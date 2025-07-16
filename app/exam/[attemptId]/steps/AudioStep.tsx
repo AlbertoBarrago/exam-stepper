@@ -24,7 +24,7 @@ export default function AudioStep({
             return;
         }
 
-        // Important!: check correctness here or log to backend
+        // TODO: check correctness here or log to backend
         onNextAction();
     };
 

@@ -42,6 +42,7 @@ export default function SpeakingStep({ durationMs, onNextAction }: Props) {
             recorder.stop();
             stream.getTracks().forEach(t => t.stop());
             setRecording(false);
+            //TODO: Add here the logic for analyze text with an ai and return a score, add persistence on DB and implement the Audit flux
         }, durationMs);
     };
 
@@ -57,35 +58,35 @@ export default function SpeakingStep({ durationMs, onNextAction }: Props) {
 
     return (
         <div className="space-y-4">
-            <p>  Parla per {
+            <p>  Talk about yourself in  {
                 durationMs < 60000
-                    ? `${durationMs / 1000} secondi`
-                    : `${durationMs / 60000} minuti`
-            } di te stesso...
+                    ? `${durationMs / 1000} seconds`
+                    : `${durationMs / 60000} minutes`
+            }...
             </p>
             {!recording && !done && (
                 <button className="btn" onClick={startRecording}>
-                    Inizia a registrare
+                    Start to record
                 </button>
             )}
 
-            {recording && <p className="text-blue-600 font-semibold">🎙️ Registrazione in corso ({
+            {recording && <p className="text-blue-600 font-semibold">🎙️ Record in progress...) ({
                 durationMs < 60000
-                    ? `${durationMs / 1000} secondi`
-                    : `${durationMs / 60000} minuti`
+                    ? `${durationMs / 1000} seconds`
+                    : `${durationMs / 60000} minutes`
             })...</p>}
 
             {stream && recording && <Spectrum stream={stream} />}
 
             {audioURL && (
                 <div className="space-y-2">
-                    <p className="text-green-600">✅ Registrazione completata</p>
+                    <p className="text-green-600">✅ Record completed</p>
                     <audio controls src={audioURL} />
                     <button
                         className="btn mt-4"
                         onClick={() => onNextAction(new Blob(chunksRef.current, { type: 'audio/webm' }))}
                     >
-                        Procedi
+                        Next →
                     </button>
                 </div>
             )}

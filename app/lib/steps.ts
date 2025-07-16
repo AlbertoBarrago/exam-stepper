@@ -19,11 +19,13 @@ export type Sentence = {
     correct: string;
 }
 
+// In the first `kind` case we are demonstrating how the front-end can handle content from server in easy way for little chunk of code
+// The order for STEPS is what we follow for each step on client Shell
 export const STEPS: Step[] = [
     {
         kind: 'welcome', title: 'Welcome', html:
-            `<p>You will take a short demo test.<br />
-     There are three parts: listening, reading, and speaking.</p>`
+            `<h1 class="text-4xl">You will take a short demo test.</h1> <br />
+            <p class="text-2xl">There are three parts: listening, reading, and speaking.</p>`
     },
     {
         kind: 'audio',

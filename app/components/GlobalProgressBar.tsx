@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useExam } from '../providers/ExamProvider';
+import { useExam } from '@/providers/ExamProvider';
 import { Clock } from 'lucide-react';
 
 const TOTAL_MS = 50 * 60 * 1000;
@@ -32,6 +32,7 @@ export default function GlobalProgressBar() {
     );
 }
 
+//TODO: can be moved on utils file...
 function formatTime(ms: number) {
     const totalSec = Math.floor(ms / 1000);
     const min = Math.floor(totalSec / 60);

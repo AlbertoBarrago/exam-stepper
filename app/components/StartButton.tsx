@@ -6,6 +6,8 @@ import { v4 as uuid } from 'uuid';
 export default function StartButton() {
     const router = useRouter();
 
+    //TODO: Add here the logic for retrieve the attemptId now is mocked
+
     return (
         <button
             onClick={() => {
