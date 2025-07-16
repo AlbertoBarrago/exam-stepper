@@ -27,6 +27,9 @@ export default function FillBlankStep({
             <button className="btn ml-4" onClick={handleSubmit}>
                 Submit
             </button>
+            <button className="btn ml-4" onClick={() => setTyped('')}>
+                Reset
+            </button>
         </>
     );
 }

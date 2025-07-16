@@ -1,13 +1,17 @@
 'use client';
+import { useExam } from '@/components/ExamProvider';
 import { useEffect, useState } from 'react';
 
 export default function FinalRecapStep({ totalMinutes }: { totalMinutes: number }) {
+    const {setFinished} = useExam();
     const [analyzing, setAnalyzing] = useState(true);
 
+
     useEffect(() => {
+        setFinished(true);
         const timer = setTimeout(() => setAnalyzing(false), 4000);
         return () => clearTimeout(timer);
-    }, []);
+    }, [setFinished]);
 
     return (
         <div className="text-center space-y-6">

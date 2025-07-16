@@ -8,6 +8,11 @@ type ExamCtx = {
     elapsed: number;
     next: () => void;
     current: number;
+    finished: boolean;
+    setFinished: (finished: boolean) => void;
+    running: boolean;
+    startExam: () => void;
+
 };
 
 const Ctx = createContext<ExamCtx | null>(null);
@@ -33,23 +38,48 @@ export default function ExamProvider({
     const start = useRef<number>(performance.now());
     const [remaining, setRemaining] = useState(TOTAL_MS);
     const [elapsed, setElapsed] = useState(0);
+    const [running, setRunning] = useState(false);
+    const [finished, setFinished] = useState(false);
+    const startRef = useRef<number | null>(null);
+
+
+    const startExam = () => {
+        startRef.current = performance.now();
+        setRunning(true);
+    };
+
+
 
     useEffect(() => {
+        if (!running || finished) return;
+
+
         let raf: number;
         const tick = () => {
             const delta = performance.now() - start.current;
             const left = TOTAL_MS - delta;
             setRemaining(left);
             setElapsed(delta);
-            if (left <= 0) onFinishAction();
-            else raf = requestAnimationFrame(tick);
+            if (left <= 0) {
+                setFinished(true);
+                onFinishAction();
+            } else raf = requestAnimationFrame(tick);
         };
         raf = requestAnimationFrame(tick);
         return () => cancelAnimationFrame(raf);
-    }, [onFinishAction]);
+    }, [onFinishAction, finished, setRemaining, setElapsed, setFinished, start, running]);
 
     return (
-        <Ctx.Provider value={{remaining, elapsed, next, current}}>
+        <Ctx.Provider value={{
+            remaining,
+            elapsed,
+            next,
+            current,
+            finished,
+            setFinished,
+            running,
+            startExam,
+        }}>
             {children}
         </Ctx.Provider>
     );
