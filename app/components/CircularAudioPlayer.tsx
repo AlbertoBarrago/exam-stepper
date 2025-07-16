@@ -11,6 +11,7 @@ export default function CircularAudioPlayer({ src, duration }: CircularAudioPlay
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
     const [audioDuration, setAudioDuration] = useState(duration || 1);
+    const [playCount, setPlayCount] = useState(0);
 
     useEffect(() => {
         const audio = audioRef.current;
@@ -23,48 +24,70 @@ export default function CircularAudioPlayer({ src, duration }: CircularAudioPlay
 
         const setMetaDuration = () => setAudioDuration(audio.duration || duration || 1);
 
+        // When audio ends, set isPlaying to false
+        const handleEnded = () => {
+            setIsPlaying(false);
+        };
+
         audio.addEventListener("timeupdate", updateProgress);
         audio.addEventListener("loadedmetadata", setMetaDuration);
-        audio.addEventListener("ended", () => setIsPlaying(false));
+        audio.addEventListener("ended", handleEnded);
 
         return () => {
             audio.removeEventListener("timeupdate", updateProgress);
             audio.removeEventListener("loadedmetadata", setMetaDuration);
-            audio.removeEventListener("ended", () => setIsPlaying(false));
+            audio.removeEventListener("ended", handleEnded);
         };
     }, [duration]);
 
-    const togglePlay = () => {
+    const handlePlay = () => {
         const audio = audioRef.current;
-        if (!audio) return;
-        if (isPlaying) {
-            audio.pause();
-        } else {
-            audio.play();
-        }
-        setIsPlaying(!isPlaying);
+        if (!audio || playCount >= 2) return;
+
+        audio.currentTime = 0;
+        audio.play();
+        setIsPlaying(true);
+        setPlayCount((count) => count + 1);
     };
 
-    // SVG progress config
+    const handlePause = () => {
+        const audio = audioRef.current;
+        if (!audio) return;
+        audio.pause();
+        setIsPlaying(false);
+    };
+
+    const handleButtonClick = () => {
+        if (isPlaying) {
+            handlePause();
+        } else {
+            handlePlay();
+        }
+    };
+
     const radius = 48;
     const circumference = 2 * Math.PI * radius;
-    const displayProgress = Math.min(progress, 2);
+    const displayProgress = Math.min(progress * playCount, 2);
 
     return (
         <div className="relative w-32 h-32 flex items-center justify-center">
             <audio ref={audioRef} src={src} preload="auto" style={{ display: "none" }} />
 
             <button
-                className="z-10 bg-white rounded-full shadow-lg w-16 h-16 flex items-center justify-center text-3xl focus:outline-none"
-                onClick={togglePlay}
+                className="z-10 bg-white rounded-full shadow-lg w-16 h-16 flex items-center justify-center focus:outline-none"
+                onClick={handleButtonClick}
                 aria-label={isPlaying ? "Pause Audio" : "Play Audio"}
+                disabled={playCount >= 2 && !isPlaying}
+                style={{
+                    opacity: playCount >= 2 && !isPlaying ? 0.6 : 1,
+                    cursor: playCount >= 2 && !isPlaying ? 'not-allowed' : 'pointer'
+                }}
             >
                 {isPlaying
                     ? <Pause size={40} strokeWidth={2} className="text-blue-600" />
                     : <Play size={40} strokeWidth={2} className="text-blue-600" />}
             </button>
 
-            {/* Circular progress ring */}
             <svg
                 className="absolute top-0 left-0"
                 width={128}
