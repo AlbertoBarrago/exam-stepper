@@ -28,8 +28,8 @@ function StepBody() {
             return (
                 <AudioStep
                     audioUrl={step.audioUrl}
-                    onNextAction={() => next()}
                     questions={step.questions}
+                    onNextAction={() => next()}
                 />
             );
 
