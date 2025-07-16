@@ -2,6 +2,9 @@
 
 A modern web application designed to assess English language proficiency with interactive, speech-enabled features.
 
+## Deployed version 
+[here](https://exam-stepper.vercel.app/)
+
 ## ✨ Features
 
 - 📝 **Timed Exam**: Complete a 50-minute English proficiency test.
