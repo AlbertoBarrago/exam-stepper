@@ -9,7 +9,6 @@ export default function FinalRecapStep({totalMinutes}: { totalMinutes: number })
     const router = useRouter();
 
 
-
     useEffect(() => {
         setFinished(true);
         const timer = setTimeout(() => setAnalyzing(false), 4000);

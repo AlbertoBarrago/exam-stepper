@@ -62,7 +62,7 @@ export default function Spectrum({ stream }: { stream: MediaStream | null }) {
     return (
         <canvas
             ref={canvasRef}
-            className="fixed top-0 left-0 w-screen h-[120px] pointer-events-none z-10"
+            className="fixed top-50 bottom-50 left-0 w-screen h-[120px] pointer-events-none z-10"
             style={{ backgroundColor: 'transparent' }}
         />
     );

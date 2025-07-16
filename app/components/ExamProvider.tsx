@@ -42,18 +42,13 @@ export default function ExamProvider({
     const [finished, setFinished] = useState(false);
     const startRef = useRef<number | null>(null);
 
-
     const startExam = () => {
         startRef.current = performance.now();
         setRunning(true);
     };
 
-
-
     useEffect(() => {
         if (!running || finished) return;
-
-
         let raf: number;
         const tick = () => {
             const delta = performance.now() - start.current;
