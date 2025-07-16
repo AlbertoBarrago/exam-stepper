@@ -10,8 +10,10 @@ type Props = {
 
 export default function ChoiceStep({ sentence, options, correct, onNextAction }: Props) {
     const [selected, setSelected] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = () => {
+        if(!selected) return setError('Please select an option');
         if (selected) {
             onNextAction(selected === correct);
         }
@@ -36,12 +38,12 @@ export default function ChoiceStep({ sentence, options, correct, onNextAction }:
                     </label>
                 ))}
             </div>
+            {error && <p className="text-red-500">{error}</p>}
             <button
                 className="btn mt-4"
-                disabled={!selected}
                 onClick={handleSubmit}
             >
-                Submit
+                Submit and go next →
             </button>
         </div>
     );

@@ -11,7 +11,8 @@ export default function Spectrum({ stream }: { stream: MediaStream | null }) {
         const audioCtx = new AudioContext();
         const src = audioCtx.createMediaStreamSource(stream);
         const analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 1024;
+        analyser.fftSize = 256;
+        analyser.smoothingTimeConstant = 0.4;
 
         src.connect(analyser);
 
@@ -27,28 +28,32 @@ export default function Spectrum({ stream }: { stream: MediaStream | null }) {
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // ECG-style line
-            ctx.beginPath();
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = '#22d3ee'; // cyan-400
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const barCount = 128;
+            const barWidth = 10;
+            const barSpacing = 1;
+            const totalBarWidth = barWidth + barSpacing;
 
-            const sliceWidth = canvas.width / buffer.length;
-            let x = 0;
+            for (let i = 0; i < barCount; i++) {
+                const value = buffer[i] || 0;
+                const barHeight = (value / 255) * centerY;
 
-            for (let i = 0; i < buffer.length; i++) {
-                const v = buffer[i] / 255;
-                const y = canvas.height - v * canvas.height;
+                const rightX = centerX + (i * totalBarWidth) + barSpacing;
 
-                if (i === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
+                const leftX = centerX - (i * totalBarWidth) - barWidth - barSpacing;
+
+                ctx.fillStyle = '#3bbf2b';
+
+                ctx.fillRect(rightX, centerY - barHeight, barWidth, barHeight);
+                ctx.fillRect(rightX, centerY, barWidth, barHeight);
+
+                if (i > 0) {
+                    ctx.fillRect(leftX, centerY - barHeight, barWidth, barHeight);
+                    ctx.fillRect(leftX, centerY, barWidth, barHeight);
                 }
-
-                x += sliceWidth;
             }
 
-            ctx.stroke();
             requestAnimationFrame(draw);
         };
 
@@ -62,7 +67,7 @@ export default function Spectrum({ stream }: { stream: MediaStream | null }) {
     return (
         <canvas
             ref={canvasRef}
-            className="fixed top-50 bottom-50 left-0 w-screen h-[120px] pointer-events-none z-10"
+            className="fixed top-1/2 left-0 h-[120px] w-full -translate-y-1/2 pointer-events-none z-10"
             style={{ backgroundColor: 'transparent' }}
         />
     );

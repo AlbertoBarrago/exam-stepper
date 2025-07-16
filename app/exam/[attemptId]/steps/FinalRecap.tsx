@@ -32,7 +32,7 @@ export default function FinalRecapStep({totalMinutes}: { totalMinutes: number })
             ) : (
                 <>
                     <p className="text-green-600">Your results will be available shortly.</p>
-                    <button className="btn mt-4" onClick={backToHome}>Back to Hell</button>
+                    <button className="btn mt-4" onClick={backToHome}>Back to Home</button>
                 </>
             )}
         </div>

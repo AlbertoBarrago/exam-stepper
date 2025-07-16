@@ -22,6 +22,7 @@ function StepBody() {
                 <AudioStep
                     audioUrl={step.audioUrl}
                     onNextAction={() => next()}
+                    questions={step.questions}
                 />
             );
         case 'choice':

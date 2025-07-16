@@ -16,7 +16,7 @@ export default function GlobalProgressBar() {
     }, [remaining]);
 
     return (
-        <div className="fixed top-0 left-0 w-full h-3 z-50 flex items-center bg-gray-200">
+        <div className="fixed top-0 left-0 w-full h-4 z-50 flex items-center bg-gray-200 rounded-1xl">
             <div className="relative h-full w-[95%]">
                 <div
                     className="absolute top-0 left-0 h-full bg-blue-600 transition-[width] duration-100"
@@ -24,8 +24,8 @@ export default function GlobalProgressBar() {
                 />
             </div>
 
-            <div className="w-[5%] min-w-[56px] h-full flex items-center justify-center text-xs gap-1 text-gray-700 bg-gray-100">
-                <Clock size={20} className="text-gray-500" />
+            <div className="w-[5%] min-w-[36px] ml-1 h-full flex items-center justify-center text-xs gap-1 text-gray-700 bg-gray-100">
+                <Clock size={15} className="text-gray-500" />
                 <span className="font-mono">{formatted}</span>
             </div>
         </div>
