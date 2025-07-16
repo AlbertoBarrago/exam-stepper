@@ -5,10 +5,10 @@ A modern web application designed to assess English language proficiency with in
 ## ✨ Features
 
 - 📝 **Timed Exam**: Complete a 50-minute English proficiency test.
-- 🎤 **Speech Recognition**: Answer questions using your voice with real-time audio visualization.
+- 🎤 **Speech Recognition**: Answer questions using your voice with real-time audio visualization. [ON WORK]
 - 📊 **Global Progress Bar**: Track your overall progress throughout the exam.
 - 🔄 **Multi-Step Workflow**: Move through different types of questions seamlessly.
-- ⚡ **Instant Results**: Get feedback as soon as the test is finished.
+- ⚡ **Instant Results**: Get feedback as soon as the test is finished. [ON WORK]
 
 ## 🛠️ Tech Stack
 
