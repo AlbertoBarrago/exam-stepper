@@ -1,4 +1,4 @@
-import {useExam} from "@/components/ExamProvider";
+import {useExam} from "@/providers/ExamProvider";
 
 export default function WelcomeStep({html, onNext}: { html: string; onNext: () => void }) {
     const {startExam, running} = useExam();

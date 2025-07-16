@@ -1,5 +1,5 @@
 'use client';
-import {useExam} from '@/components/ExamProvider';
+import {useExam} from '@/providers/ExamProvider';
 import {useEffect, useState} from 'react';
 import { useRouter } from "next/navigation";
 

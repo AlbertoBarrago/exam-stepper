@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useExam } from './ExamProvider';
+import { useExam } from '../providers/ExamProvider';
 import { Clock } from 'lucide-react';
 
 const TOTAL_MS = 50 * 60 * 1000;

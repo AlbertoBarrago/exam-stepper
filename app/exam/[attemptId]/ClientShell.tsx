@@ -1,6 +1,6 @@
 'use client';
 import {STEPS} from '@/lib/steps';
-import ExamProvider, {useExam} from '@/components/ExamProvider';
+import ExamProvider, {useExam} from '@/providers/ExamProvider';
 import WelcomeStep from "@/exam/[attemptId]/steps/WelcomeStep";
 import AudioStep from "@/exam/[attemptId]/steps/AudioStep";
 import SpeakingStep from "@/exam/[attemptId]/steps/SpeakingStep";
