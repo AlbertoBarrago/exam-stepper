@@ -23,6 +23,6 @@ export const STEPS: Step[] = [
         options: ['walk', 'play', 'traveling'],
         correct: 'traveling',
     },
-    {kind: 'speak', title: 'Speaking', durationMs: 20000},
+    {kind: 'speak', title: 'Speaking', durationMs: 10000}, //2 minutes -> 120000
     {kind: 'final', title: 'Exam complete'}
 ];

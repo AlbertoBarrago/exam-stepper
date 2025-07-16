@@ -57,14 +57,23 @@ export default function SpeakingStep({ durationMs, onNextAction }: Props) {
 
     return (
         <div className="space-y-4">
-            <p>Parla per due minuti di te stesso...</p>
+            <p>  Parla per {
+                durationMs < 60000
+                    ? `${durationMs / 1000} secondi`
+                    : `${durationMs / 60000} minuti`
+            } di te stesso...
+            </p>
             {!recording && !done && (
                 <button className="btn" onClick={startRecording}>
                     Inizia a registrare
                 </button>
             )}
 
-            {recording && <p className="text-blue-600 font-semibold">🎙️ Registrazione in corso (2 minuti)...</p>}
+            {recording && <p className="text-blue-600 font-semibold">🎙️ Registrazione in corso ({
+                durationMs < 60000
+                    ? `${durationMs / 1000} secondi`
+                    : `${durationMs / 60000} minuti`
+            })...</p>}
 
             {stream && recording && <Spectrum stream={stream} />}
 
