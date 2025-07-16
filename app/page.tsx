@@ -1,12 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import StartButton from '@/components/StartButton';
 
 export default function Home() {
     return (
-        <main className="min-h-screen flex flex-col font-sans text-gray-800">
-            {/* --- Hero banner --- */}
+        <main className="min-h-screen flex flex-col font-sans text-gray-800 bg-gradient-to-b from-blue-50 to-white">
             <section
                 className="flex flex-col items-center justify-center flex-1 text-center bg-gradient-to-b from-blue-50 to-white px-4 py-14 sm:py-14">
                 <h1 className="text-4xl sm:text-5xl font-bold max-w-3xl leading-tight tracking-tight">
@@ -22,7 +20,6 @@ export default function Home() {
 
             </section>
 
-            {/* --- How it works --- */}
             <section className="py-10 px-4 bg-white border-t">
                 <h2 className="text-2xl sm:text-3xl font-semibold text-center">How the test works</h2>
                 <div className="mt-12 grid gap-12 md:grid-cols-3 max-w-6xl mx-auto px-4 sm:px-6">
@@ -55,7 +52,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* --- Footer --- */}
             <footer className="py-4 text-center text-sm text-gray-500 bg-gray-50 border-t">
                 ©2025 YourBrand — Inspired by EF SET, not affiliated with EF Education First.
             </footer>

@@ -24,8 +24,8 @@ export default function GlobalProgressBar() {
                 />
             </div>
 
-            <div className="w-[5%] h-full flex items-center justify-center text-xs gap-1 text-gray-700 bg-gray-100">
-                <Clock size={12} className="text-gray-500" />
+            <div className="w-[5%] min-w-[56px] h-full flex items-center justify-center text-xs gap-1 text-gray-700 bg-gray-100">
+                <Clock size={20} className="text-gray-500" />
                 <span className="font-mono">{formatted}</span>
             </div>
         </div>

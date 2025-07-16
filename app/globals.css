@@ -8,13 +8,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #686363;
+    --background: #171515;
     --foreground: #ededed;
   }
 }
@@ -26,11 +24,11 @@ body {
 }
 
 .btn {
-  @apply bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700;
+  @apply bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 hover:cursor-pointer cursor-default;
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition;
+    @apply inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition hover:cursor-pointer cursor-default;
   }
 }

@@ -11,13 +11,11 @@ export const STEPS: Step[] = [
             `<p>You will take a short demo test.<br />
      There are three parts: listening, reading, and speaking.</p>`
     },
-
     {
         kind: 'audio',
         title: 'Listening',
         audioUrl: '/audio/listening.mp3'
     },
-
     {
         kind: 'choice',
         title: 'Reading',
@@ -25,8 +23,6 @@ export const STEPS: Step[] = [
         options: ['walk', 'play', 'traveling'],
         correct: 'traveling',
     },
-
     {kind: 'speak', title: 'Speaking', durationMs: 20000},
-
     {kind: 'final', title: 'Exam complete'}
 ];
