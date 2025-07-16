@@ -1,5 +1,6 @@
 'use client';
 import { useRef, useState } from 'react';
+import CircularAudioPlayer from "@/components/CircularAudioPlayer";
 
 export default function AudioStep({
                                       audioUrl,
@@ -21,18 +22,14 @@ export default function AudioStep({
 
     return (
         <div>
-            <audio controls ref={audioRef} preload="auto">
-                <source src={audioUrl} type="audio/mpeg" />
-                <source src={audioUrl.replace('.mp3', '.ogg')} type="audio/ogg" />
-                Your browser does not support the audio element.
-            </audio>
-            <button
-                className="btn mt-6"
-                onClick={handlePlay}
-                disabled={playCount >= 2}
-            >
-                {playCount < 2 ? 'Play Audio' : 'No more plays'}
-            </button>
+            <CircularAudioPlayer src={audioUrl}/>
+            {/*<button*/}
+            {/*    className="btn mt-6"*/}
+            {/*    onClick={handlePlay}*/}
+            {/*    disabled={playCount >= 2}*/}
+            {/*>*/}
+            {/*    {playCount < 2 ? 'Play Audio' : 'No more plays'}*/}
+            {/*</button>*/}
             <button
                 className="btn mt-6 ml-4"
                 onClick={onNextAction}

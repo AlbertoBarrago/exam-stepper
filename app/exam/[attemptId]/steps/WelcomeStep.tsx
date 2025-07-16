@@ -8,7 +8,6 @@ export default function WelcomeStep({html, onNext}: { html: string; onNext: () =
         onNext();
     };
 
-
     return (
         <>
             <div className="prose max-w-none" dangerouslySetInnerHTML={{__html: html}}/>
