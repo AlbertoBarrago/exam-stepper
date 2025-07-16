@@ -17,6 +17,13 @@ function StepBody() {
         case 'welcome':
             return <WelcomeStep html={step.html}
                                 onNext={() => next()}/>;
+        case 'choice':
+            return (
+                <ChoiceStep
+                    sentenceList={step.sentenceList}
+                    onNextAction={() => next()}
+                />
+            );
         case 'audio':
             return (
                 <AudioStep
@@ -25,15 +32,7 @@ function StepBody() {
                     questions={step.questions}
                 />
             );
-        case 'choice':
-            return (
-                <ChoiceStep
-                    sentence={step.sentence}
-                    options={step.options}
-                    correct={step.correct}
-                    onNextAction={() => next()}
-                />
-            );
+
         case 'speak':
             return (
                 <SpeakingStep
@@ -68,7 +67,7 @@ function MainExamUI() {
 
     return (
         <main className="max-w-xl mx-auto p-6">
-            <Stepper total={STEPS.length} current={current} />
+            <Stepper total={STEPS.length} current={current}/>
             <h2 className="text-lg font-semibold mb-4">{STEPS[current].title}</h2>
             <StepBody/>
         </main>

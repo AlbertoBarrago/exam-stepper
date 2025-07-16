@@ -16,3 +16,11 @@ A modern web application designed to assess English language proficiency with in
 - [TailwindCSS](https://tailwindcss.com/) – Utility-first CSS framework for rapid UI development.
 - **Web Audio API** – For capturing and visualizing real-time audio input.
 - **MediaRecorder API** – For recording test taker’s audio answers.
+
+
+## 🪓 TODOs: 
+- Add Translations
+- Add Audit for action (like ioredis, or custom logging service)
+- Add Zod Validation for data before persistence or during filling the form 
+- Improve each step with the appropriate logic and test, this is just a blueprint
+
