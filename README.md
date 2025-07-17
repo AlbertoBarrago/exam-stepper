@@ -21,6 +21,19 @@ A modern web application designed to assess English language proficiency with in
 - **MediaRecorder API** – For recording test taker’s audio answers.
 
 
+### Steps Structure
+
+All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
+
+- Welcome/
+- Reading/
+- Listening/
+- Writing/
+- Speaking/
+- Final/
+
+
+
 ## 📌 Todo / Integration steps
 
 ### Step Organization

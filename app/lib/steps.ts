@@ -1,8 +1,13 @@
 export type Step =
     | { kind: 'welcome'; title: string; html: string }
-    | { kind: 'audio'; title: string; audioUrl: string, questions: AudioQuestion[]; }
-    | { kind: 'choice'; title: string; sentenceList: Sentence[]; }
-    | { kind: 'speak'; title: string, durationMs: number }
+    | { kind: 'reading-intro'; title: string }
+    | { kind: 'reading-question'; title: string; sentenceList: Sentence[] }
+    | { kind: 'reading-complete'; title: string }
+    | { kind: 'listening-intro'; title: string }
+    | { kind: 'listening-question'; title: string; audioUrl: string; questions: AudioQuestion[] }
+    | { kind: 'listening-complete'; title: string }
+    | { kind: 'speaking-intro'; title: string }
+    | { kind: 'speaking-question'; title: string; durationMs: number }
     | { kind: 'final'; title: string };
 
 export type AudioQuestion = {
@@ -19,35 +24,19 @@ export type Sentence = {
     correct: string;
 }
 
-// In the first `kind` case we are demonstrating how the front-end can handle content from server in easy way for little chunk of code
-// The order for STEPS is what we follow for each step on client Shell
 export const STEPS: Step[] = [
     {
-        kind: 'welcome', title: 'Welcome', html:
-            `<h1 class="text-4xl">You will take a short demo test.</h1> <br />
+        kind: 'welcome',
+        title: 'Welcome',
+        html: `<h1 class="text-4xl">You will take a short demo test.</h1> <br />
             <p class="text-2xl">There are three parts: listening, reading, and speaking.</p>`
     },
     {
-        kind: 'audio',
-        title: 'Listening',
-        audioUrl: '/audio/listening.mp3',
-        questions: [
-            {
-                id: 1,
-                before: "The speaker thinks the weather is",
-                options: ["sunny", "cloudy", "rainy"],
-                correctAnswer: "sunny",
-            },
-            {
-                id: 2,
-                before: "The conversation is about",
-                options: ["the weather", "the sun", "the moon"],
-                correctAnswer: "the sun",
-            }
-        ],
+        kind: 'reading-intro',
+        title: 'Reading Section',
     },
     {
-        kind: 'choice',
+        kind: 'reading-question',
         title: 'Reading',
         sentenceList: [
             {
@@ -82,6 +71,48 @@ export const STEPS: Step[] = [
             },
         ],
     },
-    {kind: 'speak', title: 'Speaking', durationMs: 10000}, //now set to the 10s duration
-    {kind: 'final', title: 'Exam complete'}
+    {
+        kind: 'reading-complete',
+        title: 'Reading Complete',
+    },
+    {
+        kind: 'listening-intro',
+        title: 'Listening Section',
+    },
+    {
+        kind: 'listening-question',
+        title: 'Listening',
+        audioUrl: '/audio/listening.mp3',
+        questions: [
+            {
+                id: 1,
+                before: "The speaker thinks the weather is",
+                options: ["sunny", "cloudy", "rainy"],
+                correctAnswer: "sunny",
+            },
+            {
+                id: 2,
+                before: "The conversation is about",
+                options: ["the weather", "the sun", "the moon"],
+                correctAnswer: "the sun",
+            }
+        ],
+    },
+    {
+        kind: 'listening-complete',
+        title: 'Listening Complete',
+    },
+    {
+        kind: 'speaking-intro',
+        title: 'Speaking Section',
+    },
+    {
+        kind: 'speaking-question',
+        title: 'Speaking',
+        durationMs: 10000,
+    },
+    {
+        kind: 'final',
+        title: 'Exam complete'
+    }
 ];

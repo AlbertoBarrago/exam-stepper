@@ -7,7 +7,7 @@ type Props = {
     onNextAction: (results: boolean[]) => void; // Now passes results per question
 };
 
-export default function ChoiceStep({ sentenceList, onNextAction }: Props) {
+export default function ReadingQuestionStep({ sentenceList, onNextAction }: Props) {
     const [selected, setSelected] = useState<string[]>(Array(sentenceList.length).fill(""));
     const [error, setError] = useState<string | null>(null);
 

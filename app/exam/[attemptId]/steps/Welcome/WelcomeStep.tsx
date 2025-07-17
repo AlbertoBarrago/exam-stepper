@@ -1,11 +1,11 @@
 import {useExam} from "@/providers/ExamProvider";
 
-export default function WelcomeStep({html, onNext}: { html: string; onNext: () => void }) {
+export default function WelcomeStep({html, onNextAction}: { html: string; onNextAction: () => void }) {
     const {startExam, running} = useExam();
 
     const handleStart = () => {
         if (!running) startExam();
-        onNext();
+        onNextAction();
     };
 
     return (
