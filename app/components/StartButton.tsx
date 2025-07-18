@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { v4 as uuid } from 'uuid';
 
 export default function StartButton() {
     const router = useRouter();

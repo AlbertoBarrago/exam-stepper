@@ -2,9 +2,6 @@
 
 A modern web application designed to assess English language proficiency with interactive, speech-enabled features.
 
-## Deployed version 
-[here](https://exam-stepper.vercel.app/)
-
 ## ✨ Features
 
 - 📝 **Timed Exam**: Complete a 50-minute English proficiency test.
@@ -49,6 +46,10 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 ### UI Reusability
 - [ ] Make shared UI components (Audio check, Spectrum, Timer, Progress bar) highly reusable via props
 
+### User Session
+- [ ] Add api for the user session for get username and verify if it has permission
+- [ ] Add data into HEADER or panel on top as FIGMA shows
+
 ### Section Features
 - [ ] Reading: Choices, long text, intro/complete
 - [ ] Listening: Audio player, answer choices, intro/complete
@@ -58,6 +59,8 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 ### Docs
 - [x] Document the main "data flow" and step logic in a short `docs/architecture.md`
 
+
+### Steps Flow
 ```mermaid
 sequenceDiagram
     participant User
@@ -84,7 +87,6 @@ sequenceDiagram
     ClientShell->>FinalRecapStep: On exam end, show summary
     FinalRecapStep->>TimerStore: Pause and get elapsed times
     FinalRecapStep-->>User: Show analysis and summary
-
 ```
 
 
