@@ -1,5 +1,5 @@
 'use client';
-import {StepsConst} from '@/const/stepsConst';
+import {StepsConfig} from '@/const/stepsConfig';
 import WelcomeStep from "@/exam/[attemptId]/steps/Welcome/WelcomeStep";
 import ReadingIntroStep from "@/exam/[attemptId]/steps/Reading/ReadingIntroStep";
 import ReadingQuestionStep from "@/exam/[attemptId]/steps/Reading/ReadingQuestionStep";
@@ -15,7 +15,7 @@ import SpeakingStep from "@/exam/[attemptId]/steps/Speaking/SpeakingStep";
 import FinalRecapStep from "@/exam/[attemptId]/steps/Final/FinalRecapStep";
 import Stepper from "@/components/Stepper";
 import SectionTimerBar from "@/components/SectionTimeBar";
-import {useEffect, useRef, useState} from "react";
+import {JSX, useEffect, useRef, useState} from "react";
 import {useTimerStore} from "@/state/timerStore";
 import {Section} from "@/types/clientShellTypes";
 import {QUESTION_KINDS, SECTIONS, stepKindToSection} from "@/const/clientShellConst";
@@ -25,7 +25,7 @@ function isSection(val: string | null): val is Section {
 }
 
 function StepBody({current, next}: { current: number; next: () => void }) {
-    const step = StepsConst[current];
+    const step = StepsConfig[current];
     switch (step.kind) {
         case 'welcome':
             return (
@@ -132,9 +132,21 @@ function TickController() {
     return null;
 }
 
-export default function ClientShell() {
+/**
+ * ClientShell is a React functional component that manages and renders a step-based progression system.
+ * It tracks the current step, handles transitions between steps, and initializes or pauses certain actions
+ * based on the step type.
+ * The component leverages various hooks such as useState, useEffect, and custom hooks
+ * to manage state, side effects, and provide functionality like timers.
+ * Additionally, it renders components
+ * that visually present the progress and content of each step.
+ *
+ * @return {JSX.Element} The rendered JSX of the ClientShell component, including a stepper, timer bar,
+ * and content for the current step.
+ */
+export default function ClientShell(): JSX.Element {
     const [current, setCurrent] = useState(0);
-    const step = StepsConst[current];
+    const step = StepsConfig[current];
     const section = stepKindToSection(step.kind);
 
     const prevStepKindRef = useRef<string | null>(null);
@@ -142,11 +154,12 @@ export default function ClientShell() {
     const pause = useTimerStore(s => s.pause);
 
     useEffect(() => {
-        const step = StepsConst[current];
+        const step = StepsConfig[current];
         const currentKind = step.kind;
         const prevKind = prevStepKindRef.current;
         const thisSection = stepKindToSection(currentKind);
 
+        //With this logic we can introduce many steps from intro to complete phase
         if (QUESTION_KINDS.includes(currentKind)) {
             if (
                 prevKind &&
@@ -164,15 +177,15 @@ export default function ClientShell() {
     }, [current, startSection, pause]);
 
 
-    const next = () => setCurrent(c => Math.min(c + 1, StepsConst.length - 1));
+    const next = () => setCurrent(c => Math.min(c + 1, StepsConfig.length - 1));
 
     return (
         <>
             <SectionTimerBar displaySection={isSection(section) ? section : null}/>
             <TickController/>
             <main className="max-w-xl mx-auto p-6">
-                <Stepper total={StepsConst.length} current={current}/>
-                <h2 className="text-lg font-semibold mb-4">{StepsConst[current].title}</h2>
+                <Stepper total={StepsConfig.length} current={current}/>
+                <h2 className="text-lg font-semibold mb-4">{StepsConfig[current].title}</h2>
                 <StepBody current={current} next={next}/>
             </main>
         </>
