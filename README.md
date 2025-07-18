@@ -40,11 +40,11 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 - [x] Refactor `steps/` folder so each exam section has its own folder and sub-steps
 
 ### Data & Types
-- [ ] Create `types/ExamTypes.ts` to share step/result/timing types across the app
+- [x] Create `state/timerSTore.ts` to share step/result/timing types across the app with zustand
 
 ### Step Navigation
-- [ ] Implement `StepController` or a custom `useStepMachine` hook to manage step logic, timing, and navigation
-- [ ] Build out context (`ExamContext`) for global exam state (progress, results, navigation)
+- [x] Implement `StepController` or a custom `useStepMachine` hook to manage step logic, timing, and navigation
+- [x] Build out context (`ExamContext`) for global exam state (progress, results, navigation)
 
 ### UI Reusability
 - [ ] Make shared UI components (Audio check, Spectrum, Timer, Progress bar) highly reusable via props
