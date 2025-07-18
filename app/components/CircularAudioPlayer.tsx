@@ -65,7 +65,7 @@ export default function CircularAudioPlayer({ src, duration }: CircularAudioPlay
         }
     };
 
-    const radius = 48;
+    const radius = 36;
     const circumference = 2 * Math.PI * radius;
     const displayProgress = Math.min(progress * playCount, 2);
 

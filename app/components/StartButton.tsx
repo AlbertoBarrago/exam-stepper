@@ -7,8 +7,8 @@ export default function StartButton() {
 
     const handleStart = async () => {
         const res = await fetch('/api/start', { method: 'POST' });
-        const { attemptId } = await res.json();
-        router.push(`/exam/${attemptId}`);
+        const { userData } = await res.json();
+        router.push(`/exam/${userData.token}`);
     };
 
     return (
