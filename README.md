@@ -34,11 +34,10 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 - Final/
 
 
-
 ## 📌 Todo / Integration steps
 
 ### Step Organization
-- [ ] Refactor `steps/` folder so each exam section has its own folder and sub-steps
+- [x] Refactor `steps/` folder so each exam section has its own folder and sub-steps
 
 ### Data & Types
 - [ ] Create `types/ExamTypes.ts` to share step/result/timing types across the app
@@ -57,9 +56,37 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 - [ ] Speaking: Microphone permission, audio visualization, practice, main questions, repeat parts
 
 ### Docs
-- [ ] Document the main "data flow" and step logic in a short `docs/architecture.md`
+- [x] Document the main "data flow" and step logic in a short `docs/architecture.md`
 
----
+```mermaid
+sequenceDiagram
+    participant User
+    participant ClientShell
+    participant TimerStore
+    participant SectionTimeBar
+    participant StepComponent
 
-*Add contributor notes on new sections, expected data, and anything tricky in the README or /docs folder as you go!*
+    User->>ClientShell: Loads Exam Page
+    ClientShell->>TimerStore: Initialize timer state
+    ClientShell->>StepComponent: Render current step
+    StepComponent-->>ClientShell: User clicks "Next"
+    ClientShell->>TimerStore: If step is section intro, startSection()
+    ClientShell->>TimerStore: If step is section complete, pause()
+    ClientShell->>SectionTimeBar: Pass current section info
+    SectionTimeBar->>TimerStore: Get section time left
+    TimerStore-->>SectionTimeBar: Return time left
+    SectionTimeBar-->>User: Display section progress bar
+    loop Each Step
+      User->>StepComponent: Interact/Complete
+      StepComponent-->>ClientShell: onNextAction()
+      ClientShell->>TimerStore: tick() (every second if running)
+    end
+    ClientShell->>FinalRecapStep: On exam end, show summary
+    FinalRecapStep->>TimerStore: Pause and get elapsed times
+    FinalRecapStep-->>User: Show analysis and summary
+
+```
+
+
+
 

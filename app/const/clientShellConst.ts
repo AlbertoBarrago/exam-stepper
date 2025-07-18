@@ -17,5 +17,6 @@ const stepKindToSection = (kind: string): string | null => {
 
 export {
     QUESTION_KINDS,
-    SECTIONS, stepKindToSection
+    SECTIONS,
+    stepKindToSection
 };
