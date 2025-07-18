@@ -15,6 +15,7 @@ import SpeakingStep from "@/exam/[attemptId]/steps/Speaking/SpeakingStep";
 import FinalRecapStep from "@/exam/[attemptId]/steps/Final/FinalRecapStep";
 import {JSX} from "react";
 import {useTimerStore} from "@/state/timerStore";
+import PreventBackNavigation from "@/components/PreventBackNavigation";
 
 function StepBody({current, next}: { current: number; next: () => void }) {
     const step = StepsConfig[current];
@@ -113,15 +114,17 @@ function StepBody({current, next}: { current: number; next: () => void }) {
     }
 }
 
-
 export default function ClientShell(): JSX.Element {
     const currentStepIndex = useTimerStore(s => s.currentStepIndex);
     const nextStep = useTimerStore(s => s.nextStep);
 
     return (
-        <section className="max-w-xl mx-auto p-6">
-            <h2 className="text-lg font-semibold mb-4">{StepsConfig[currentStepIndex].title}</h2>
-            <StepBody current={currentStepIndex} next={nextStep}/>
-        </section>
+        <>
+            <PreventBackNavigation/>
+            <section className="max-w-xl mx-auto p-6">
+                <h2 className="text-lg font-semibold mb-4">{StepsConfig[currentStepIndex].title}</h2>
+                <StepBody current={currentStepIndex} next={nextStep}/>
+            </section>
+        </>
     );
 }
