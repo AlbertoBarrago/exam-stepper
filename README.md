@@ -49,6 +49,10 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 ### UI Reusability
 - [ ] Make shared UI components (Audio check, Spectrum, Timer, Progress bar) highly reusable via props
 
+### User Session
+- [ ] Add api for the user session for get username and verify if it has permission
+- [ ] Add data into HEADER or panel on top as FIGMA shows
+
 ### Section Features
 - [ ] Reading: Choices, long text, intro/complete
 - [ ] Listening: Audio player, answer choices, intro/complete
