@@ -1,7 +1,7 @@
 'use client';
 import CircularAudioPlayer from "@/components/CircularAudioPlayer";
 import {useState} from "react";
-import {AudioQuestion} from "@/const/stepsConst";
+import {AudioQuestion} from "@/types/stepTypes";
 
 
 export default function ListeningStep({

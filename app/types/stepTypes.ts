@@ -1,11 +1,11 @@
-type AudioQuestion = {
+export type AudioQuestion = {
     id: number;
     before: string;
     options: string[];
     correctAnswer: string;
 };
 
-type Sentence = {
+export type Sentence = {
     title: string;
     sentence: string;
     options: string[];

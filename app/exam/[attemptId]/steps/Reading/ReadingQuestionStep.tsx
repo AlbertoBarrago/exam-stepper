@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { Sentence } from "@/const/stepsConst";
+import {Sentence} from "@/types/stepTypes";
 
 type Props = {
     sentenceList: Sentence[],
