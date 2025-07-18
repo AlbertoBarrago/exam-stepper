@@ -1,5 +1,5 @@
 'use client';
-import { StepsConst } from '@/const/stepsConst';
+import {StepsConst} from '@/const/stepsConst';
 import WelcomeStep from "@/exam/[attemptId]/steps/Welcome/WelcomeStep";
 import ReadingIntroStep from "@/exam/[attemptId]/steps/Reading/ReadingIntroStep";
 import ReadingQuestionStep from "@/exam/[attemptId]/steps/Reading/ReadingQuestionStep";
@@ -15,8 +15,8 @@ import SpeakingStep from "@/exam/[attemptId]/steps/Speaking/SpeakingStep";
 import FinalRecapStep from "@/exam/[attemptId]/steps/Final/FinalRecapStep";
 import Stepper from "@/components/Stepper";
 import SectionTimerBar from "@/components/SectionTimeBar";
-import { useEffect, useRef, useState } from "react";
-import { useTimerStore } from "@/state/timerStore";
+import {useEffect, useRef, useState} from "react";
+import {useTimerStore} from "@/state/timerStore";
 import {Section} from "@/types/clientShellTypes";
 import {QUESTION_KINDS, SECTIONS, stepKindToSection} from "@/const/clientShellConst";
 
@@ -24,7 +24,7 @@ function isSection(val: string | null): val is Section {
     return !!val && SECTIONS.includes(val as Section);
 }
 
-function StepBody({ current, next }: { current: number; next: () => void }) {
+function StepBody({current, next}: { current: number; next: () => void }) {
     const step = StepsConst[current];
     switch (step.kind) {
         case 'welcome':
@@ -114,7 +114,7 @@ function StepBody({ current, next }: { current: number; next: () => void }) {
             );
         case 'final':
             return (
-                <FinalRecapStep />
+                <FinalRecapStep/>
             );
         default:
             return <div>Invalid step</div>;
@@ -156,8 +156,7 @@ export default function ClientShell() {
             ) {
                 startSection(thisSection);
             }
-        }
-        else if (currentKind.endsWith('-complete')) {
+        } else if (currentKind.endsWith('-complete')) {
             pause();
         }
 
@@ -169,12 +168,12 @@ export default function ClientShell() {
 
     return (
         <>
-            <SectionTimerBar displaySection={isSection(section) ? section : null} />
-            <TickController />
+            <SectionTimerBar displaySection={isSection(section) ? section : null}/>
+            <TickController/>
             <main className="max-w-xl mx-auto p-6">
-                <Stepper total={StepsConst.length} current={current} />
+                <Stepper total={StepsConst.length} current={current}/>
                 <h2 className="text-lg font-semibold mb-4">{StepsConst[current].title}</h2>
-                <StepBody current={current} next={next} />
+                <StepBody current={current} next={next}/>
             </main>
         </>
     );
