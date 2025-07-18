@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from "next/navigation";
-import { useTimerStore } from '@/lib/state/timerStore';
+import { useTimerStore } from '@/state/timerStore';
 
 function formatTime(secs: number) {
     const m = Math.floor(secs / 60);

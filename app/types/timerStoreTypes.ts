@@ -1,11 +1,10 @@
-import {Section} from "@/types/clientShell";
+import {Section} from "@/types/clientShellTypes";
 
 interface TimerState {
     globalTimeLeft: number;
     sectionTimeLeft: number;
     currentSection: Section | null;
     isRunning: boolean;
-
 
     sectionElapsed: Record<Section, number>;
 

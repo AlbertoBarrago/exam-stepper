@@ -1,4 +1,4 @@
-import {useTimerStore} from "@/lib/state/timerStore";
+import {useTimerStore} from "@/state/timerStore";
 
 export default function WelcomeStep({html, onNextAction}: { html: string; onNextAction: () => void }) {
     const start = useTimerStore(s => s.start);
