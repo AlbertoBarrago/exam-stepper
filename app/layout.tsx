@@ -1,34 +1,26 @@
-import type {Metadata} from "next";
-import {Geist, Geist_Mono} from "next/font/google";
-import "./globals.css";
+import './globals.css'
+import Header from '@/components/Header'
+import React from "react";
 
-const geistSans = Geist({
-    variable: "--font-geist-sans",
-    subsets: ["latin"],
-});
+export const metadata = {
+    title: 'Exam Stepper',
+    description: 'Test and certify your English in 50 minutes.',
+}
 
-const geistMono = Geist_Mono({
-    variable: "--font-geist-mono",
-    subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-    title: 'EF‑Style English Test • Home',
-    description:
-        'Take a quick, accurate online English test inspired by EF SET. Free, unlimited, instant results.',
-};
-
-export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
-    children: React.ReactNode;
-}>) {
+export default function RootLayout({children}: {
+    children: React.ReactNode
+}) {
+    const currentYear = new Date().getFullYear();
     return (
         <html lang="en">
-        <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-        {children}
+        <body className="min-h-screen flex flex-col font-sans text-gray-800">
+        <Header/>
+        <main className="flex-1">
+            {children}
+        </main>
+        <footer className="py-4 text-center text-sm text-gray-500">
+            ©{currentYear} IdCert
+        </footer>
         </body>
         </html>
     );
