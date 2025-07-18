@@ -50,6 +50,9 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 - [ ] Add api for the user session for get username and verify if it has permission
 - [ ] Add data into HEADER or panel on top as FIGMA shows
 
+### FE "Security"
+- [x] Handle browser back button to prevent exam navigation loopholes
+
 ### Section Features
 - [ ] Reading: Choices, long text, intro/complete
 - [ ] Listening: Audio player, answer choices, intro/complete
