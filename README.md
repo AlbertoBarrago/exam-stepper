@@ -34,7 +34,6 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 - Final/
 
 
-
 ## 📌 Todo / Integration steps
 
 ### Step Organization

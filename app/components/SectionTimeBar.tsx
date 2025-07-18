@@ -1,5 +1,5 @@
 'use client';
-import { useTimerStore } from '@/lib/timerStore';
+import { useTimerStore } from '@/lib/state/timerStore';
 import { SECTION_LIMITS } from '@/lib/sectionTimes';
 import { Book, Headphones, Pen, Mic } from 'lucide-react';
 import { JSX } from "react";

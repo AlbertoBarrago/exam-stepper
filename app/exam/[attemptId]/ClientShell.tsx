@@ -16,7 +16,7 @@ import FinalRecapStep from "@/exam/[attemptId]/steps/Final/FinalRecapStep";
 import Stepper from "@/components/Stepper";
 import SectionTimerBar from "@/components/SectionTimeBar";
 import { useEffect, useRef, useState } from "react";
-import { useTimerStore } from "@/lib/timerStore";
+import { useTimerStore } from "@/lib/state/timerStore";
 import {Section} from "@/types/clientShell";
 import {QUESTION_KINDS, SECTIONS, stepKindToSection} from "@/const/clientShell";
 
