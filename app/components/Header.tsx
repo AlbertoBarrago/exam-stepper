@@ -15,6 +15,7 @@ function isSection(val: string | null): val is Section {
 function TickController() {
     const tick = useTimerStore(s => s.tick);
     const isRunning = useTimerStore(s => s.isRunning);
+
     useEffect(() => {
         if (!isRunning) return;
         const interval = setInterval(() => tick(), 1000);
@@ -28,9 +29,11 @@ export default function Header() {
     const [open, setOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
-    const [current, setCurrent] = useState(0);
-    const step = StepsConfig[current];
+    const currentStepIndex = useTimerStore(s => s.currentStepIndex);
+    const step = StepsConfig[currentStepIndex];
     const section = stepKindToSection(step.kind);
+    const resetTimer = useTimerStore(s => s.reset);
+
 
     useEffect(() => {
         function handleClick(event: MouseEvent) {
@@ -45,7 +48,7 @@ export default function Header() {
     return (
         <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50">
             <div className="text-xl font-bold text-blue-700">IdCert</div>
-                <SectionTimerBar displaySection={isSection(section) ? section : null}/>
+                <SectionTimerBar displaySection={isSection(section) ? section : null} />
                 <TickController/>
             <div className="relative" ref={menuRef}>
                 {user ? (
@@ -78,6 +81,7 @@ export default function Header() {
                                 logout();
                                 setOpen(false);
                                 router.push('/');
+                                resetTimer();
                             }}
                         >
                             Logout

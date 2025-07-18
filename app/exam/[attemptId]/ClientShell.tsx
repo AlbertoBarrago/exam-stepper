@@ -13,8 +13,8 @@ import WritingCompleteStep from "@/exam/[attemptId]/steps/Writing/WritingComplet
 import SpeakingIntroStep from "@/exam/[attemptId]/steps/Speaking/SpeakingIntroStep";
 import SpeakingStep from "@/exam/[attemptId]/steps/Speaking/SpeakingStep";
 import FinalRecapStep from "@/exam/[attemptId]/steps/Final/FinalRecapStep";
-import Stepper from "@/components/Stepper";
-import {JSX, useState} from "react";
+import {JSX} from "react";
+import {useTimerStore} from "@/state/timerStore";
 
 function StepBody({current, next}: { current: number; next: () => void }) {
     const step = StepsConfig[current];
@@ -115,15 +115,13 @@ function StepBody({current, next}: { current: number; next: () => void }) {
 
 
 export default function ClientShell(): JSX.Element {
-    const [current, setCurrent] = useState(0);
-
-    const next = () => setCurrent(c => Math.min(c + 1, StepsConfig.length - 1));
+    const currentStepIndex = useTimerStore(s => s.currentStepIndex);
+    const nextStep = useTimerStore(s => s.nextStep);
 
     return (
         <section className="max-w-xl mx-auto p-6">
-            <Stepper total={StepsConfig.length} current={current}/>
-            <h2 className="text-lg font-semibold mb-4">{StepsConfig[current].title}</h2>
-            <StepBody current={current} next={next}/>
+            <h2 className="text-lg font-semibold mb-4">{StepsConfig[currentStepIndex].title}</h2>
+            <StepBody current={currentStepIndex} next={nextStep}/>
         </section>
     );
 }

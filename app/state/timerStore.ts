@@ -19,7 +19,13 @@ import {Section} from "@/types/clientShellTypes";
  * @property {function} start - Starts the timer without targeting any specific section.
  * @property {function} pause - Pauses the timer, stopping any updates to the time or elapsed states.
  */
-export const useTimerStore = create<TimerState>((set, get) => ({
+export const useTimerStore = create<TimerState & {
+    currentStepIndex: number;
+    setCurrentStepIndex: (idx: number) => void;
+    nextStep: () => void;
+    prevStep: () => void;
+    reset: () => void;
+}>((set, get) => ({
     globalTimeLeft: TOTAL_LIMIT,
     sectionTimeLeft: 0,
     currentSection: null,
@@ -30,6 +36,10 @@ export const useTimerStore = create<TimerState>((set, get) => ({
         writing: 0,
         speaking: 0,
     },
+    currentStepIndex: 0,
+    setCurrentStepIndex: (idx: number) => set({ currentStepIndex: idx }),
+    nextStep: () => set({ currentStepIndex: get().currentStepIndex + 1 }),
+    prevStep: () => set({ currentStepIndex: Math.max(0, get().currentStepIndex - 1) }),
 
     tick: () => {
         const { globalTimeLeft, sectionTimeLeft, currentSection, isRunning, sectionElapsed } = get();
@@ -49,8 +59,20 @@ export const useTimerStore = create<TimerState>((set, get) => ({
             currentSection: section,
             isRunning: true,
         })),
-
-
     start: () => set({ isRunning: true }),
     pause: () => set({ isRunning: false }),
+    reset: () =>
+        set({
+            globalTimeLeft: TOTAL_LIMIT,
+            sectionTimeLeft: 0,
+            currentSection: null,
+            isRunning: false,
+            sectionElapsed: {
+                reading: 0,
+                listening: 0,
+                writing: 0,
+                speaking: 0,
+            },
+            currentStepIndex: 0,
+        }),
 }));

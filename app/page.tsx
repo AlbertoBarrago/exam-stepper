@@ -2,15 +2,9 @@
 
 import StartButton from '@/components/StartButton';
 import {useUserStore} from "@/state/userStore";
-import {useEffect} from "react";
 
 export default function Home() {
-    const {loading, error, user, fetchUser} = useUserStore();
-
-    useEffect(() => {
-        void fetchUser();
-    }, [fetchUser]);
-
+    const {loading, error, user} = useUserStore();
 
     return (
         <section
