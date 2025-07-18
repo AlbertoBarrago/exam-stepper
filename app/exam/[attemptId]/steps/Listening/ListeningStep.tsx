@@ -4,7 +4,7 @@ import {useState} from "react";
 import {AudioQuestion} from "@/lib/steps";
 
 
-export default function AudioStep({
+export default function ListeningStep({
                                       audioUrl,
                                       onNextAction,
                                       questions
