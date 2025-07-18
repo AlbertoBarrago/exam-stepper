@@ -56,9 +56,6 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 - [ ] Writing: Word counter, AI result hook-up
 - [ ] Speaking: Microphone permission, audio visualization, practice, main questions, repeat parts
 
-### Docs
-- [x] Document the main "data flow" and step logic in a short `docs/architecture.md`
-
 
 ### Steps Flow
 ```mermaid
