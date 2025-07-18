@@ -1,29 +1,49 @@
 'use client';
-import {useExam} from '@/providers/ExamProvider';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from "next/navigation";
+import { useTimerStore } from '@/lib/timerStore';
 
-export default function FinalRecapStep({totalMinutes}: { totalMinutes: number }) {
-    const {setFinished} = useExam();
+function formatTime(secs: number) {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+export default function FinalRecapStep() {
+    const pause = useTimerStore(s => s.pause);
+    const sectionElapsed = useTimerStore(s => s.sectionElapsed);
+
     const [analyzing, setAnalyzing] = useState(true);
     const router = useRouter();
 
-
     useEffect(() => {
-        setFinished(true);
+        pause();
         const timer = setTimeout(() => setAnalyzing(false), 4000);
         return () => clearTimeout(timer);
-    }, [setFinished]);
-
+    }, [pause]);
 
     const backToHome = () => {
         router.push('/');
-    }
+    };
+
+    // Calculate total time spent
+    const sectionTimes = Object.entries(sectionElapsed);
+    const totalSeconds = sectionTimes.reduce((acc, [, v]) => acc + v, 0);
 
     return (
         <div className="text-center space-y-6">
             <h2 className="text-2xl font-bold">Test Complete!</h2>
-            <p>You used {totalMinutes} minutes.</p>
+            <p className="font-medium">Time spent in each section:</p>
+            <div className="flex flex-col items-center gap-2 mb-2">
+                {sectionTimes.map(([section, secs]) => (
+                    <span key={section}>
+                        <span className="capitalize font-semibold">{section}</span>: {formatTime(secs)}
+                    </span>
+                ))}
+            </div>
+            <div className="font-bold text-lg">
+                Total time: {formatTime(totalSeconds)}
+            </div>
             {analyzing ? (
                 <>
                     <p className="text-blue-600">Analyzing results...</p>

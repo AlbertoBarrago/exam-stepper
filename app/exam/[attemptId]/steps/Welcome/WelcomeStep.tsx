@@ -1,12 +1,15 @@
-import {useExam} from "@/providers/ExamProvider";
+import {useTimerStore} from "@/lib/timerStore";
 
 export default function WelcomeStep({html, onNextAction}: { html: string; onNextAction: () => void }) {
-    const {startExam, running} = useExam();
+    const start = useTimerStore(s => s.start);
+    const isRunning = useTimerStore(s => s.isRunning);
+
 
     const handleStart = () => {
-        if (!running) startExam();
+        if (!isRunning) start();
         onNextAction();
     };
+
 
     return (
         <>
