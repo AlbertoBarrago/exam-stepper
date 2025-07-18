@@ -13,6 +13,9 @@ import SpeakingStep from "@/exam/[attemptId]/steps/Speaking/SpeakingStep";
 import FinalRecapStep from "@/exam/[attemptId]/steps/Final/FinalRecapStep";
 import GlobalProgressBar from "@/components/GlobalProgressBar";
 import Stepper from "@/components/Stepper";
+import WritingIntroStep from "@/exam/[attemptId]/steps/Writing/WritingIntroStep";
+import WritingStep from "@/exam/[attemptId]/steps/Writing/WritingStep";
+import WritingCompleteStep from "@/exam/[attemptId]/steps/Writing/WritingCompleteStep";
 
 function StepBody() {
     const { current, next, elapsed } = useExam();
@@ -65,6 +68,27 @@ function StepBody() {
         case 'listening-complete':
             return (
                 <ListeningCompleteStep
+                    title={step.title}
+                    onNextAction={() => next()}
+                />
+            );
+        case 'writing-intro':
+            return (
+                <WritingIntroStep
+                    title={step.title}
+                    onNextAction={() => next()}
+                />
+            );
+        case 'writing-question':
+            return (
+                <WritingStep
+                    title={step.title}
+                    onNextAction={() => next()}
+                />
+            );
+        case 'writing-complete':
+            return (
+                <WritingCompleteStep
                     title={step.title}
                     onNextAction={() => next()}
                 />

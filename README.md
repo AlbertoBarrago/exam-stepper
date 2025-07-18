@@ -17,6 +17,7 @@ A modern web application designed to assess English language proficiency with in
 
 - [Next.js 14](https://nextjs.org/) – Powerful React framework for fast, scalable apps.
 - [TailwindCSS](https://tailwindcss.com/) – Utility-first CSS framework for rapid UI development.
+- [Zustand](https://zustand.docs.pmnd.rs/getting-started/introduction) - For state management solution
 - **Web Audio API** – For capturing and visualizing real-time audio input.
 - **MediaRecorder API** – For recording test taker’s audio answers.
 

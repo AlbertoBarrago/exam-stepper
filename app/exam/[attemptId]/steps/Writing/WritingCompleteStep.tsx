@@ -2,7 +2,8 @@
 
 type Props = { title: string, onNextAction: () => void };
 
-export default function ReadingIntroStep({title, onNextAction}: Props) {
+
+export default function WritingCompleteStep({title, onNextAction}: Props) {
 
     const handleNext = () => {
         onNextAction();

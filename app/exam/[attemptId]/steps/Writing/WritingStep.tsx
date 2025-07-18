@@ -2,7 +2,7 @@
 
 type Props = { title: string, onNextAction: () => void };
 
-export default function ListeningCompleteStep({title, onNextAction}: Props) {
+export default function WritingStep({ title, onNextAction }: Props) {
 
     const handleNext = () => {
         onNextAction();
@@ -10,10 +10,11 @@ export default function ListeningCompleteStep({title, onNextAction}: Props) {
 
     return (
         <>
+
             {title}
             <button className="btn mt-6 ml-4" onClick={handleNext}>
                 Next →
             </button>
         </>
-    );
+    )
 }

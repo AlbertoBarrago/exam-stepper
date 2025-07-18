@@ -6,6 +6,9 @@ export type Step =
     | { kind: 'listening-intro'; title: string }
     | { kind: 'listening-question'; title: string; audioUrl: string; questions: AudioQuestion[] }
     | { kind: 'listening-complete'; title: string }
+    | { kind: 'writing-intro'; title: string }
+    | { kind: 'writing-question'; title: string }
+    | { kind: 'writing-complete'; title: string }
     | { kind: 'speaking-intro'; title: string }
     | { kind: 'speaking-question'; title: string; durationMs: number }
     | { kind: 'final'; title: string };
@@ -62,13 +65,7 @@ export const STEPS: Step[] = [
                 sentence: 'They ____ to the beach every summer.',
                 options: ['go', 'run', 'think'],
                 correct: 'go',
-            },
-            {
-                title: 'Reading',
-                sentence: 'His favorite color is ____.',
-                options: ['book', 'blue', 'apple'],
-                correct: 'blue',
-            },
+            }
         ],
     },
     {
@@ -101,6 +98,18 @@ export const STEPS: Step[] = [
     {
         kind: 'listening-complete',
         title: 'Listening Complete',
+    },
+    {
+        kind: 'writing-intro',
+        title: 'Writing Section',
+    },
+    {
+        kind: 'writing-question',
+        title: 'Writing',
+    },
+    {
+        kind:'writing-complete',
+        title: 'Writing Complete',
     },
     {
         kind: 'speaking-intro',
