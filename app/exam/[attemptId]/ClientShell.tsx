@@ -1,5 +1,5 @@
 'use client';
-import {StepsConfig} from '@/const/stepsConfig';
+import {StepsConfig} from '@/config/stepsConfig';
 import WelcomeStep from "@/exam/[attemptId]/steps/Welcome/WelcomeStep";
 import ReadingIntroStep from "@/exam/[attemptId]/steps/Reading/ReadingIntroStep";
 import ReadingQuestionStep from "@/exam/[attemptId]/steps/Reading/ReadingQuestionStep";
@@ -13,16 +13,9 @@ import WritingCompleteStep from "@/exam/[attemptId]/steps/Writing/WritingComplet
 import SpeakingIntroStep from "@/exam/[attemptId]/steps/Speaking/SpeakingIntroStep";
 import SpeakingStep from "@/exam/[attemptId]/steps/Speaking/SpeakingStep";
 import FinalRecapStep from "@/exam/[attemptId]/steps/Final/FinalRecapStep";
-import Stepper from "@/components/Stepper";
-import SectionTimerBar from "@/components/SectionTimeBar";
-import {JSX, useEffect, useRef, useState} from "react";
+import {JSX} from "react";
 import {useTimerStore} from "@/state/timerStore";
-import {Section} from "@/types/clientShellTypes";
-import {QUESTION_KINDS, SECTIONS, stepKindToSection} from "@/const/clientShellConst";
-
-function isSection(val: string | null): val is Section {
-    return !!val && SECTIONS.includes(val as Section);
-}
+import PreventBackNavigation from "@/components/PreventBackNavigation";
 
 function StepBody({current, next}: { current: number; next: () => void }) {
     const step = StepsConfig[current];
@@ -121,73 +114,17 @@ function StepBody({current, next}: { current: number; next: () => void }) {
     }
 }
 
-function TickController() {
-    const tick = useTimerStore(s => s.tick);
-    const isRunning = useTimerStore(s => s.isRunning);
-    useEffect(() => {
-        if (!isRunning) return;
-        const interval = setInterval(() => tick(), 1000);
-        return () => clearInterval(interval);
-    }, [isRunning, tick]);
-    return null;
-}
-
-/**
- * ClientShell is a React functional component that manages and renders a step-based progression system.
- * It tracks the current step, handles transitions between steps, and initializes or pauses certain actions
- * based on the step type.
- * The component leverages various hooks such as useState, useEffect, and custom hooks
- * to manage state, side effects, and provide functionality like timers.
- * Additionally, it renders components
- * that visually present the progress and content of each step.
- *
- * @return {JSX.Element} The rendered JSX of the ClientShell component, including a stepper, timer bar,
- * and content for the current step.
- */
 export default function ClientShell(): JSX.Element {
-    const [current, setCurrent] = useState(0);
-    const step = StepsConfig[current];
-    const section = stepKindToSection(step.kind);
-
-    const prevStepKindRef = useRef<string | null>(null);
-    const startSection = useTimerStore(s => s.startSection);
-    const pause = useTimerStore(s => s.pause);
-
-    useEffect(() => {
-        const step = StepsConfig[current];
-        const currentKind = step.kind;
-        const prevKind = prevStepKindRef.current;
-        const thisSection = stepKindToSection(currentKind);
-
-        //With this logic we can introduce many steps from intro to complete phase
-        if (QUESTION_KINDS.includes(currentKind)) {
-            if (
-                prevKind &&
-                stepKindToSection(prevKind) === thisSection &&
-                prevKind.endsWith('-intro') &&
-                isSection(thisSection)
-            ) {
-                startSection(thisSection);
-            }
-        } else if (currentKind.endsWith('-complete')) {
-            pause();
-        }
-
-        prevStepKindRef.current = currentKind;
-    }, [current, startSection, pause]);
-
-
-    const next = () => setCurrent(c => Math.min(c + 1, StepsConfig.length - 1));
+    const currentStepIndex = useTimerStore(s => s.currentStepIndex);
+    const nextStep = useTimerStore(s => s.nextStep);
 
     return (
         <>
-            <SectionTimerBar displaySection={isSection(section) ? section : null}/>
-            <TickController/>
-            <main className="max-w-xl mx-auto p-6">
-                <Stepper total={StepsConfig.length} current={current}/>
-                <h2 className="text-lg font-semibold mb-4">{StepsConfig[current].title}</h2>
-                <StepBody current={current} next={next}/>
-            </main>
+            <PreventBackNavigation/>
+            <section className="max-w-xl mx-auto p-6">
+                <h2 className="text-lg font-semibold mb-4">{StepsConfig[currentStepIndex].title}</h2>
+                <StepBody current={currentStepIndex} next={nextStep}/>
+            </section>
         </>
     );
 }

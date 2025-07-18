@@ -10,6 +10,7 @@ interface TimerState {
     startSection: (section: Section) => void;
     start: () => void;
     pause: () => void;
+    reset: () => void;
 }
 
 export type {TimerState};

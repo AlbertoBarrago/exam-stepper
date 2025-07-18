@@ -52,7 +52,7 @@ export default function SectionTimeBar({ displaySection }: Props) {
     const pct = (elapsed / total) * 100;
 
     return (
-        <div className="w-full max-w-lg mx-auto mt-8 flex items-center gap-3">
+        <div className="w-full max-w-lg mx-auto flex items-center gap-3">
             <span className="text-blue-600">{icons[section]}</span>
             <span className="font-semibold w-24">{names[section]}</span>
             <div className="flex-1 h-3 rounded bg-gray-200 relative overflow-hidden">
