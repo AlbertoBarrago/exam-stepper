@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import SectionTimerBar from "@/components/SectionTimeBar";
 import {StepsConfig} from "@/const/stepsConfig";
-import {SECTIONS, stepKindToSection} from "@/const/clientShellConst";
+import {QUESTION_KINDS, SECTIONS, stepKindToSection} from "@/const/clientShellConst";
 import {Section} from "@/types/clientShellTypes";
 
 function isSection(val: string | null): val is Section {
@@ -33,7 +33,10 @@ export default function Header() {
     const step = StepsConfig[currentStepIndex];
     const section = stepKindToSection(step.kind);
     const resetTimer = useTimerStore(s => s.reset);
+    const startSection = useTimerStore(s => s.startSection);
+    const pause = useTimerStore(s => s.pause);
 
+    const prevStepKindRef = useRef<string | undefined>(undefined);
 
     useEffect(() => {
         function handleClick(event: MouseEvent) {
@@ -44,6 +47,28 @@ export default function Header() {
         if (open) document.addEventListener("mousedown", handleClick);
         return () => document.removeEventListener("mousedown", handleClick);
     }, [open]);
+
+    useEffect(() => {
+        const step = StepsConfig[currentStepIndex];
+        const currentKind = step.kind;
+        const prevKind = prevStepKindRef.current;
+        const thisSection = stepKindToSection(currentKind);
+
+        if (QUESTION_KINDS.includes(currentKind)) {
+            if (
+                prevKind &&
+                stepKindToSection(prevKind) === thisSection &&
+                prevKind.endsWith('-intro') &&
+                isSection(thisSection)
+            ) {
+                startSection(thisSection);
+            }
+        } else if (currentKind.endsWith('-complete')) {
+            pause();
+        }
+
+        prevStepKindRef.current = currentKind;
+    }, [currentStepIndex, startSection, pause]);
 
     return (
         <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50">
