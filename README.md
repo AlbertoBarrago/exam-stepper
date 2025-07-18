@@ -58,6 +58,8 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 ### Docs
 - [x] Document the main "data flow" and step logic in a short `docs/architecture.md`
 
+
+### Steps Flow
 ```mermaid
 sequenceDiagram
     participant User
@@ -84,7 +86,6 @@ sequenceDiagram
     ClientShell->>FinalRecapStep: On exam end, show summary
     FinalRecapStep->>TimerStore: Pause and get elapsed times
     FinalRecapStep-->>User: Show analysis and summary
-
 ```
 
 
