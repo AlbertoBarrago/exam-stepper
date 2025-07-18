@@ -151,9 +151,10 @@ export default function ClientShell() {
             if (
                 prevKind &&
                 stepKindToSection(prevKind) === thisSection &&
-                prevKind.endsWith('-intro')
+                prevKind.endsWith('-intro') &&
+                isSection(thisSection)
             ) {
-                startSection(thisSection!);
+                startSection(thisSection);
             }
         }
         else if (currentKind.endsWith('-complete')) {
@@ -162,6 +163,7 @@ export default function ClientShell() {
 
         prevStepKindRef.current = currentKind;
     }, [current, startSection, pause]);
+
 
     const next = () => setCurrent(c => Math.min(c + 1, STEPS.length - 1));
 

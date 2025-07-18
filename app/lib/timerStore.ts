@@ -1,21 +1,8 @@
 import { create } from 'zustand';
 import { SECTION_LIMITS, TOTAL_LIMIT } from './sectionTimes';
+import {TimerState} from "@/types/timerStore";
+import {Section} from "@/types/clientShell";
 
-type Section = keyof typeof SECTION_LIMITS;
-
-interface TimerState {
-    globalTimeLeft: number;
-    sectionTimeLeft: number;
-    currentSection: Section | null;
-    isRunning: boolean;
-
-    sectionElapsed: Record<Section, number>;
-
-    tick: () => void;
-    startSection: (section: string) => void;
-    start: () => void;
-    pause: () => void;
-}
 
 export const useTimerStore = create<TimerState>((set, get) => ({
     globalTimeLeft: TOTAL_LIMIT,
@@ -41,12 +28,13 @@ export const useTimerStore = create<TimerState>((set, get) => ({
         });
     },
 
-    startSection: (section) =>
+    startSection: (section: Section) =>
         set(() => ({
             sectionTimeLeft: SECTION_LIMITS[section],
             currentSection: section,
             isRunning: true,
         })),
+
 
     start: () => set({ isRunning: true }),
     pause: () => set({ isRunning: false }),
