@@ -4,7 +4,7 @@ import { useTimerStore } from "@/state/timerStore";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import SectionTimerBar from "@/components/SectionTimeBar";
-import {StepsConfig} from "@/const/stepsConfig";
+import {StepsConfig} from "@/config/stepsConfig";
 import {QUESTION_KINDS, SECTIONS, stepKindToSection} from "@/const/clientShellConst";
 import {Section} from "@/types/clientShellTypes";
 

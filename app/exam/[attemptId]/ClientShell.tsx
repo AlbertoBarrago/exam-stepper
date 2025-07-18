@@ -1,5 +1,5 @@
 'use client';
-import {StepsConfig} from '@/const/stepsConfig';
+import {StepsConfig} from '@/config/stepsConfig';
 import WelcomeStep from "@/exam/[attemptId]/steps/Welcome/WelcomeStep";
 import ReadingIntroStep from "@/exam/[attemptId]/steps/Reading/ReadingIntroStep";
 import ReadingQuestionStep from "@/exam/[attemptId]/steps/Reading/ReadingQuestionStep";

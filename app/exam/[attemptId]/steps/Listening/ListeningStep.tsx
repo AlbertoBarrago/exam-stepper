@@ -38,7 +38,7 @@ export default function ListeningStep({
 
     return (
         <div>
-            <p className="mb-4">Listen to the audio and complete the sentences:</p>
+            <p className="mb-4">You can listen just <code>TWO</code> time:</p>
             <CircularAudioPlayer src={audioUrl}/>
 
             <div className="mt-6 space-y-4">
