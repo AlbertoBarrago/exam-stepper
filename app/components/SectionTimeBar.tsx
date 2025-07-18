@@ -1,6 +1,6 @@
 'use client';
 import { useTimerStore } from '@/state/timerStore';
-import { SECTION_LIMITS } from '@/const/sectionTimesConst';
+import { SECTION_LIMITS } from '@/const/timesConst';
 import { Book, Headphones, Pen, Mic } from 'lucide-react';
 import { JSX } from "react";
 

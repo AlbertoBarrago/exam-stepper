@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { SECTION_LIMITS, TOTAL_LIMIT } from '@/const/sectionTimesConst';
+import { SECTION_LIMITS, TOTAL_LIMIT } from '@/const/timesConst';
 import {TimerState} from "@/types/timerStoreTypes";
 import {Section} from "@/types/clientShellTypes";
 

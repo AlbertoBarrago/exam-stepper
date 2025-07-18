@@ -1,5 +1,5 @@
 'use client';
-import {StepsConst} from '@/const/stepsConst';
+import {StepsConfig} from '@/const/stepsConfig';
 import WelcomeStep from "@/exam/[attemptId]/steps/Welcome/WelcomeStep";
 import ReadingIntroStep from "@/exam/[attemptId]/steps/Reading/ReadingIntroStep";
 import ReadingQuestionStep from "@/exam/[attemptId]/steps/Reading/ReadingQuestionStep";
@@ -25,7 +25,7 @@ function isSection(val: string | null): val is Section {
 }
 
 function StepBody({current, next}: { current: number; next: () => void }) {
-    const step = StepsConst[current];
+    const step = StepsConfig[current];
     switch (step.kind) {
         case 'welcome':
             return (
@@ -134,7 +134,7 @@ function TickController() {
 
 export default function ClientShell() {
     const [current, setCurrent] = useState(0);
-    const step = StepsConst[current];
+    const step = StepsConfig[current];
     const section = stepKindToSection(step.kind);
 
     const prevStepKindRef = useRef<string | null>(null);
@@ -142,7 +142,7 @@ export default function ClientShell() {
     const pause = useTimerStore(s => s.pause);
 
     useEffect(() => {
-        const step = StepsConst[current];
+        const step = StepsConfig[current];
         const currentKind = step.kind;
         const prevKind = prevStepKindRef.current;
         const thisSection = stepKindToSection(currentKind);
@@ -164,15 +164,15 @@ export default function ClientShell() {
     }, [current, startSection, pause]);
 
 
-    const next = () => setCurrent(c => Math.min(c + 1, StepsConst.length - 1));
+    const next = () => setCurrent(c => Math.min(c + 1, StepsConfig.length - 1));
 
     return (
         <>
             <SectionTimerBar displaySection={isSection(section) ? section : null}/>
             <TickController/>
             <main className="max-w-xl mx-auto p-6">
-                <Stepper total={StepsConst.length} current={current}/>
-                <h2 className="text-lg font-semibold mb-4">{StepsConst[current].title}</h2>
+                <Stepper total={StepsConfig.length} current={current}/>
+                <h2 className="text-lg font-semibold mb-4">{StepsConfig[current].title}</h2>
                 <StepBody current={current} next={next}/>
             </main>
         </>

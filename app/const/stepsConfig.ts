@@ -1,16 +1,15 @@
 import {Step} from "@/types/stepTypes";
 
-
-export const StepsConst: Step[] = [
+export const StepsConfig: Step[] = [
     {
         kind: 'welcome',
         title: 'Welcome',
         html: `<h1 class="text-4xl">You will take a short demo test.</h1> <br />
-            <p class="text-2xl">There are three parts: listening, reading, and speaking.</p>`
+            <p class="text-2xl">There are four parts: listening, reading, writing and speaking.</p>`
     },
     {
         kind: 'reading-intro',
-        title: 'Reading Section',
+        title: 'Reading Section Intro',
     },
     {
         kind: 'reading-question',
@@ -48,7 +47,7 @@ export const StepsConst: Step[] = [
     },
     {
         kind: 'listening-intro',
-        title: 'Listening Section',
+        title: 'Listening Section Intro',
     },
     {
         kind: 'listening-question',
@@ -75,7 +74,7 @@ export const StepsConst: Step[] = [
     },
     {
         kind: 'writing-intro',
-        title: 'Writing Section',
+        title: 'Writing Section Intro',
     },
     {
         kind: 'writing-question',
