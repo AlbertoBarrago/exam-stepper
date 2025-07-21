@@ -1,11 +1,11 @@
 'use client';
 
 
-export default function StartButton({handleStart}: { handleStart: () => void}) {
+export default function StartButton({handleStartAction}: { handleStartAction: () => void}) {
 
     return (
         <button
-            onClick={handleStart}
+            onClick={handleStartAction}
             className="btn btn-primary"
         >
             Start the free English test →

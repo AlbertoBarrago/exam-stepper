@@ -126,7 +126,6 @@ function StepBody({current, next}: { current: number; next: () => void }) {
 export default function ClientShell(): JSX.Element {
     const currentStepIndex = useTimerStore(s => s.currentStepIndex);
     const nextStep = useTimerStore(s => s.nextStep);
-    const isRunning = useTimerStore(s => s.isRunning);
     const token = useUserStore(s => s.user?.token);
 
     const router = useRouter();
@@ -135,11 +134,7 @@ export default function ClientShell(): JSX.Element {
         if (!token) {
             router.push("/");
         }
-        if (currentStepIndex > 0 && !isRunning) {
-            router.push("/");
-        }
-
-    }, [isRunning, router, currentStepIndex, token]);
+    }, [router, token]);
 
 
     return (

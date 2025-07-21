@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from "next/navigation";
 import { useTimerStore } from '@/state/timerStore';
+import {useUserStore} from "@/state/userStore";
 
 function formatTime(secs: number) {
     const m = Math.floor(secs / 60);
@@ -13,6 +14,7 @@ export default function FinalRecapStep() {
     const pause = useTimerStore(s => s.pause);
     const reset = useTimerStore(s => s.reset);
     const sectionElapsed = useTimerStore(s => s.sectionElapsed);
+    const logout = useUserStore(s=> s.logout)
 
     const [analyzing, setAnalyzing] = useState(true);
     const router = useRouter();
@@ -25,10 +27,10 @@ export default function FinalRecapStep() {
 
     const backToHome = () => {
         reset()
+        logout()
         router.push('/');
     };
 
-    // Calculate total time spent
     const sectionTimes = Object.entries(sectionElapsed);
     const totalSeconds = sectionTimes.reduce((acc, [, v]) => acc + v, 0);
 
