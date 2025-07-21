@@ -1,16 +1,15 @@
 import {Step} from "@/types/stepTypes";
 
 export const StepsConfig: Step[] = [
-    {kind: 'permission', title: 'Audio Check'},
     {
         kind: 'welcome',
-        title: 'Welcome',
-        html: `<h1 class="text-4xl">You will take a short demo test.</h1> <br />
-            <p class="text-2xl">There are four parts: listening, reading, writing and speaking.</p>`
+        title: 'Welcome'
     },
+    {kind: 'permission', title: 'Audio Check'},
     {
         kind: 'reading-intro',
         title: 'Reading Section Intro',
+        subTitle: 'You are about to start the reading section.'
     },
     {
         kind: 'reading-question',

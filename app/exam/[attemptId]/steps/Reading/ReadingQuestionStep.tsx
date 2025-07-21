@@ -1,6 +1,6 @@
 'use client';
-import { useState } from 'react';
 import {Sentence} from "@/types/stepTypes";
+import ReadingQuestion from "@/components/ReadingQuestion";
 
 type Props = {
     sentenceList: Sentence[],
@@ -8,55 +8,24 @@ type Props = {
 };
 
 export default function ReadingQuestionStep({ sentenceList, onNextAction }: Props) {
-    const [selected, setSelected] = useState<string[]>(Array(sentenceList.length).fill(""));
-    const [error, setError] = useState<string | null>(null);
 
-    const handleOptionChange = (idx: number, val: string) => {
-        setSelected(prev => {
-            const next = [...prev];
-            next[idx] = val;
-            return next;
-        });
+    const handleAnswerChange = (optionIndex: number) => {
+        console.log('Answer changed to:', optionIndex);
     };
 
     const handleSubmit = () => {
-        if (selected.some(s => !s)) {
-            setError("Please answer all questions.");
-            return;
-        }
-        setError(null);
-        // For each answer, check if it's correct
-        const results = sentenceList.map((s, idx) => selected[idx] === s.correct);
-        onNextAction(results);
+        onNextAction([true]);
     };
 
     return (
-        <div className="space-y-8">
-            {sentenceList.map((item, idx) => (
-                <div key={idx} className="space-y-2">
-                    <p className="text-lg font-medium">
-                        {item.sentence.replace('____', '_____')}
-                    </p>
-                    <div>
-                        {item.options.map(opt => (
-                            <label key={opt} className="flex items-center gap-2">
-                                <input
-                                    type="radio"
-                                    name={`choice_${idx}`}
-                                    value={opt}
-                                    checked={selected[idx] === opt}
-                                    onChange={() => handleOptionChange(idx, opt)}
-                                />
-                                <span>{opt}</span>
-                            </label>
-                        ))}
-                    </div>
-                </div>
-            ))}
-            {error && <p className="text-red-500">{error}</p>}
-            <button className="btn mt-4" onClick={handleSubmit}>
-                Submit and go next →
-            </button>
-        </div>
+        <ReadingQuestion
+            questionNumber={1}
+            totalQuestions={10}
+            sentence="James has considerable _____ about advertising."
+            options={["information", "knowledge", "communication", "intelligence"]}
+            onNextAction={handleSubmit}
+            onAnswerChangeAction={handleAnswerChange}
+            initialAnswer={null}
+        />
     );
 }

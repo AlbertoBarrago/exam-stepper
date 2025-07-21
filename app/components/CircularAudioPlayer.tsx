@@ -90,7 +90,7 @@ export default function CircularAudioPlayer({
 
 
     return (
-        <div className="relative w-32 h-32 flex items-center justify-center">
+        <div className="relative w-32 h-32 flex items-center justify-center mx-auto">
             {src &&
                 <audio ref={audioRef} src={src} preload="auto" style={{ display: "none" }} />
             }

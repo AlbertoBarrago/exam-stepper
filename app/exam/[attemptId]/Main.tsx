@@ -23,16 +23,15 @@ import {useUserStore} from "@/state/userStore";
 function StepBody({current, next}: { current: number; next: () => void }) {
     const step = StepsConfig[current];
     switch (step.kind) {
-        case 'permission':
-            return (
-                <PermissionStep
-                    onNextAction={() => next()}
-                />
-            );
         case 'welcome':
             return (
                 <WelcomeStep
-                    html={step.html}
+                    onNextAction={() => next()}
+                />
+            );
+        case 'permission':
+            return (
+                <PermissionStep
                     onNextAction={() => next()}
                 />
             );
@@ -40,6 +39,7 @@ function StepBody({current, next}: { current: number; next: () => void }) {
             return (
                 <ReadingIntroStep
                     title={step.title}
+                    subtitle={step.subTitle}
                     onNextAction={() => next()}
                 />
             );
@@ -131,6 +131,7 @@ export default function Main(): JSX.Element {
     const router = useRouter();
 
     useEffect(() => {
+        //console.log("Main useEffect()->", token);
         if (!token) {
             router.push("/");
         }
@@ -141,7 +142,6 @@ export default function Main(): JSX.Element {
         <>
             <PreventBackNavigation />
             <section className="max-w-xl mx-auto p-6 text-center">
-                <h2 className="text-lg font-semibold mb-4">{StepsConfig[currentStepIndex].title}</h2>
                 <StepBody current={currentStepIndex} next={nextStep}/>
             </section>
         </>

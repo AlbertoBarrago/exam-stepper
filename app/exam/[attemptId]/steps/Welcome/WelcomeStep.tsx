@@ -1,6 +1,7 @@
 import {useTimerStore} from "@/state/timerStore";
+import WelcomeComponent from "@/components/Welcome";
 
-export default function WelcomeStep({html, onNextAction}: { html: string; onNextAction: () => void }) {
+export default function WelcomeStep({onNextAction}: { onNextAction: () => void }) {
     const start = useTimerStore(s => s.start);
 
     const handleStart = () => {
@@ -10,9 +11,10 @@ export default function WelcomeStep({html, onNextAction}: { html: string; onNext
 
 
     return (
-        <>
-            <div className="prose max-w-none" dangerouslySetInnerHTML={{__html: html}}/>
-            <button className="btn mt-6" onClick={handleStart}>Start</button>
-        </>
+        <WelcomeComponent
+            onNextAction={handleStart}
+            title="Welcome"
+            subtitle="You are about to start the test"
+        />
     );
 }

@@ -1,19 +1,21 @@
 'use client';
 
-type Props = { title: string, onNextAction: () => void };
+import ReadingComponent from "@/components/ReadingIntro";
 
-export default function ReadingIntroStep({title, onNextAction}: Props) {
+type Props = { title: string, subtitle: string, onNextAction: () => void };
+
+export default function ReadingIntroStep({title, subtitle, onNextAction}: Props) {
 
     const handleNext = () => {
         onNextAction();
     }
 
     return (
-       <>
-           {title}
-           <button className="btn mt-6 ml-4" onClick={handleNext}>
-               Next →
-           </button>
-       </>
+        <ReadingComponent
+            onStartAction={handleNext}
+            duration="20 mins"
+            title={title}
+            subtitle={subtitle}
+        />
     );
 }
