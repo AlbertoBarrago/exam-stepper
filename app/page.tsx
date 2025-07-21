@@ -2,9 +2,25 @@
 
 import StartButton from '@/components/StartButton';
 import {useUserStore} from "@/state/userStore";
+import {useRouter} from "next/navigation";
 
 export default function Home() {
     const {loading, error, user} = useUserStore();
+    const router = useRouter();
+
+    const handleStart = async () => {
+        try {
+            const res = await fetch('/api/start', { method: 'POST' })
+            const {userData} = await res.json();
+            router.push(`/exam/${userData.token}`);
+        } catch (err) {
+            let message = 'Failed to fetch user';
+            if (err instanceof Error) {
+                message = err.message;
+            }
+            alert("Failed to start: " + message);
+        }
+    };
 
     return (
         <section
@@ -17,7 +33,7 @@ export default function Home() {
             </p>
 
             <div className="mt-10">
-                {!loading && user && <StartButton/>}
+                {!loading && user && <StartButton handleStart={handleStart}/>}
             </div>
             {loading && <div className="mt-6 text-blue-700">Loading user...</div>}
             {error && <div className="mt-6 text-red-500">{error}</div>}

@@ -24,7 +24,7 @@ export default function PermissionStep({ onNextAction }: PermissionStepProps) {
 
         if (mode === 'init') {
             try {
-                setHint('Sto registrando... parla pure!');
+                setHint('Im recording, say something...!');
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaStreamRef.current = stream;
                 const recorder = new MediaRecorder(stream);
@@ -36,7 +36,7 @@ export default function PermissionStep({ onNextAction }: PermissionStepProps) {
                     console.log('Recording blob url:', url);
                     setAudioURL(url);
                     setMode('ready');
-                    setHint('Premi play per riascoltare la tua registrazione.');
+                    setHint('Press play to record...');
                 };
                 mediaRecorderRef.current = recorder;
                 recorder.start();
@@ -48,8 +48,8 @@ export default function PermissionStep({ onNextAction }: PermissionStepProps) {
                     }
                 }, 3000);
             } catch (err) {
-                setError('Permesso microfono negato.');
-                setHint('Permesso microfono negato.');
+                setError(`Access denied: ${err}`);
+                setHint(`Access denied: ${err}`);
             }
         }
     };

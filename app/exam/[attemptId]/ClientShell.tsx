@@ -13,10 +13,12 @@ import WritingCompleteStep from "@/exam/[attemptId]/steps/Writing/WritingComplet
 import SpeakingIntroStep from "@/exam/[attemptId]/steps/Speaking/SpeakingIntroStep";
 import SpeakingStep from "@/exam/[attemptId]/steps/Speaking/SpeakingStep";
 import FinalRecapStep from "@/exam/[attemptId]/steps/Final/FinalRecapStep";
-import {JSX} from "react";
+import {JSX, useEffect} from "react";
 import {useTimerStore} from "@/state/timerStore";
 import PreventBackNavigation from "@/components/PreventBackNavigation";
 import PermissionStep from "@/exam/[attemptId]/steps/Permission/PermissionStep";
+import {useRouter} from "next/navigation";
+import {useUserStore} from "@/state/userStore";
 
 function StepBody({current, next}: { current: number; next: () => void }) {
     const step = StepsConfig[current];
@@ -124,6 +126,17 @@ function StepBody({current, next}: { current: number; next: () => void }) {
 export default function ClientShell(): JSX.Element {
     const currentStepIndex = useTimerStore(s => s.currentStepIndex);
     const nextStep = useTimerStore(s => s.nextStep);
+    const isRunning = useTimerStore(s => s.isRunning);
+    const token = useUserStore(s => s.user?.token);
+
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!isRunning && currentStepIndex > 0 || !token) {
+            router.push("/");
+        }
+    }, [isRunning, router, currentStepIndex, token]);
+
 
     return (
         <>
