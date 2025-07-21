@@ -4,7 +4,7 @@ export default function WelcomeStep({html, onNextAction}: { html: string; onNext
     const start = useTimerStore(s => s.start);
 
     const handleStart = () => {
-        start()
+        start(); //Start the process
         onNextAction();
     };
 

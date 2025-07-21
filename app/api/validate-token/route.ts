@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 
 
 const isValidToken = (token: string) => {
-    return true;
+    return !!token;
 }
 
 export async function POST(request: NextRequest) {
     const authHeader = request.headers.get('authorization');
-    let token = null;
+    let token;
     if (authHeader && authHeader.startsWith('Bearer ')) {
         token = authHeader.replace('Bearer ', '');
     } else {
@@ -18,12 +18,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { message, nextStep, userResponse } = await request.json();
-
     return NextResponse.json({
-        success: true,
-        msg: message,
-        nextStep,
-        userResponse
+        success: true
     });
 }

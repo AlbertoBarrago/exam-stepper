@@ -123,7 +123,7 @@ function StepBody({current, next}: { current: number; next: () => void }) {
     }
 }
 
-export default function ClientShell(): JSX.Element {
+export default function Main(): JSX.Element {
     const currentStepIndex = useTimerStore(s => s.currentStepIndex);
     const nextStep = useTimerStore(s => s.nextStep);
     const token = useUserStore(s => s.user?.token);
