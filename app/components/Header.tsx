@@ -105,7 +105,7 @@ export default function Header() {
                     </button>
                 ) : (
                     <button
-                        className="px-4 py-2 bg-blue-600 text-white rounded font-semibold"
+                        className="px-4 py-2 bg-blue-600 text-white rounded font-semibold cursor-pointer hover:bg-blue-700 transition-colors duration-200"
                         onClick={() => void fetchUser()}
                     >
                         Login
