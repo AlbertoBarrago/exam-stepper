@@ -54,6 +54,7 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 - [x] Handle the browser back button to prevent exam navigation loopholes
 
 ### Section Features
+- [ ] Permission: Audio and video [ON WORK]
 - [ ] Reading: Choices, long text, intro/complete
 - [ ] Listening: Audio player, answer choices, intro/complete
 - [ ] Writing: Word counter, AI result hook-up

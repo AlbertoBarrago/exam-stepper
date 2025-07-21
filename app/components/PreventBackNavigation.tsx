@@ -1,7 +1,6 @@
 import { JSX, useEffect, useState } from "react";
 import { useTimerStore } from "@/state/timerStore";
 import Modal from "@/components/Modal";
-import { useRouter } from "next/navigation";
 
 /**
  * Prevents the user from navigating back using the browser's back button or reloading the page
@@ -18,7 +17,6 @@ function PreventBackNavigation(): JSX.Element {
     const resetTimer = useTimerStore((state) => state.reset);
     const [isModalOpen, setModalOpen] = useState(false);
     const [isReloadModal, setIsReloadModal] = useState(false);
-    const router = useRouter();
 
     useEffect(() => {
         const onPopState = () => {
@@ -48,11 +46,7 @@ function PreventBackNavigation(): JSX.Element {
 
     const handleConfirm = () => {
         resetTimer();
-        if (isReloadModal) {
-            window.location.reload();
-        } else {
-            router.push("/");
-        }
+        window.location.reload();
         setModalOpen(false);
         setIsReloadModal(false);
     };

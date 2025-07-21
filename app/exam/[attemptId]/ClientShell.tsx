@@ -21,16 +21,16 @@ import PermissionStep from "@/exam/[attemptId]/steps/Permission/PermissionStep";
 function StepBody({current, next}: { current: number; next: () => void }) {
     const step = StepsConfig[current];
     switch (step.kind) {
+        case 'permission':
+            return (
+                <PermissionStep
+                    onNextAction={() => next()}
+                />
+            );
         case 'welcome':
             return (
                 <WelcomeStep
                     html={step.html}
-                    onNextAction={() => next()}
-                />
-            );
-        case 'permission':
-            return (
-                <PermissionStep
                     onNextAction={() => next()}
                 />
             );
