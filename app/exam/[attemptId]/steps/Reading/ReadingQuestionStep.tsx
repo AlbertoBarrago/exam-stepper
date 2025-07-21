@@ -4,7 +4,7 @@ import ReadingQuestion from "@/components/ReadingQuestion";
 
 type Props = {
     sentenceList: Sentence[],
-    onNextAction: (results: boolean[]) => void; // Now passes results per question
+    onNextAction: (results: boolean[]) => void;
 };
 
 export default function ReadingQuestionStep({ sentenceList, onNextAction }: Props) {
