@@ -94,6 +94,11 @@ export const StepsConfig: Step[] = [
         durationMs: 10000,
     },
     {
+        kind: 'speaking-complete',
+        title: 'Speaking',
+        durationMs: 10000,
+    },
+    {
         kind: 'final',
         title: 'Exam complete'
     }

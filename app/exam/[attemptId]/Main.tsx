@@ -19,6 +19,7 @@ import PreventBackNavigation from "@/components/PreventBackNavigation";
 import PermissionStep from "@/exam/[attemptId]/steps/Permission/PermissionStep";
 import {useRouter} from "next/navigation";
 import {useUserStore} from "@/state/userStore";
+import SpeakingCompleteStep from "@/exam/[attemptId]/steps/Speaking/SpeakingCompleteStep";
 
 function StepBody({current, next}: { current: number; next: () => void }) {
     const step = StepsConfig[current];
@@ -111,6 +112,12 @@ function StepBody({current, next}: { current: number; next: () => void }) {
             return (
                 <SpeakingStep
                     durationMs={step.durationMs}
+                    onNextAction={() => next()}
+                />
+            );
+        case 'speaking-complete':
+            return (
+                <SpeakingCompleteStep
                     onNextAction={() => next()}
                 />
             );

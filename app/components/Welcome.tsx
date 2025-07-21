@@ -91,7 +91,7 @@ const WelcomeComponent = ({
                                 className="flex-shrink-0 w-2 h-2 bg-gray-400 rounded-full mt-2 mr-3"
                                 aria-hidden="true"
                             />
-                            <p className="text-sm text-gray-700 leading-relaxed">
+                            <p className="text-sm text-gray-700 leading-relaxed text-left">
                                 {instruction}
                             </p>
                         </div>

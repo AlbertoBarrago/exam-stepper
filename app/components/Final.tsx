@@ -128,7 +128,7 @@ const SectionComplete: React.FC<SectionCompleteProps> = ({
                 <div className="text-center">
                     <button
                         onClick={onContinue}
-                        className="bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none text-white font-medium rounded-full px-8 py-4 text-lg transition-all duration-200 min-w-[280px]"
+                        className="bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none text-white font-medium rounded-full px-8 py-4 transition-all duration-200 min-w-[280px] cursor-pointer"
                         aria-describedby="continue-description"
                     >
                         {getButtonText()}

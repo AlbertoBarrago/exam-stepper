@@ -26,4 +26,5 @@ export type Step =
     | { kind: 'writing-complete'; title: string }
     | { kind: 'speaking-intro'; title: string }
     | { kind: 'speaking-question'; title: string; durationMs: number }
+    | { kind: 'speaking-complete'; title: string; durationMs: number }
     | { kind: 'final'; title: string };
