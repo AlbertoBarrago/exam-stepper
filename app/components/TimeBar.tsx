@@ -30,7 +30,7 @@ function formatTime(totalSec: number) {
     return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
 }
 
-export default function SectionTimeBar({ displaySection }: Props) {
+export default function TimeBar({ displaySection }: Props) {
     const currentSection = useTimerStore(s => s.currentSection);
     const sectionTimeLeft = useTimerStore(s => s.sectionTimeLeft);
 

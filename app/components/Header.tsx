@@ -3,7 +3,7 @@ import { useUserStore } from "@/state/userStore";
 import { useTimerStore } from "@/state/timerStore";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import SectionTimerBar from "@/components/SectionTimeBar";
+import SectionTimerBar from "@/components/TimeBar";
 import {StepsConfig} from "@/config/stepsConfig";
 import {QUESTION_KINDS, SECTIONS, stepKindToSection} from "@/const/clientShellConst";
 import {Section} from "@/types/clientShellTypes";

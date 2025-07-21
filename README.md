@@ -67,7 +67,7 @@ sequenceDiagram
     participant User
     participant Main
     participant TimerStore
-    participant SectionTimeBar
+    participant TimeBar
     participant StepComponent
 
     User->>Main: Loads Exam Page
@@ -76,10 +76,10 @@ sequenceDiagram
     StepComponent-->>Main: User clicks "Next"
     Main->>TimerStore: If step is section intro, startSection()
     Main->>TimerStore: If step is section complete, pause()
-    Main->>SectionTimeBar: Pass current section info
-    SectionTimeBar->>TimerStore: Get section time left
-    TimerStore-->>SectionTimeBar: Return time left
-    SectionTimeBar-->>User: Display section progress bar
+    Main->>TimeBar: Pass current section info
+    TimeBar->>TimerStore: Get section time left
+    TimerStore-->>TimeBar: Return time left
+    TimeBar-->>User: Display section progress bar
     loop Each Step
       User->>StepComponent: Interact/Complete
       StepComponent-->>Main: onNextAction()
