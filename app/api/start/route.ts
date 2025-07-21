@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 const mockUserData = {
     name: 'John',
     surname: 'Doe',
-    email: 'email@gmail.com',
+    email: 'jhon@gmail.com',
     token: uuid()
 }
 
