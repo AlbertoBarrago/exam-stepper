@@ -1,6 +1,6 @@
 'use client';
 import {Sentence} from "@/types/stepTypes";
-import ReadingQuestion from "@/components/ReadingQuestion";
+import ReadingQuestion from "@/components/step/ReadingQuestion";
 
 type Props = {
     sentenceList: Sentence[],

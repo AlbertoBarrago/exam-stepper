@@ -1,6 +1,6 @@
 'use client';
 
-import ReadingComponent from "@/components/ReadingIntro";
+import ReadingComponent from "@/components/step/ReadingIntro";
 
 type Props = { title: string, subtitle: string, onNextAction: () => void };
 
