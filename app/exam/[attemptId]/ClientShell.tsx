@@ -127,7 +127,7 @@ export default function ClientShell(): JSX.Element {
 
     return (
         <>
-            <PreventBackNavigation/>
+            <PreventBackNavigation message={"Are you sure you want to leave?"} />
             <section className="max-w-xl mx-auto p-6 text-center">
                 <h2 className="text-lg font-semibold mb-4">{StepsConfig[currentStepIndex].title}</h2>
                 <StepBody current={currentStepIndex} next={nextStep}/>

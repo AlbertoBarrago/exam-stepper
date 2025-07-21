@@ -20,7 +20,7 @@ function isSection(val: string | null): val is Section {
 
 /**
  * TickController is a functional component responsible for managing the timer's ticking behavior.
- * It utilizes a timer store to track the state of the timer (running or not) and executes a periodic tick action.
+ * It uses a timer store to track the state of the timer (running or not) and executes a periodic tick action.
  * The component sets up an interval to invoke the tick action every second when the timer is running,
  * and cleans up the interval when the timer stops.
  *
@@ -85,7 +85,7 @@ export default function Header() {
     }, [currentStepIndex, startSection, pause]);
 
     return (
-        <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50">
+        <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50 border-b-blue-600 border-b-3">
             <div className="text-xl font-bold text-blue-700">IdCert</div>
                 <SectionTimerBar displaySection={isSection(section) ? section : null} />
                 <TickController/>
