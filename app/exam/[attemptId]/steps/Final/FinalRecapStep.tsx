@@ -11,6 +11,7 @@ function formatTime(secs: number) {
 
 export default function FinalRecapStep() {
     const pause = useTimerStore(s => s.pause);
+    const reset = useTimerStore(s => s.reset);
     const sectionElapsed = useTimerStore(s => s.sectionElapsed);
 
     const [analyzing, setAnalyzing] = useState(true);
@@ -23,6 +24,7 @@ export default function FinalRecapStep() {
     }, [pause]);
 
     const backToHome = () => {
+        reset()
         router.push('/');
     };
 

@@ -14,6 +14,7 @@ export type Sentence = {
 
 export type Step =
     | { kind: 'welcome'; title: string; html: string }
+    | { kind: 'permission'; title: string;}
     | { kind: 'reading-intro'; title: string }
     | { kind: 'reading-question'; title: string; sentenceList: Sentence[] }
     | { kind: 'reading-complete'; title: string }

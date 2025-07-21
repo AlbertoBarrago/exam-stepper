@@ -16,6 +16,7 @@ import FinalRecapStep from "@/exam/[attemptId]/steps/Final/FinalRecapStep";
 import {JSX} from "react";
 import {useTimerStore} from "@/state/timerStore";
 import PreventBackNavigation from "@/components/PreventBackNavigation";
+import PermissionStep from "@/exam/[attemptId]/steps/Permission/PermissionStep";
 
 function StepBody({current, next}: { current: number; next: () => void }) {
     const step = StepsConfig[current];
@@ -24,6 +25,12 @@ function StepBody({current, next}: { current: number; next: () => void }) {
             return (
                 <WelcomeStep
                     html={step.html}
+                    onNextAction={() => next()}
+                />
+            );
+        case 'permission':
+            return (
+                <PermissionStep
                     onNextAction={() => next()}
                 />
             );
@@ -121,7 +128,7 @@ export default function ClientShell(): JSX.Element {
     return (
         <>
             <PreventBackNavigation/>
-            <section className="max-w-xl mx-auto p-6">
+            <section className="max-w-xl mx-auto p-6 text-center">
                 <h2 className="text-lg font-semibold mb-4">{StepsConfig[currentStepIndex].title}</h2>
                 <StepBody current={currentStepIndex} next={nextStep}/>
             </section>
