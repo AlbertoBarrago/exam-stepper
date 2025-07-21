@@ -1,21 +1,9 @@
 import { create } from 'zustand';
+import { UserStore, UserData } from "@/types/user";
 
-type UserData = {
-    name: string;
-    surname: string;
-    email: string;
-    token: string;
-};
-
-interface UserStore {
-    user: UserData | null;
-    loading: boolean;
-    error: string | null;
-    fetchUser: () => Promise<void>;
-    logout: () => void;
-}
-
-export const useUserStore = create<UserStore>((set) => ({
+export const useUserStore = create<UserStore & {
+    setUser: (userData: UserData) => void;
+}>((set) => ({
     user: null,
     loading: false,
     error: null,
@@ -33,5 +21,6 @@ export const useUserStore = create<UserStore>((set) => ({
             set({ error: message, loading: false });
         }
     },
-    logout: () => set({ user: null })
+    logout: () => set({ user: null }),
+    setUser: (userData: UserData) => set({ user: userData })
 }));

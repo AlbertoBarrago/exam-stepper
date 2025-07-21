@@ -1,30 +1,20 @@
 import {useTimerStore} from "@/state/timerStore";
-import {useUserStore} from "@/state/userStore";
-import {useEffect} from "react";
-import {useRouter} from "next/navigation";
+import WelcomeComponent from "@/components/Welcome";
 
-export default function WelcomeStep({html, onNextAction}: { html: string; onNextAction: () => void }) {
+export default function WelcomeStep({onNextAction}: { onNextAction: () => void }) {
     const start = useTimerStore(s => s.start);
-    const isRunning = useTimerStore(s => s.isRunning);
-    const {user} = useUserStore();
-    const router = useRouter();
 
     const handleStart = () => {
-        if (!isRunning) start();
+        start(); //Start the process
         onNextAction();
     };
 
-    useEffect(() => {
-        if(!user) {
-            router.push("/")
-        }
-    }, [router, user]);
-
 
     return (
-        <>
-            <div className="prose max-w-none" dangerouslySetInnerHTML={{__html: html}}/>
-            <button className="btn mt-6" onClick={handleStart}>Start</button>
-        </>
+        <WelcomeComponent
+            onNextAction={handleStart}
+            title="Welcome"
+            subtitle="You are about to start the test"
+        />
     );
 }

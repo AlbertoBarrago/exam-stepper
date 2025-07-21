@@ -8,11 +8,25 @@ import {StepsConfig} from "@/config/stepsConfig";
 import {QUESTION_KINDS, SECTIONS, stepKindToSection} from "@/const/clientShellConst";
 import {Section} from "@/types/clientShellTypes";
 
+/**
+ * Checks if the provided value is a valid section.
+ *
+ * @param {string | null} val - The value to be checked.
+ * @return {boolean} Returns true if the value is a valid section, otherwise false.
+ */
 function isSection(val: string | null): val is Section {
     return !!val && SECTIONS.includes(val as Section);
 }
 
-function TickController() {
+/**
+ * TickController is a functional component responsible for managing the timer's ticking behavior.
+ * It uses a timer store to track the state of the timer (running or not) and executes a periodic tick action.
+ * The component sets up an interval to invoke the tick action every second when the timer is running,
+ * and cleans up the interval when the timer stops.
+ *
+ * @return {null} Returns null, as this component does not render any UI.
+ */
+function TickController(): null {
     const tick = useTimerStore(s => s.tick);
     const isRunning = useTimerStore(s => s.isRunning);
 
@@ -71,7 +85,7 @@ export default function Header() {
     }, [currentStepIndex, startSection, pause]);
 
     return (
-        <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50">
+        <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50 border-b-blue-600 border-b-3">
             <div className="text-xl font-bold text-blue-700">IdCert</div>
                 <SectionTimerBar displaySection={isSection(section) ? section : null} />
                 <TickController/>

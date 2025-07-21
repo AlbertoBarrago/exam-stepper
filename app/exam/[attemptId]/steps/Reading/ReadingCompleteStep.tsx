@@ -1,19 +1,20 @@
 'use client';
 
+import SectionComplete from "@/components/Final";
+
 type Props = { title: string, onNextAction: () => void };
 
-export default function ReadingCompleteStep({title, onNextAction}: Props) {
+export default function ReadingCompleteStep({onNextAction}: Props) {
 
     const handleNext = () => {
         onNextAction();
     }
 
     return (
-       <>
-           {title}
-           <button className="btn mt-6 ml-4" onClick={handleNext}>
-               Next →
-           </button>
-       </>
+        <SectionComplete
+            completedSection="reading"
+            nextSection="listening"
+            onContinue={handleNext}
+        />
     );
 }

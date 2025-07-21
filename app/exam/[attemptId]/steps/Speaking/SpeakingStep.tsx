@@ -70,16 +70,16 @@ export default function SpeakingStep({ durationMs, onNextAction }: Props) {
                 </button>
             )}
 
-            {recording && <p className="text-blue-600 font-semibold">🎙️ Record in progress...) ({
+            {recording && <p className="text-blue-600 font-semibold">🎙️ Record in progress... {
                 durationMs < 60000
                     ? `${durationMs / 1000} seconds`
                     : `${durationMs / 60000} minutes`
-            })...</p>}
+            }</p>}
 
             {stream && recording && <Spectrum stream={stream} />}
 
             {audioURL && (
-                <div className="space-y-2">
+                <div className="space-y-2 flex flex-col items-center gap-4">
                     <p className="text-green-600">✅ Record completed</p>
                     <audio controls src={audioURL} />
                     <button

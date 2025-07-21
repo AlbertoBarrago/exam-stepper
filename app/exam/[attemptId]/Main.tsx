@@ -13,9 +13,13 @@ import WritingCompleteStep from "@/exam/[attemptId]/steps/Writing/WritingComplet
 import SpeakingIntroStep from "@/exam/[attemptId]/steps/Speaking/SpeakingIntroStep";
 import SpeakingStep from "@/exam/[attemptId]/steps/Speaking/SpeakingStep";
 import FinalRecapStep from "@/exam/[attemptId]/steps/Final/FinalRecapStep";
-import {JSX} from "react";
+import {JSX, useEffect} from "react";
 import {useTimerStore} from "@/state/timerStore";
 import PreventBackNavigation from "@/components/PreventBackNavigation";
+import PermissionStep from "@/exam/[attemptId]/steps/Permission/PermissionStep";
+import {useRouter} from "next/navigation";
+import {useUserStore} from "@/state/userStore";
+import SpeakingCompleteStep from "@/exam/[attemptId]/steps/Speaking/SpeakingCompleteStep";
 
 function StepBody({current, next}: { current: number; next: () => void }) {
     const step = StepsConfig[current];
@@ -23,7 +27,12 @@ function StepBody({current, next}: { current: number; next: () => void }) {
         case 'welcome':
             return (
                 <WelcomeStep
-                    html={step.html}
+                    onNextAction={() => next()}
+                />
+            );
+        case 'permission':
+            return (
+                <PermissionStep
                     onNextAction={() => next()}
                 />
             );
@@ -31,6 +40,7 @@ function StepBody({current, next}: { current: number; next: () => void }) {
             return (
                 <ReadingIntroStep
                     title={step.title}
+                    subtitle={step.subTitle}
                     onNextAction={() => next()}
                 />
             );
@@ -105,6 +115,12 @@ function StepBody({current, next}: { current: number; next: () => void }) {
                     onNextAction={() => next()}
                 />
             );
+        case 'speaking-complete':
+            return (
+                <SpeakingCompleteStep
+                    onNextAction={() => next()}
+                />
+            );
         case 'final':
             return (
                 <FinalRecapStep/>
@@ -114,15 +130,25 @@ function StepBody({current, next}: { current: number; next: () => void }) {
     }
 }
 
-export default function ClientShell(): JSX.Element {
+export default function Main(): JSX.Element {
     const currentStepIndex = useTimerStore(s => s.currentStepIndex);
     const nextStep = useTimerStore(s => s.nextStep);
+    const token = useUserStore(s => s.user?.token);
+
+    const router = useRouter();
+
+    useEffect(() => {
+        //console.log("Main useEffect()->", token);
+        if (!token) {
+            router.push("/");
+        }
+    }, [router, token]);
+
 
     return (
         <>
-            <PreventBackNavigation/>
-            <section className="max-w-xl mx-auto p-6">
-                <h2 className="text-lg font-semibold mb-4">{StepsConfig[currentStepIndex].title}</h2>
+            <PreventBackNavigation />
+            <section className="max-w-xl mx-auto p-6 text-center">
                 <StepBody current={currentStepIndex} next={nextStep}/>
             </section>
         </>

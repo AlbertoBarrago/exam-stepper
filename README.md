@@ -50,7 +50,11 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 - [ ] Add api for the user session for get username and verify if it has permission
 - [ ] Add data into HEADER or panel on top as FIGMA shows
 
+### FE "Security"
+- [x] Handle the browser back button to prevent exam navigation loopholes
+
 ### Section Features
+- [ ] Permission: Audio and video [ON WORK]
 - [ ] Reading: Choices, long text, intro/complete
 - [ ] Listening: Audio player, answer choices, intro/complete
 - [ ] Writing: Word counter, AI result hook-up
@@ -61,27 +65,27 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 ```mermaid
 sequenceDiagram
     participant User
-    participant ClientShell
+    participant Main
     participant TimerStore
     participant SectionTimeBar
     participant StepComponent
 
-    User->>ClientShell: Loads Exam Page
-    ClientShell->>TimerStore: Initialize timer state
-    ClientShell->>StepComponent: Render current step
-    StepComponent-->>ClientShell: User clicks "Next"
-    ClientShell->>TimerStore: If step is section intro, startSection()
-    ClientShell->>TimerStore: If step is section complete, pause()
-    ClientShell->>SectionTimeBar: Pass current section info
+    User->>Main: Loads Exam Page
+    Main->>TimerStore: Initialize timer state
+    Main->>StepComponent: Render current step
+    StepComponent-->>Main: User clicks "Next"
+    Main->>TimerStore: If step is section intro, startSection()
+    Main->>TimerStore: If step is section complete, pause()
+    Main->>SectionTimeBar: Pass current section info
     SectionTimeBar->>TimerStore: Get section time left
     TimerStore-->>SectionTimeBar: Return time left
     SectionTimeBar-->>User: Display section progress bar
     loop Each Step
       User->>StepComponent: Interact/Complete
-      StepComponent-->>ClientShell: onNextAction()
-      ClientShell->>TimerStore: tick() (every second if running)
+      StepComponent-->>Main: onNextAction()
+      Main->>TimerStore: tick() (every second if running)
     end
-    ClientShell->>FinalRecapStep: On exam end, show summary
+    Main->>FinalRecapStep: On exam end, show summary
     FinalRecapStep->>TimerStore: Pause and get elapsed times
     FinalRecapStep-->>User: Show analysis and summary
 ```
