@@ -132,9 +132,13 @@ export default function ClientShell(): JSX.Element {
     const router = useRouter();
 
     useEffect(() => {
-        if (!isRunning && currentStepIndex > 0 || !token) {
+        if (!token) {
             router.push("/");
         }
+        if (currentStepIndex > 0 && !isRunning) {
+            router.push("/");
+        }
+
     }, [isRunning, router, currentStepIndex, token]);
 
 

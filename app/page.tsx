@@ -3,15 +3,18 @@
 import StartButton from '@/components/StartButton';
 import {useUserStore} from "@/state/userStore";
 import {useRouter} from "next/navigation";
+import {useTimerStore} from "@/state/timerStore";
 
 export default function Home() {
     const {loading, error, user} = useUserStore();
     const router = useRouter();
+    const start = useTimerStore(state => state.start);
 
     const handleStart = async () => {
         try {
             const res = await fetch('/api/start', { method: 'POST' })
             const {userData} = await res.json();
+            start(); //start the magic
             router.push(`/exam/${userData.token}`);
         } catch (err) {
             let message = 'Failed to fetch user';
