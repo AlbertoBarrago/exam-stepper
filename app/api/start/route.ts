@@ -1,14 +1,25 @@
 import { NextResponse } from 'next/server';
-import { v4 as uuid } from 'uuid';
+import { SignJWT } from 'jose';
+
+const PRIVATE_KEY = process.env.JWT_PRIVATE_KEY as string;
 
 const mockUserData = {
     name: 'John',
     surname: 'Doe',
     email: 'jhon@gmail.com',
-    token: uuid()
+};
+
+async function createMockJWT(payload: object) {
+    const secret = new TextEncoder().encode(PRIVATE_KEY);
+    return await new SignJWT({ ...payload })
+        .setProtectedHeader({ alg: 'HS256' })
+        .setIssuedAt()
+        .setExpirationTime('1h')
+        .sign(secret);
 }
 
 export async function POST() {
-    const userData = mockUserData;
+    const token = await createMockJWT(mockUserData);
+    const userData = { ...mockUserData, token };
     return NextResponse.json({ userData });
 }
