@@ -18,6 +18,7 @@ import {Section} from "@/types/clientShellTypes";
  * @property {function} startSection - Initializes a new section and sets its time limit, marks the timer as running.
  * @property {function} start - Starts the timer without targeting any specific section.
  * @property {function} pause - Pauses the timer, stopping any updates to the time or elapsed states.
+ * @property {function} reset - Reset the timer, reset all counters
  */
 export const useTimerStore = create<TimerState & {
     currentStepIndex: number;
