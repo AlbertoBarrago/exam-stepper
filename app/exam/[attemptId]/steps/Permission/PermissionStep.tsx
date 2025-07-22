@@ -24,7 +24,7 @@ export default function PermissionStep({ onNextAction }: PermissionStepProps) {
 
         if (mode === 'init') {
             try {
-                setHint('Im recording, say something...!');
+                setHint('Im recording, say something... 5sec!');
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaStreamRef.current = stream;
                 const recorder = new MediaRecorder(stream);
@@ -36,7 +36,7 @@ export default function PermissionStep({ onNextAction }: PermissionStepProps) {
                     console.log('Recording blob url:', url);
                     setAudioURL(url);
                     setMode('ready');
-                    setHint('Press play to record...');
+                    setHint('Press play and verify if you can hear the recording...');
                 };
                 mediaRecorderRef.current = recorder;
                 recorder.start();
@@ -46,7 +46,7 @@ export default function PermissionStep({ onNextAction }: PermissionStepProps) {
                         mediaRecorderRef.current.stop();
                         mediaStreamRef.current?.getTracks().forEach(track => track.stop());
                     }
-                }, 3000);
+                }, 5000);
             } catch (err) {
                 setError(`Access denied: ${err}`);
                 setHint(`Access denied: ${err}`);
@@ -59,8 +59,8 @@ export default function PermissionStep({ onNextAction }: PermissionStepProps) {
     }
 
     return (
-        <section>
-            <h1 className="text-2xl font-bold mb-4">Test Microfono</h1>
+        <section className={"mt-20"}>
+            <h1 className="text-2xl font-bold mb-4">Microphone Check</h1>
             <p className="mb-2">{hint}</p>
 
             <div
@@ -99,7 +99,7 @@ export default function PermissionStep({ onNextAction }: PermissionStepProps) {
                 onClick={onNextAction}
                 disabled={!audioURL}
             >
-                Yes, continue to test
+                Yes work, proceed to the next step
             </button>
         </section>
     );

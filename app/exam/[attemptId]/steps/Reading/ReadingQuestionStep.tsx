@@ -1,19 +1,18 @@
 'use client';
-import {Sentence} from "@/types/stepTypes";
-import ReadingQuestion from "@/components/ReadingQuestion";
+import ReadingQuestion from "@/components/step/ReadingQuestion";
 
 type Props = {
-    sentenceList: Sentence[],
+    sentence: string,
     onNextAction: (results: boolean[]) => void;
 };
 
-export default function ReadingQuestionStep({ sentenceList, onNextAction }: Props) {
+ const ReadingQuestionStep = ({ sentence, onNextAction }: Props) => {
 
     const handleAnswerChange = (optionIndex: number) => {
         console.log('Answer changed to:', optionIndex);
     };
-
-    const handleSubmit = () => {
+    const handleSubmit = (optionsSelected: number) => {
+        console.log('Submitting with options:', optionsSelected);
         onNextAction([true]);
     };
 
@@ -21,7 +20,7 @@ export default function ReadingQuestionStep({ sentenceList, onNextAction }: Prop
         <ReadingQuestion
             questionNumber={1}
             totalQuestions={10}
-            sentence="James has considerable _____ about advertising."
+            sentence={sentence}
             options={["information", "knowledge", "communication", "intelligence"]}
             onNextAction={handleSubmit}
             onAnswerChangeAction={handleAnswerChange}
@@ -29,3 +28,5 @@ export default function ReadingQuestionStep({ sentenceList, onNextAction }: Prop
         />
     );
 }
+
+export default ReadingQuestionStep;

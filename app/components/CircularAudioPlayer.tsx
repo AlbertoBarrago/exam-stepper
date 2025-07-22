@@ -64,7 +64,6 @@ export default function CircularAudioPlayer({
         setProgress(0);
     };
 
-
     const handlePause = () => {
         const audio = audioRef.current;
         if (!audio) return;

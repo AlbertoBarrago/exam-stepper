@@ -16,7 +16,15 @@ const customJestConfig = {
     '!**/node_modules/**',
   ],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1',
+    '^@/(.*)$': '<rootDir>/app/$1',
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+  },
+  transformIgnorePatterns: [
+    '/node_modules/',
+    '\\.next/',
+  ],
+  transform: {
+    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
   },
 }
 

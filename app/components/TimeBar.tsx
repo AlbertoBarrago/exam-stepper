@@ -30,7 +30,7 @@ function formatTime(totalSec: number) {
     return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
 }
 
-export default function SectionTimeBar({ displaySection }: Props) {
+export default function TimeBar({ displaySection }: Props) {
     const currentSection = useTimerStore(s => s.currentSection);
     const sectionTimeLeft = useTimerStore(s => s.sectionTimeLeft);
 
@@ -52,7 +52,7 @@ export default function SectionTimeBar({ displaySection }: Props) {
     const pct = (elapsed / total) * 100;
 
     return (
-        <div className="w-[70%] mx-auto flex items-center gap-3">
+        <div className="w-[70%] mx-auto flex items-center gap-3" role={"timer"}>
             <span className="text-blue-600">{icons[section]}</span>
             <span className="font-semibold w-20">{names[section]}</span>
             <div className="flex-1 h-3 rounded bg-gray-200 relative overflow-hidden">

@@ -4,7 +4,7 @@ import { ChevronRight } from 'lucide-react';
 interface ReadingQuestionProps {
     questionNumber?: number;
     totalQuestions?: number;
-    sentence?: string;
+    sentence: string;
     options?: string[];
     onNextAction?: (selectedAnswer: number) => void;
     onAnswerChangeAction?: (optionIndex: number) => void;
@@ -99,7 +99,6 @@ const ReadingQuestion: React.FC<ReadingQuestionProps> = ({
                     </div>
                 </div>
 
-                {/* Next Button */}
                 <div className="text-center mb-6">
                     <button
                         onClick={handleNext}
@@ -118,11 +117,6 @@ const ReadingQuestion: React.FC<ReadingQuestionProps> = ({
                     </button>
                 </div>
 
-                {/*<div className="text-center">
-                    <p className="text-xs text-gray-500">
-                        ©2025 IdCert
-                    </p>
-                </div>*/}
 
                 <div id="question-text" className="sr-only">
                     Question {questionNumber} of {totalQuestions}: Complete the sentence by choosing the best option

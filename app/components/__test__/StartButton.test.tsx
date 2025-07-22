@@ -16,7 +16,7 @@ afterEach(() => {
 
 test("calls handleStart when button is clicked", () => {
     const handleStart = jest.fn();
-    render(<StartButton handleStart={handleStart} />);
+    render(<StartButton handleStartAction={handleStart} />);
     const btn = screen.getByRole("button", { name: /start the free english test/i });
     fireEvent.click(btn);
     expect(handleStart).toHaveBeenCalled();

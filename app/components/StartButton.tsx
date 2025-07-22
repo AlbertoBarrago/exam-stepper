@@ -1,6 +1,4 @@
 'use client';
-
-
 export default function StartButton({handleStartAction}: { handleStartAction: () => void}) {
 
     return (

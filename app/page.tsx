@@ -1,35 +1,66 @@
 'use client';
-
+import { useState, useCallback } from 'react';
 import StartButton from '@/components/StartButton';
-import {useUserStore} from "@/state/userStore";
-import {useRouter} from "next/navigation";
-import {useTimerStore} from "@/state/timerStore";
+import { useUserStore } from "@/state/userStore";
+import { useRouter } from "next/navigation";
+import { useTimerStore } from "@/state/timerStore";
 
 export default function Home() {
-    const {loading, error, user} = useUserStore();
-    const router = useRouter();
-    const start = useTimerStore(state => state.start);
+    const user = useUserStore(state => state.user);
+    const loadingUser = useUserStore(state => state.loading);
+    const userError = useUserStore(state => state.error);
     const setUser = useUserStore(state => state.setUser);
 
+    const router = useRouter();
+    const startTimer = useTimerStore(state => state.start);
 
-    const handleStart = async () => {
+    const [isStarting, setIsStarting] = useState(false);
+    const [startError, setStartError] = useState<string | null>(null);
+
+    const handleStart = useCallback(async () => {
+        setIsStarting(true);
+        setStartError(null);
         try {
-            const res = await fetch('/api/start', { method: 'POST' })
-            const {userData} = await res.json();
+            const res = await fetch('/api/start', { method: 'POST' });
 
-            console.log("Home handleStart()->", userData);
-            setUser(userData); //update user state
-
-            start(); //start the magic
-
-            router.push(`/exam/${user?.token}`);
-        } catch (err) {
-            let message = 'Failed to fetch user';
-            if (err instanceof Error) {
-                message = err.message;
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({ message: 'Failed to start the exam.' }));
+                console.error(errorData);
             }
-            alert("Failed to start: " + message);
+
+            const { userData } = await res.json();
+            setUser(userData);
+            startTimer();
+            router.push(`/exam/${userData.interceptId}`);
+
+        } catch (err) {
+            const message = err instanceof Error ? err.message : 'An unknown error occurred';
+            setStartError(message);
+        } finally {
+            setIsStarting(false);
         }
+    }, [router, setUser, startTimer]); // Dependencies for useCallback
+
+    const renderActionArea = () => {
+        if (loadingUser) {
+            return <div className="text-blue-700">Loading user...</div>;
+        }
+
+        if (userError) {
+            return <div className="text-red-500">{userError}</div>;
+        }
+
+        if (user) {
+            return (
+                <div className="flex flex-col items-center gap-4">
+                    <StartButton handleStartAction={handleStart} />
+                    {isStarting && <div className="text-blue-700">Starting exam...</div>}
+                    {startError && <div className="text-red-500">{startError}</div>}
+                </div>
+            );
+        }
+
+        return null;
     };
 
     return (
@@ -42,11 +73,9 @@ export default function Home() {
                 Free. Unlimited retakes. Trusted by learners, schools, and companies worldwide.
             </p>
 
-            <div className="mt-10">
-                {!loading && user && <StartButton handleStartAction={handleStart}/>}
+            <div className="mt-10 min-h-[5rem]">
+                {renderActionArea()}
             </div>
-            {loading && <div className="mt-6 text-blue-700">Loading user...</div>}
-            {error && <div className="mt-6 text-red-500">{error}</div>}
         </section>
     );
 }
