@@ -18,8 +18,6 @@ import PreventBackNavigation from "@/components/PreventBackNavigation";
 import PermissionStep from "@/exam/[attemptId]/steps/Permission/PermissionStep";
 import SpeakingCompleteStep from "@/exam/[attemptId]/steps/Speaking/SpeakingCompleteStep";
 import {useStepStore} from "@/state/stepStore";
-import ReadingPassage from "@/components/step/ReadingQuestionList";
-import ReadingQuestionList from "@/components/step/ReadingQuestionList";
 import ReadingQuestionListStep from "@/exam/[attemptId]/steps/Reading/ReadingQuestionListStep";
 
 function StepBody({current, next}: { current: number; next: () => void }) {
@@ -91,7 +89,7 @@ export default function Main(): JSX.Element {
     return (
         <>
             <PreventBackNavigation/>
-            <section className="max-w-xl mx-auto p-6 text-center">
+            <section className="p-6 text-center">
                 <StepBody current={currentStepIndex} next={nextStep}/>
             </section>
         </>
