@@ -17,12 +17,11 @@ export default function Home() {
             const res = await fetch('/api/start', { method: 'POST' })
             const {userData} = await res.json();
 
-            console.log("Home handleStart()->", userData);
-            setUser(userData); //update user state
+            setUser(userData);
+            start();
 
-            start(); //start the magic
+            router.push(`/exam/${userData.interceptId}`);
 
-            router.push(`/exam/${user?.token}`);
         } catch (err) {
             let message = 'Failed to fetch user';
             if (err instanceof Error) {
@@ -31,6 +30,7 @@ export default function Home() {
             alert("Failed to start: " + message);
         }
     };
+
 
     return (
         <section

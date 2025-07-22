@@ -7,6 +7,7 @@ const mockUserData = {
     name: 'John',
     surname: 'Doe',
     email: 'jhon@gmail.com',
+    interceptId: '123456789'
 };
 
 async function createMockJWT(payload: object) {
@@ -21,5 +22,15 @@ async function createMockJWT(payload: object) {
 export async function POST() {
     const token = await createMockJWT(mockUserData);
     const userData = { ...mockUserData, token };
-    return NextResponse.json({ userData });
+    const response = NextResponse.json({ userData });
+
+    response.cookies.set('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'development',
+        sameSite: 'strict',
+        path: '/',
+        maxAge: 60,
+    });
+
+    return response;
 }
