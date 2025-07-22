@@ -1,3 +1,4 @@
+import { NextResponse } from 'next/server';
 import {Step} from "@/types/stepTypes";
 
 export const StepsConfig: Step[] = [
@@ -103,3 +104,6 @@ export const StepsConfig: Step[] = [
         title: 'Exam complete'
     }
 ];
+export async function GET() {
+    return NextResponse.json(StepsConfig);
+}

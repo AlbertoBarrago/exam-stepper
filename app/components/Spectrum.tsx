@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 export default function Spectrum({ stream }: { stream: MediaStream | null }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    //TODO: can be customized or is possible convert basic config in setup props
+    //TODO: can be customized or is possible convert basic step in setup props
 
     useEffect(() => {
         if (!stream) return;
