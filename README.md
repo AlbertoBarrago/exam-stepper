@@ -1,4 +1,6 @@
-# English Test App
+# English Test Stepper Test 
+
+> ON WORK...
 
 A modern web application designed to assess English language proficiency with interactive, speech-enabled features.
 
@@ -60,6 +62,10 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 - [ ] Writing: Word counter, AI result hook-up
 - [ ] Speaking: Microphone permission, audio visualization, practice, main questions, repeat parts
 
+
+### Timer 
+- [ ] Handle time off, fail exam. 
+ 
 
 ### Steps Flow
 ```mermaid
