@@ -19,7 +19,7 @@ export default function RootLayout({children}: {
             {children}
         </main>
         <footer className="py-4 text-center text-sm text-gray-500">
-            ©{currentYear} IdCert
+            ©{currentYear}
         </footer>
         </body>
         </html>
