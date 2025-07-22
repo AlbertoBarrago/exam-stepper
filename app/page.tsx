@@ -25,9 +25,8 @@ export default function Home() {
             const res = await fetch('/api/start', { method: 'POST' });
 
             if (!res.ok) {
-                // Attempt to parse a meaningful error message from the API response
                 const errorData = await res.json().catch(() => ({ message: 'Failed to start the exam.' }));
-                throw new Error(errorData.message);
+                console.error(errorData);
             }
 
             const { userData } = await res.json();
