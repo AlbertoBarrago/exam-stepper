@@ -11,7 +11,8 @@ type Props = {
     const handleAnswerChange = (optionIndex: number) => {
         console.log('Answer changed to:', optionIndex);
     };
-    const handleSubmit = () => {
+    const handleSubmit = (optionsSelected: number) => {
+        console.log('Submitting with options:', optionsSelected);
         onNextAction([true]);
     };
 

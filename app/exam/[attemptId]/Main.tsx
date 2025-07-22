@@ -72,7 +72,6 @@ export default function Main(): JSX.Element {
     const {steps, isLoading, error, fetchSteps} = useStepStore();
 
     useEffect(() => {
-        // Fetch just one time if already exist
         if (steps.length === 0) {
             void fetchSteps();
         }
