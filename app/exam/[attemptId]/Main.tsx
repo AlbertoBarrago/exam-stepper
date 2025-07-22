@@ -18,6 +18,9 @@ import PreventBackNavigation from "@/components/PreventBackNavigation";
 import PermissionStep from "@/exam/[attemptId]/steps/Permission/PermissionStep";
 import SpeakingCompleteStep from "@/exam/[attemptId]/steps/Speaking/SpeakingCompleteStep";
 import {useStepStore} from "@/state/stepStore";
+import ReadingPassage from "@/components/step/ReadingQuestionList";
+import ReadingQuestionList from "@/components/step/ReadingQuestionList";
+import ReadingQuestionListStep from "@/exam/[attemptId]/steps/Reading/ReadingQuestionListStep";
 
 function StepBody({current, next}: { current: number; next: () => void }) {
     const steps = useStepStore(s => s.steps);
@@ -35,7 +38,9 @@ function StepBody({current, next}: { current: number; next: () => void }) {
         case 'reading-intro':
             return <ReadingIntroStep title={step.title} subtitle={step.subTitle} onNextAction={next}/>;
         case 'reading-question':
-            return <ReadingQuestionStep sentenceList={step.sentenceList} onNextAction={next}/>;
+            return <ReadingQuestionStep sentence={step.sentence} onNextAction={next}/>;
+        case 'reading-question-list':
+            return <ReadingQuestionListStep questions={step.questions} passage={step.passage} onNextAction={next}/>;
         case 'reading-complete':
             return <ReadingCompleteStep title={step.title} onNextAction={next}/>;
         case 'listening-intro':

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useRouter } from "next/navigation";
 import { useTimerStore } from '@/state/timerStore';
 import {useUserStore} from "@/state/userStore";
@@ -25,14 +25,14 @@ export default function FinalRecapStep() {
         return () => clearTimeout(timer);
     }, [pause]);
 
-    const backToHome = () => {
+    const backToHome = useCallback(() => {
         reset()
         logout()
         router.push('/');
-    };
+    }, [logout, reset, router]);
 
-    const sectionTimes = Object.entries(sectionElapsed);
-    const totalSeconds = sectionTimes.reduce((acc, [, v]) => acc + v, 0);
+    const sectionTimes = useMemo(() => Object.entries(sectionElapsed), [sectionElapsed]);
+    const totalSeconds = useMemo(() => sectionTimes.reduce((acc, [, v]) => acc + v, 0), [sectionTimes]);
 
     return (
         <div className="text-center space-y-6">
