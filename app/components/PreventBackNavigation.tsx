@@ -73,7 +73,7 @@ function PreventBackNavigation(): JSX.Element {
             content={
                 isReloadModal
                     ? "Are you sure you want to reload the page? Your current progress will be lost."
-                    : "Do you really want to go back? This will reset your progress and return you to the home page."
+                    : "This will reset your progress and return you to the instructions page. Are you sure you want to proceed?."
             }
             isOpen={isModalOpen}
             onConfirm={handleConfirm}

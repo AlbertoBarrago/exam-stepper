@@ -63,7 +63,7 @@ export default function Modal({title, content, isOpen, onConfirm, onCancel}: Mod
                         onClick={onConfirm}
                         aria-label="Confirm"
                     >
-                        Deactivate
+                        Yes, I confirm
                     </button>
                 </div>
             </div>

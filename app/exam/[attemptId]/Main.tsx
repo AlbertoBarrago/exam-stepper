@@ -13,13 +13,13 @@ import WritingCompleteStep from "@/exam/[attemptId]/steps/Writing/WritingComplet
 import SpeakingIntroStep from "@/exam/[attemptId]/steps/Speaking/SpeakingIntroStep";
 import SpeakingStep from "@/exam/[attemptId]/steps/Speaking/SpeakingStep";
 import FinalRecapStep from "@/exam/[attemptId]/steps/Final/FinalRecapStep";
-import {JSX, useEffect} from "react";
+import {JSX} from "react";
 import {useTimerStore} from "@/state/timerStore";
 import PreventBackNavigation from "@/components/PreventBackNavigation";
 import PermissionStep from "@/exam/[attemptId]/steps/Permission/PermissionStep";
-import {useRouter} from "next/navigation";
-import {useUserStore} from "@/state/userStore";
 import SpeakingCompleteStep from "@/exam/[attemptId]/steps/Speaking/SpeakingCompleteStep";
+import {useUserStore} from "@/state/userStore";
+import {useRouter} from "next/navigation";
 
 function StepBody({current, next}: { current: number; next: () => void }) {
     const step = StepsConfig[current];
@@ -133,17 +133,12 @@ function StepBody({current, next}: { current: number; next: () => void }) {
 export default function Main(): JSX.Element {
     const currentStepIndex = useTimerStore(s => s.currentStepIndex);
     const nextStep = useTimerStore(s => s.nextStep);
-    const token = useUserStore(s => s.user?.token);
-
+    const userSession = useUserStore(s => s.user);
     const router = useRouter();
 
-    useEffect(() => {
-        //console.log("Main useEffect()->", token);
-        if (!token) {
-            router.push("/");
-        }
-    }, [router, token]);
-
+    if (!userSession) {
+        router.push("/")
+    }
 
     return (
         <>

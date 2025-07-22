@@ -2,7 +2,6 @@ export type UserData = {
     name: string;
     surname: string;
     email: string;
-    token: string;
     interceptId: string;
 };
 
