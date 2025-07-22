@@ -1,18 +1,25 @@
-import { NextResponse } from 'next/server';
+import {NextResponse} from 'next/server';
 import {Step} from "@/types/stepTypes";
 
 const StepsConfig: Step[] = [
     {
+        id: 0,
         kind: 'welcome',
         title: 'Welcome'
     },
-    {kind: 'permission', title: 'Audio Check'},
     {
+        id: 0,
+        kind: 'permission',
+        title: 'Audio Check'
+    },
+    {
+        id: 1,
         kind: 'reading-intro',
         title: 'Reading Section Intro',
         subTitle: 'You are about to start the reading section.'
     },
     {
+        id: 2,
         kind: 'reading-question',
         title: 'Reading',
         sentenceList: [
@@ -43,14 +50,17 @@ const StepsConfig: Step[] = [
         ],
     },
     {
+        id: 3,
         kind: 'reading-complete',
         title: 'Reading Complete',
     },
     {
+        id: 4,
         kind: 'listening-intro',
         title: 'Listening Section Intro',
     },
     {
+        id: 5,
         kind: 'listening-question',
         title: 'Listening',
         audioUrl: '/audio/listening.mp3',
@@ -70,36 +80,43 @@ const StepsConfig: Step[] = [
         ],
     },
     {
+        id: 6,
         kind: 'listening-complete',
         title: 'Listening Complete',
     },
     {
+        id: 7,
         kind: 'writing-intro',
         title: 'Writing Section Intro',
     },
     {
+        id: 8,
         kind: 'writing-question',
         title: 'Writing',
     },
     {
-        kind:'writing-complete',
+        id: 9,
+        kind: 'writing-complete',
         title: 'Writing Complete',
     },
     {
+        id: 10,
         kind: 'speaking-intro',
         title: 'Speaking Section',
     },
     {
+        id: 11,
         kind: 'speaking-question',
         title: 'Speaking',
         durationMs: 10000,
     },
     {
+        id: 12,
         kind: 'speaking-complete',
         title: 'Speaking',
-        durationMs: 10000,
     },
     {
+        id: 13,
         kind: 'final',
         title: 'Exam complete'
     }

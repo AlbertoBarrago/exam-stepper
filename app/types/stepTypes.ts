@@ -12,19 +12,25 @@ export type Sentence = {
     correct: string;
 }
 
+// Union type, ts trick
+type SimpleStepKind =
+    | 'welcome'
+    | 'permission'
+    | 'reading-complete'
+    | 'listening-intro'
+    | 'listening-complete'
+    | 'writing-intro'
+    | 'writing-question'
+    | 'writing-complete'
+    | 'speaking-intro'
+    | 'speaking-complete'
+    | 'final';
+
+
 export type Step =
-    | { kind: 'welcome'; title: string; }
-    | { kind: 'permission'; title: string;}
-    | { kind: 'reading-intro'; title: string, subTitle: string}
-    | { kind: 'reading-question'; title: string; sentenceList: Sentence[] }
-    | { kind: 'reading-complete'; title: string }
-    | { kind: 'listening-intro'; title: string }
-    | { kind: 'listening-question'; title: string; audioUrl: string; questions: AudioQuestion[] }
-    | { kind: 'listening-complete'; title: string }
-    | { kind: 'writing-intro'; title: string }
-    | { kind: 'writing-question'; title: string }
-    | { kind: 'writing-complete'; title: string }
-    | { kind: 'speaking-intro'; title: string }
-    | { kind: 'speaking-question'; title: string; durationMs: number }
-    | { kind: 'speaking-complete'; title: string; durationMs: number }
-    | { kind: 'final'; title: string };
+    | { id: number; kind: 'reading-intro'; title: string; subTitle: string }
+    | { id: number; kind: 'reading-question'; title: string; sentenceList: Sentence[] }
+    | { id: number; kind: 'listening-question'; title: string; audioUrl: string; questions: AudioQuestion[] }
+    | { id: number; kind: 'speaking-question'; title: string; durationMs: number }
+    | { id: number; kind: SimpleStepKind; title: string };
+
