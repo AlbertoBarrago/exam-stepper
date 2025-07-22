@@ -61,8 +61,6 @@ export default function Home() {
             );
         }
 
-        // Per the original logic, nothing is rendered if there is no user.
-        // You could render a Login button here in the future.
         return null;
     };
 
