@@ -1,14 +1,15 @@
 import React from 'react';
-import {BookOpenIcon, ClockIcon} from "lucide-react";
+import {BookOpenIcon, PencilIcon, SpeakerIcon, MicIcon, ClockIcon} from "lucide-react";
 
-const ReadingComponent = ({
+const IntroComponent = ({
                               onStartAction: onStart = () => {},
-                              duration = "20 mins",
+                              duration = 1200000,
                               title = "Reading",
-                              subtitle = "You are about to start the reading section."
+                              subtitle = "You are about to start the reading section.",
+                              kind = "reading"
                           }) => {
     return (
-        <div className="flex items-center justify-center p-4">
+        <div className="flex items-center justify-center p-4 text-left">
             <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-8">
                 <div className="text-center mb-8">
                     <h1 className="text-xl font-semibold text-gray-900 mb-2">
@@ -21,16 +22,28 @@ const ReadingComponent = ({
 
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-full mb-4">
-                        <BookOpenIcon
+                        {kind.includes("reading") && <BookOpenIcon
                             className="w-8 h-8 text-blue-500"
                             aria-hidden="true"
-                        />
+                        />}
+                        {kind.includes("writing") && <PencilIcon
+                            className="w-8 h-8 text-blue-500"
+                            aria-hidden="true"
+                        />}
+                        {kind.includes("speaking") && <MicIcon
+                            className="w-8 h-8 text-blue-500"
+                            aria-hidden="true"
+                        />}
+                        {kind.includes("listening") && <SpeakerIcon
+                            className="w-8 h-8 text-blue-500"
+                            aria-hidden="true"
+                        />}
                     </div>
                     <div className="space-y-1">
-                        <p className="text-sm font-medium text-gray-900">Reading</p>
+                        <p className="text-sm font-medium text-gray-900">{title.split(" ")[0]}</p>
                         <div className="flex items-center justify-center text-sm text-gray-500">
                             <ClockIcon className="w-4 h-4 mr-1" aria-hidden="true" />
-                            <span>{duration}</span>
+                            <span>{duration / 60000} min</span>
                         </div>
                     </div>
                 </div>
@@ -69,7 +82,7 @@ const ReadingComponent = ({
                 </button>
 
                 <div id="reading-instructions" className="sr-only">
-                    Reading section with {duration} duration. Three important instructions:
+                    Reading section with {duration / 60000} minutes of duration. Three important instructions:
                     Questions adapt to your level, no points lost for incorrect answers,
                     and submissions cannot be changed once submitted.
                 </div>
@@ -78,4 +91,4 @@ const ReadingComponent = ({
     );
 };
 
-export default ReadingComponent;
+export default IntroComponent;

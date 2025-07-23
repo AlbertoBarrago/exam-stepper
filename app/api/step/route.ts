@@ -16,7 +16,8 @@ const StepsConfig: Step[] = [
         id: 1,
         kind: 'reading-intro',
         title: 'Reading Section Intro',
-        subTitle: 'You are about to start the reading section.'
+        subTitle: 'You are about to start the reading section.',
+        durationMs: 1200000
     },
     {
         id: 1.1,
@@ -111,6 +112,8 @@ const StepsConfig: Step[] = [
         id: 2,
         kind: 'listening-intro',
         title: 'Listening Section Intro',
+        subTitle: 'Now you have to listen some audio',
+        durationMs: 1200000
     },
     {
         id: 2.1,
@@ -141,6 +144,8 @@ const StepsConfig: Step[] = [
         id: 3,
         kind: 'writing-intro',
         title: 'Writing Section Intro',
+        subTitle: 'Now you have write some content',
+        durationMs: 2100000
     },
     {
         id: 3.1,
@@ -156,6 +161,8 @@ const StepsConfig: Step[] = [
         id: 4,
         kind: 'speaking-intro',
         title: 'Speaking Section',
+        subTitle: 'Now you have speaking a little',
+        durationMs: 9000000
     },
     {
         id: 4.1,

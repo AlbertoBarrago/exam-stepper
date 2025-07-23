@@ -34,7 +34,8 @@ function StepBody({current, next}: { current: number; next: () => void }) {
         case 'permission':
             return <PermissionStep onNextAction={next}/>;
         case 'reading-intro':
-            return <ReadingIntroStep title={step.title} subtitle={step.subTitle} onNextAction={next}/>;
+            return <ReadingIntroStep title={step.title} subtitle={step.subTitle} durationMs={step.durationMs}
+                                     kind={step.kind} onNextAction={next}/>;
         case 'reading-question':
             return <ReadingQuestionStep sentence={step.sentence} onNextAction={next}/>;
         case 'reading-question-list':
@@ -42,7 +43,8 @@ function StepBody({current, next}: { current: number; next: () => void }) {
         case 'reading-complete':
             return <ReadingCompleteStep title={step.title} onNextAction={next}/>;
         case 'listening-intro':
-            return <ListeningIntroStep title={step.title} onNextAction={next}/>;
+            return <ListeningIntroStep title={step.title} subtitle={step.subTitle} durationMs={step.durationMs}
+                                       kind={step.kind} onNextAction={next}/>;
         case 'listening-question':
             return <ListeningStep audioUrl={step.audioUrl} questions={step.questions} onNextAction={next}/>;
         case 'listening-complete':
