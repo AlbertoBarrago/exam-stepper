@@ -1,23 +1,7 @@
 import React from 'react';
 import {ChevronLeft, ChevronRight} from 'lucide-react';
+import {ReadingPassageProps} from "@/types/readingTypes";
 
-interface Question {
-    id: string;
-    question: string;
-    options: string[];
-    type: 'single' | 'multiple';
-}
-
-interface ReadingPassageProps {
-    passage: string;
-    questions: Question[];
-    currentQuestionIndex?: number;
-    onAnswerChange: (questionId: string, answer: number | number[]) => void;
-    onNextAction: () => void;
-    onPrevious?: () => void;
-    answers: Record<string, number | number[]>;
-    showPrevious?: boolean;
-}
 
 const ReadingPassage: React.FC<ReadingPassageProps> = ({
                                                            passage,

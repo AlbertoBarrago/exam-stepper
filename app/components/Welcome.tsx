@@ -7,37 +7,38 @@ const WelcomeComponent = ({
                               title = "Welcome",
                               subtitle = "You are about to start the test"
                           }) => {
-    const testSections = [
+
+    //TODO: can be moved inside a service or can be fetched from remote with little adjustment
+    const welcomeConfig = [
         {
             icon: BookOpenIcon,
             name: "Reading",
-            duration: "30 mins",
+            duration: "20 mins",
             color: "text-blue-500",
             bgColor: "bg-blue-50"
         },
         {
             icon: SpeakerIcon,
             name: "Listening",
-            duration: "30 mins",
+            duration: "20 mins",
             color: "text-gray-500",
             bgColor: "bg-gray-50"
         },
         {
             icon: PencilIcon,
             name: "Writing",
-            duration: "60 mins",
+            duration: "30 mins",
             color: "text-blue-500",
             bgColor: "bg-blue-50"
         },
         {
             icon: MicIcon,
             name: "Speaking",
-            duration: "15 mins",
+            duration: "20 mins",
             color: "text-purple-500",
             bgColor: "bg-purple-50"
         }
     ];
-
     const instructions = [
         "Check you will have enough time to complete the whole test before you begin. Once you begin the test, you cannot pause the timer or restart the test. You can take very short breaks between test sections if needed. These breaks are also timed.",
         "You can only take the test once. You cannot repeat the test to practice.",
@@ -47,7 +48,7 @@ const WelcomeComponent = ({
     ];
 
     return (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center mt-10">
             <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full p-8">
                 <div className="text-center mb-8">
                     <h1 className="text-2xl font-semibold text-gray-900 mb-2">
@@ -59,7 +60,7 @@ const WelcomeComponent = ({
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    {testSections.map((section, index) => {
+                    {welcomeConfig.map((section, index) => {
                         const IconComponent = section.icon;
                         return (
                             <div

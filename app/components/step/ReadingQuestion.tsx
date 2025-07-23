@@ -1,21 +1,12 @@
 import React, { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
-
-interface ReadingQuestionProps {
-    questionNumber?: number;
-    totalQuestions?: number;
-    sentence: string;
-    options?: string[];
-    onNextAction?: (selectedAnswer: number) => void;
-    onAnswerChangeAction?: (optionIndex: number) => void;
-    initialAnswer?: number | null;
-}
+import {ReadingQuestionProps} from "@/types/readingTypes";
 
 const ReadingQuestion: React.FC<ReadingQuestionProps> = ({
-                                                             questionNumber = 1,
-                                                             totalQuestions = 10,
-                                                             sentence = "James has considerable _____ about advertising.",
-                                                             options = ["information", "knowledge", "communication", "intelligence"],
+                                                             questionNumber,
+                                                             totalQuestions,
+                                                             sentence,
+                                                             options,
                                                              onNextAction,
                                                              onAnswerChangeAction,
                                                              initialAnswer = null
@@ -55,7 +46,7 @@ const ReadingQuestion: React.FC<ReadingQuestionProps> = ({
                     </div>
 
                     <div className="space-y-3" role="radiogroup" aria-labelledby="question-text">
-                        {options.map((option, index) => (
+                        {options?.map((option, index) => (
                             <label
                                 key={index}
                                 className={`

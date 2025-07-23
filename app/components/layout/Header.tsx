@@ -39,10 +39,11 @@ export default function Header() {
     const menuRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
-    const {steps, isLoading: isLoadingSteps} = useStepStore(); // <-- Get steps from the store
+    const {steps, isLoading: isLoadingSteps} = useStepStore();
     const {currentStepIndex, reset: resetTimer, startSection, pause} = useTimerStore();
 
     const prevStepKindRef = useRef<string | undefined>(undefined);
+    const [showTimeBar, setShowTimeBar] = useState(true); // New state to control visibility
 
     const handleLogout = () => {
         logout();
@@ -78,7 +79,9 @@ export default function Header() {
         const prevKind = prevStepKindRef.current;
         const thisSection = stepKindToSection(currentKind);
 
-        if (QUESTION_KINDS.includes(currentKind)) {
+        if (QUESTION_KINDS.includes(currentKind) || currentKind.endsWith('-intro')) {
+            // Show time bar for intro and question steps
+            setShowTimeBar(true);
             if (
                 prevKind &&
                 stepKindToSection(prevKind) === thisSection &&
@@ -88,17 +91,19 @@ export default function Header() {
                 startSection(thisSection);
             }
         } else if (currentKind.endsWith('-complete')) {
+            // Hide the time bar for complete steps and pause the timer
             pause();
+            setShowTimeBar(false);
         }
 
         prevStepKindRef.current = currentKind;
-    }, [currentStepIndex, startSection, pause, step]);
+    }, [currentStepIndex, startSection, pause, step, setShowTimeBar]);
 
     return (
         <header
             className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50 border-b-blue-600 border-b-3">
             <div className="text-xl font-bold text-blue-700 cursor-pointer" onClick={goToHome}>Home</div>
-            <SectionTimerBar displaySection={isSection(section) ? section : null}/>
+            {showTimeBar && <SectionTimerBar displaySection={isSection(section) ? section : null}/>}
             <TickController/>
             <div className="relative" ref={menuRef}>
                 {user ? (
