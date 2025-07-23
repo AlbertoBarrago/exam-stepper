@@ -90,8 +90,7 @@ export default function AudioPlayer({
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
         const secs = Math.floor(seconds % 60);
-        const ms = Math.floor((seconds % 1) * 1000);
-        return `${mins}:${secs.toString().padStart(2, '0')}:${ms.toString().padStart(2, '0')}`;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
     const radius = 36;
@@ -129,12 +128,12 @@ export default function AudioPlayer({
                                  style={{
                                      color: '#2563eb',
                                      transition: 'color 0.7s cubic-bezier(0.4, 0, 0.2, 1)'
-                                 }} />
+                                 }}/>
                         : <Play size={40} strokeWidth={2}
                                 style={{
                                     color: '#ffffff',
                                     transition: 'color 0.7s cubic-bezier(0.4, 0, 0.2, 1)'
-                                }} />}
+                                }}/>}
                 </button>
 
                 <svg
@@ -172,7 +171,7 @@ export default function AudioPlayer({
                     <div className="bg-gray-50 px-3 py-2 rounded-lg">
                         <div className="font-medium text-gray-700 mb-1">Time Elapsed</div>
                         <div className="font-mono text-blue-600">
-                            {formatTime(elapsedTime)}
+                            {formatTime(elapsedTime)}/{formatTime(audioDuration)}
                         </div>
                     </div>
 
@@ -180,7 +179,7 @@ export default function AudioPlayer({
                         <div className="bg-gray-50 px-3 py-2 rounded-lg">
                             <div className="font-medium text-gray-700 mb-1">Plays Remaining</div>
                             <div className={`font-mono ${remainingPlays === 0 ? 'text-red-600' : 'text-blue-600'}`}>
-                                {remainingPlays} / {maxPlays}
+                                {remainingPlays}/{maxPlays}
                             </div>
                         </div>
                     )}

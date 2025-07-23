@@ -73,7 +73,7 @@ const SectionComplete: React.FC<SectionCompleteProps> = ({
     };
 
     return (
-        <div className="flex items-center justify-center p-4">
+        <div className="flex items-center justify-center p-4 mt-10">
             <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full p-8">
                 <div className="text-center mb-12">
                     <h1 className="text-3xl font-bold text-gray-900 mb-4">

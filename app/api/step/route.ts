@@ -132,7 +132,13 @@ const StepsConfig: Step[] = [
                 before: "The conversation is about",
                 options: ["the weather", "the sun", "the moon"],
                 correctAnswer: "the sun",
-            }
+            },
+            {
+                id: 3,
+                before: "The subject is about",
+                options: ["a men", "a dog", "a cat"],
+                correctAnswer: "a cat",
+            },
         ],
     },
     {

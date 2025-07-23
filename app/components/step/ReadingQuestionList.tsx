@@ -51,7 +51,7 @@ const ReadingPassage: React.FC<ReadingPassageProps> = ({
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Passage Section */}
-            <div className="bg-white rounded-lg shadow-lg">
+            <div className="bg-white rounded-lg shadow-lg text-left">
                 <div className="p-6 max-h-[80vh] overflow-y-auto">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4">
                         Read the magazine article about an underground market and answer the best answer for each
