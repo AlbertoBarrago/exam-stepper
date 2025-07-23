@@ -1,19 +1,22 @@
 'use client';
 
-type Props = { title: string, onNextAction: () => void };
+import IntroComponent from "@/components/step/Intro";
+import {IntroProps} from "@/types/introTypes";
 
-export default function WritingIntroStep({title, onNextAction}: Props) {
+
+export default function WritingIntroStep({title, subtitle, kind, durationMs, onNextAction}: IntroProps) {
 
     const handleNext = () => {
         onNextAction();
     }
 
     return (
-       <>
-           {title}
-           <button className="btn mt-6 ml-4" onClick={handleNext}>
-               Next →
-           </button>
-       </>
+        <IntroComponent
+            onStartAction={handleNext}
+            duration={durationMs}
+            title={title}
+            subtitle={subtitle}
+            kind={kind}
+        />
     );
 }

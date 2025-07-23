@@ -162,7 +162,7 @@ const StepsConfig: Step[] = [
         kind: 'speaking-intro',
         title: 'Speaking Section',
         subTitle: 'Now you have speaking a little',
-        durationMs: 9000000
+        durationMs: 900000
     },
     {
         id: 4.1,

@@ -50,13 +50,13 @@ function StepBody({current, next}: { current: number; next: () => void }) {
         case 'listening-complete':
             return <ListeningCompleteStep title={step.title} onNextAction={next}/>;
         case 'writing-intro':
-            return <WritingIntroStep title={step.title} onNextAction={next}/>;
+            return <WritingIntroStep title={step.title} subtitle={step.subTitle} kind={step.kind} durationMs={step.durationMs} onNextAction={next}/>;
         case 'writing-question':
             return <WritingStep title={step.title} onNextAction={next}/>;
         case 'writing-complete':
             return <WritingCompleteStep title={step.title} onNextAction={next}/>;
         case 'speaking-intro':
-            return <SpeakingIntroStep title={step.title} onNextAction={next}/>;
+            return <SpeakingIntroStep title={step.title} subtitle={step.subTitle} durationMs={step.durationMs} kind={step.kind} onNextAction={next}/>;
         case 'speaking-question':
             return <SpeakingStep durationMs={step.durationMs} onNextAction={next}/>;
         case 'speaking-complete':
