@@ -1,5 +1,3 @@
-'use client';
-
 import SectionComplete from "@/components/step/Final";
 
 type Props = { onNextAction: () => void };
