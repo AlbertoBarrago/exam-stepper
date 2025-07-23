@@ -8,12 +8,12 @@ interface CircularAudioPlayerProps {
     limitPlays?: boolean;
 }
 
-export default function CircularAudioPlayer({
-                                                src,
-                                                duration,
-                                                permissionStep,
-                                                limitPlays = true,
-                                            }: CircularAudioPlayerProps) {
+export default function AudioPlayer({
+                                        src,
+                                        duration,
+                                        permissionStep,
+                                        limitPlays = true,
+                                    }: CircularAudioPlayerProps) {
     const audioRef = useRef<HTMLAudioElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
@@ -67,6 +67,8 @@ export default function CircularAudioPlayer({
     const handlePause = () => {
         const audio = audioRef.current;
         if (!audio) return;
+        audio.currentTime = 0;
+        setProgress(0)
         audio.pause();
         setIsPlaying(false);
     };
@@ -91,22 +93,33 @@ export default function CircularAudioPlayer({
     return (
         <div className="relative w-32 h-32 flex items-center justify-center mx-auto">
             {src &&
-                <audio ref={audioRef} src={src} preload="auto" style={{ display: "none" }} />
+                <audio ref={audioRef} src={src} preload="auto" style={{display: "none"}}/>
             }
 
+
             <button
-                className="z-10 bg-white rounded-full shadow-lg w-16 h-16 flex items-center justify-center focus:outline-none"
                 onClick={handleButtonClick}
                 aria-label={isPlaying ? "Pause Audio" : "Play Audio"}
                 disabled={isButtonDisabled}
+                className="z-10 rounded-full shadow-lg w-16 h-16 flex items-center justify-center focus:outline-none"
                 style={{
+                    backgroundColor: isPlaying ? '#ffffff' : '#2563eb',
                     opacity: isButtonDisabled ? 0.6 : 1,
-                    cursor: isButtonDisabled ? 'not-allowed' : 'pointer'
+                    cursor: isButtonDisabled ? 'not-allowed' : 'pointer',
+                    transition: 'background-color 0.7s cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
             >
                 {isPlaying
-                    ? <Pause size={40} strokeWidth={2} className="text-blue-600" />
-                    : <Play size={40} strokeWidth={2} className="text-blue-600" />}
+                    ? <Pause size={40} strokeWidth={2}
+                             style={{
+                                 color: '#2563eb',
+                                 transition: 'color 0.7s cubic-bezier(0.4, 0, 0.2, 1)'
+                             }} />
+                    : <Play size={40} strokeWidth={2}
+                            style={{
+                                color: '#ffffff',
+                                transition: 'color 0.7s cubic-bezier(0.4, 0, 0.2, 1)'
+                            }} />}
             </button>
 
             <svg
@@ -127,12 +140,14 @@ export default function CircularAudioPlayer({
                     cy={64}
                     r={radius}
                     fill="none"
-                    stroke="#2563eb"
                     strokeWidth={8}
                     strokeDasharray={circumference}
                     strokeDashoffset={circumference - displayProgress * circumference}
                     strokeLinecap="round"
-                    style={{ transition: 'stroke-dashoffset 0.2s linear' }}
+                    style={{
+                        stroke: '#2563eb',
+                        transition: 'stroke-dashoffset 0.3s linear, stroke 0.7s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
                 />
             </svg>
         </div>

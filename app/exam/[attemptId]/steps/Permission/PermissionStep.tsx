@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import CircularAudioPlayer from "@/components/CircularAudioPlayer";
+import AudioPlayer from "@/components/AudioPlayer";
 import { useRouter } from 'next/navigation';
 
 type PermissionStepProps = {
@@ -69,7 +69,7 @@ export default function PermissionStep({ onNextAction }: PermissionStepProps) {
                 tabIndex={0}
                 onClick={mode === 'init' ? handleCircularInteraction : undefined}
             >
-                <CircularAudioPlayer
+                <AudioPlayer
                     src={audioURL}
                     duration={3}
                     permissionStep={true}
