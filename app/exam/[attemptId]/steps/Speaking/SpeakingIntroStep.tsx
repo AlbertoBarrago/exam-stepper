@@ -1,4 +1,4 @@
-import IntroComponent from '@/components/steps/Intro';
+import IntroComponent from '@/components/steps/IntroTask';
 import { IntroProps } from '@/types/introTypes';
 
 export default function SpeakingIntroStep({

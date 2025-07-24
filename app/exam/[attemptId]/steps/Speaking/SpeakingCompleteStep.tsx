@@ -1,4 +1,4 @@
-import SectionComplete from '@/components/steps/Final';
+import SectionComplete from '@/components/steps/CompleteTask';
 import { NextTypes } from '@/types/commonTypes';
 
 export default function SpeakingCompleteStep({ onNextAction }: NextTypes) {
