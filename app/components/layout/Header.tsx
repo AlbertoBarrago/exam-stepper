@@ -102,7 +102,7 @@ export default function Header() {
   return (
     <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50 border-b-blue-600 border-b-3">
       <div className="text-xl font-bold text-blue-700 cursor-pointer" onClick={goToHome}>
-        Home
+        English Exam
       </div>
       {showTimeBar && <SectionTimerBar displaySection={isSection(section) ? section : null} />}
       <TickController />

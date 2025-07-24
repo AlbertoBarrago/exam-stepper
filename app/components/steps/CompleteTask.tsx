@@ -1,13 +1,6 @@
 import React from 'react';
-import { BookOpen, Headphones, PenTool, Mic, Check } from 'lucide-react';
-
-interface SectionCompleteProps {
-  completedSection: 'reading' | 'listening' | 'writing' | 'speaking';
-  nextSection?: 'listening' | 'writing' | 'speaking' | null;
-  onContinue: () => void;
-  customTitle?: string;
-  customSubtitle?: string;
-}
+import { Check } from 'lucide-react';
+import { SectionCompleteProps } from '@/types/commonTypes';
 
 const SectionComplete: React.FC<SectionCompleteProps> = ({
   completedSection,
@@ -15,42 +8,8 @@ const SectionComplete: React.FC<SectionCompleteProps> = ({
   onContinue,
   customTitle = 'Well done!',
   customSubtitle,
+  sections,
 }) => {
-  const sections = [
-    {
-      id: 'reading',
-      name: 'Reading',
-      duration: '20 mins',
-      icon: BookOpen,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-50',
-    },
-    {
-      id: 'listening',
-      name: 'Listening',
-      duration: '20 mins',
-      icon: Headphones,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-50',
-    },
-    {
-      id: 'writing',
-      name: 'Writing',
-      duration: '35 mins',
-      icon: PenTool,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-50',
-    },
-    {
-      id: 'speaking',
-      name: 'Speaking',
-      duration: '15 mins',
-      icon: Mic,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-50',
-    },
-  ];
-
   const getSubtitle = () => {
     if (customSubtitle) return customSubtitle;
 
