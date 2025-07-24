@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { UserStore, UserData } from '@/types/user';
+import { UserData, UserStore } from '@/types/userTypes';
 
 export const useUserStore = create<
   UserStore & {
