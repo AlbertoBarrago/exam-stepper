@@ -1,20 +1,26 @@
-'use client';
+import WritingTask from '@/components/steps/WritingTask';
+import { WritingTypes } from '@/types/writingTypes';
 
-type Props = { title: string, onNextAction: () => void };
+export default function WritingStep({ onNextAction }: WritingTypes) {
+  const handleTextChange = (text: string, wordCount: number) => {
+    console.log('Text changed:', { text, wordCount });
+  };
 
-export default function WritingStep({ title, onNextAction }: Props) {
+  const submitToAi = () => {
+    // TODO: add AI analysis for text, than go Next...
 
-    const handleNext = () => {
-        onNextAction();
-    }
+    onNextAction();
+  };
 
-    return (
-        <>
-
-            {title}
-            <button className="btn mt-6 ml-4" onClick={handleNext}>
-                Next →
-            </button>
-        </>
-    )
+  return (
+    <WritingTask
+      title="Write a clear and compelling job advertisement."
+      placeholder="Start your answer here..."
+      minWords={50}
+      maxWords={150}
+      onTextChange={handleTextChange}
+      onSubmit={submitToAi}
+      buttonText="Submit"
+    />
+  );
 }

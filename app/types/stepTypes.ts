@@ -1,44 +1,60 @@
-export type AudioQuestion = {
-    id: number;
-    before: string;
-    options: string[];
-    correctAnswer: string;
+export type IdValue = {
+  id: number;
+  value: string;
 };
 
-export type Sentence = {
-    sentence: string;
-    options: string[];
-    passage?: string;
-    correct: string;
-}
+export type AudioQuestion = {
+  id: number;
+  before: string;
+  options: IdValue[];
+  correctAnswer: IdValue;
+};
 
 export interface Question {
-    id: string;
-    question: string;
-    options: string[];
-    type: 'single' | 'multiple';
+  id: number;
+  question: string;
+  options: IdValue[];
+  type: 'single' | 'multiple';
 }
 
 // Union type, ts trick
 type SimpleStepKind =
-    | 'welcome'
-    | 'permission'
-    | 'reading-complete'
-    | 'listening-intro'
-    | 'listening-complete'
-    | 'writing-intro'
-    | 'writing-question'
-    | 'writing-complete'
-    | 'speaking-intro'
-    | 'speaking-complete'
-    | 'final';
+  | 'welcome'
+  | 'permission'
+  | 'reading-complete'
+  | 'listening-complete'
+  | 'writing-question'
+  | 'writing-complete'
+  | 'speaking-complete'
+  | 'final';
 
+type IntroStepKind = 'reading-intro' | 'listening-intro' | 'writing-intro' | 'speaking-intro';
 
 export type Step =
-    | { id: number; kind: 'reading-intro'; title: string; subTitle: string }
-    | { id: number; kind: 'reading-question'; title: string; sentence: string, options: string[] }
-    | { id: number; kind: 'reading-question-list'; title: string; passage: string, questions: Question[], componentProps: object, sampleAnswers: object}
-    | { id: number; kind: 'listening-question'; title: string; audioUrl: string; questions: AudioQuestion[] }
-    | { id: number; kind: 'speaking-question'; title: string; durationMs: number }
-    | { id: number; kind: SimpleStepKind; title: string };
+  | { id: number; kind: 'reading-question'; title: string; sentence: string; options: IdValue[] }
+  | {
+      id: number;
+      kind: 'reading-question-list';
+      title: string;
+      passage: string;
+      questions: Question[];
+      componentProps: object;
+      sampleAnswers: object;
+    }
+  | {
+      id: number;
+      kind: 'listening-question';
+      title: string;
+      audioUrl: string;
+      questions: AudioQuestion[];
+    }
+  | { id: number; kind: 'speaking-question'; title: string; durationMs: number }
+  | { id: number; kind: IntroStepKind; title: string; subTitle: string; durationMs: number }
+  | { id: number; kind: SimpleStepKind; title: string };
 
+export type StepState = {
+  steps: Step[];
+  fetchSteps: () => Promise<void>;
+  isLoading: boolean;
+  error: string | null;
+};

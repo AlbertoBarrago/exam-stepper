@@ -1,0 +1,7 @@
+export type IntroProps = {
+  title: string;
+  subtitle: string;
+  kind: string;
+  durationMs: number;
+  onNextAction: () => void;
+};

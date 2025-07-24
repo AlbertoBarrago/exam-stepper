@@ -1,21 +1,24 @@
-'use client';
+import IntroComponent from '@/components/steps/IntroTask';
+import { IntroProps } from '@/types/introTypes';
 
-import ReadingComponent from "@/components/step/ReadingIntro";
+export default function ReadingIntroStep({
+  title,
+  subtitle,
+  kind,
+  durationMs,
+  onNextAction,
+}: IntroProps) {
+  const handleNext = () => {
+    onNextAction();
+  };
 
-type Props = { title: string, subtitle: string, onNextAction: () => void };
-
-export default function ReadingIntroStep({title, subtitle, onNextAction}: Props) {
-
-    const handleNext = () => {
-        onNextAction();
-    }
-
-    return (
-        <ReadingComponent
-            onStartAction={handleNext}
-            duration="20 mins"
-            title={title}
-            subtitle={subtitle}
-        />
-    );
+  return (
+    <IntroComponent
+      onStartAction={handleNext}
+      duration={durationMs}
+      title={title}
+      subtitle={subtitle}
+      kind={kind}
+    />
+  );
 }

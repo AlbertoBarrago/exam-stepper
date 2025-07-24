@@ -1,20 +1,18 @@
-'use client';
+import { TitleAndNextActionType } from '@/types/commonTypes';
+import CompleteTask from '@/components/steps/CompleteTask';
+import { SECTION_DATA } from '@/const/clientShellConst';
 
-import SectionComplete from "@/components/step/Final";
+export default function ReadingCompleteStep({ onNextAction }: TitleAndNextActionType) {
+  const handleNext = () => {
+    onNextAction();
+  };
 
-type Props = { title: string, onNextAction: () => void };
-
-export default function ReadingCompleteStep({onNextAction}: Props) {
-
-    const handleNext = () => {
-        onNextAction();
-    }
-
-    return (
-        <SectionComplete
-            completedSection="reading"
-            nextSection="listening"
-            onContinue={handleNext}
-        />
-    );
+  return (
+    <CompleteTask
+      completedSection="reading"
+      nextSection="listening"
+      sections={SECTION_DATA}
+      onContinue={handleNext}
+    />
+  );
 }

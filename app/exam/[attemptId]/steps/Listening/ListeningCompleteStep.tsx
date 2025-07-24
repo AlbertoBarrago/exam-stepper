@@ -1,20 +1,29 @@
-'use client';
+import CompleteTask from '@/components/steps/CompleteTask';
+import { TitleAndNextActionType } from '@/types/commonTypes';
+import { useStepStore } from '@/state/stepStore';
+import { useTimerStore } from '@/state/timerStore';
+import { SECTION_DATA } from '@/const/clientShellConst';
 
-import SectionComplete from "@/components/step/Final";
+export default function ListeningCompleteStep({ onNextAction }: TitleAndNextActionType) {
+  const { steps } = useStepStore();
+  const { nextStep } = useTimerStore();
 
-type Props = { title: string, onNextAction: () => void };
-
-export default function ListeningCompleteStep({onNextAction}: Props) {
-
-    const handleNext = () => {
-        onNextAction();
+  const handleNext = () => {
+    const writingIntroStepIndex = steps.findIndex((step) => step.kind === 'writing-intro');
+    if (writingIntroStepIndex !== -1) {
+      nextStep();
+    } else {
+      // Fallback if writing-intro step is not found, though it should be.
+      onNextAction();
     }
+  };
 
-    return (
-        <SectionComplete
-            completedSection="listening"
-            nextSection="writing"
-            onContinue={handleNext}
-        />
-    );
+  return (
+    <CompleteTask
+      completedSection="listening"
+      nextSection="writing"
+      sections={SECTION_DATA}
+      onContinue={handleNext}
+    />
+  );
 }

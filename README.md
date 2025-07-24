@@ -1,29 +1,50 @@
-# English Test Stepper Test 
-
-> ON WORK...
+# English Test Stepper
 
 A modern web application designed to assess English language proficiency with interactive, speech-enabled features.
 
 ## ✨ Features
 
 - 📝 **Timed Exam**: Complete a 50-minute English proficiency test.
-- 🎤 **Speech Recognition**: Answer questions using your voice with real-time audio visualization. [ON WORK]
+- 🎤 **Speech Recognition**: Answer questions using your voice with real-time audio visualization.
 - 📊 **Global Progress Bar**: Track your overall progress throughout the exam.
 - 🔄 **Multi-Step Workflow**: Move through different types of questions seamlessly.
-- ⚡ **Instant Results**: Get feedback as soon as the test is finished. [ON WORK]
+- ⚡ **Instant Results**: Get feedback as soon as the test is finished.
 
 ## 🛠️ Tech Stack
 
-- [Next.js 14](https://nextjs.org/) – Powerful React framework for fast, scalable apps.
-- [TailwindCSS](https://tailwindcss.com/) – Utility-first CSS framework for rapid UI development.
-- [Zustand](https://zustand.docs.pmnd.rs/getting-started/introduction) - For state management solution
-- **Web Audio API** – For capturing and visualizing real-time audio input.
-- **MediaRecorder API** – For recording test taker’s audio answers.
+- **Frontend**: [Next.js 14](https://nextjs.org/), [TailwindCSS](https://tailwindcss.com/)
+- **State Management**: [Zustand](https://zustand.docs.pmnd.rs/)
+- **Audio APIs**: Web Audio API, MediaRecorder API
 
+## 🚀 Installation
 
-### Steps Structure
+1. Clone the repository:
 
-All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
+   ```bash
+   git clone https://github.com/your-repo/exam-stepper-fe.git
+   cd exam-stepper-fe
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+## 📖 Usage
+
+1. Navigate to the application in your browser.
+2. Follow the on-screen instructions to start the exam.
+3. Complete each section within the allotted time.
+
+## 📂 Project Structure
+
+All exam sections are organized in their own folders under `exam/[attemptId]/steps/`:
 
 - Welcome/
 - Reading/
@@ -32,42 +53,22 @@ All exam sections are now in their own folders in `exam/[attemptId]/steps/`:
 - Speaking/
 - Final/
 
+## 🤝 Contributing
 
-## 📌 Todo / Integration steps
+Contributions are welcome! Please follow these steps:
 
-### Step Organization
-- [x] Refactor `steps/` folder so each exam section has its own folder and sub-steps
+1. Fork the repository.
+2. Create a new branch for your feature or bugfix.
+3. Submit a pull request with a detailed description of your changes.
 
-### Data & Types
-- [x] Create `state/timerSTore.ts` to share step/result/timing types across the app with zustand
+## 📜 License
 
-### Step Navigation
-- [x] Implement `StepController` or a custom `useStepMachine` hook to manage step logic, timing, and navigation
-- [x] Build out context (`ExamContext`) for global exam state (progress, results, navigation)
+This project is licensed under the MIT License.
 
-### UI Reusability
-- [ ] Make shared UI components (Audio check, Spectrum, Timer, Progress bar) highly reusable via props
+---
 
-### User Session
-- [ ] Add api for the user session for get username and verify if it has permission
-- [ ] Add data into HEADER or panel on top as FIGMA shows
+### Steps Flow (Visualized)
 
-### FE "Security"
-- [x] Handle the browser back button to prevent exam navigation loopholes
-
-### Section Features
-- [ ] Permission: Audio and video [ON WORK]
-- [ ] Reading: Choices, long text, intro/complete
-- [ ] Listening: Audio player, answer choices, intro/complete
-- [ ] Writing: Word counter, AI result hook-up
-- [ ] Speaking: Microphone permission, audio visualization, practice, main questions, repeat parts
-
-
-### Timer 
-- [ ] Handle time off, fail exam. 
- 
-
-### Steps Flow
 ```mermaid
 sequenceDiagram
     participant User
@@ -95,7 +96,3 @@ sequenceDiagram
     FinalRecapStep->>TimerStore: Pause and get elapsed times
     FinalRecapStep-->>User: Show analysis and summary
 ```
-
-
-
-
