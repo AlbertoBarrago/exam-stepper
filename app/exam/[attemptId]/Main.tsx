@@ -37,7 +37,7 @@ function StepBody({current, next}: { current: number; next: () => void }) {
             return <ReadingIntroStep title={step.title} subtitle={step.subTitle} durationMs={step.durationMs}
                                      kind={step.kind} onNextAction={next}/>;
         case 'reading-question':
-            return <ReadingQuestionStep sentence={step.sentence} onNextAction={next}/>;
+            return <ReadingQuestionStep sentence={step.sentence} options={step.options} onNextAction={next}/>;
         case 'reading-question-list':
             return <ReadingQuestionListStep questions={step.questions} passage={step.passage} onNextAction={next}/>;
         case 'reading-complete':

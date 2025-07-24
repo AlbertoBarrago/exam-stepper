@@ -1,12 +1,14 @@
 'use client';
 import ReadingQuestion from "@/components/step/ReadingQuestion";
+import {IdValue} from "@/types/stepTypes";
 
 type Props = {
     sentence: string,
+    options: IdValue[]
     onNextAction: (results: boolean[]) => void;
 };
 
- const ReadingQuestionStep = ({ sentence, onNextAction }: Props) => {
+ const ReadingQuestionStep = ({ sentence, options, onNextAction }: Props) => {
 
     const handleAnswerChange = (optionIndex: number) => {
         console.log('Answer changed to:', optionIndex);
@@ -21,7 +23,7 @@ type Props = {
             questionNumber={1}
             totalQuestions={10}
             sentence={sentence}
-            options={["information", "knowledge", "communication", "intelligence"]}
+            options={options}
             onNextAction={handleSubmit}
             onAnswerChangeAction={handleAnswerChange}
             initialAnswer={null}

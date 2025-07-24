@@ -51,7 +51,7 @@ const ReadingQuestion: React.FC<ReadingQuestionProps> = ({
                                 key={index}
                                 className={`
                   flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-200
-                  ${selectedAnswer === index
+                  ${selectedAnswer === option.id
                                     ? 'border-blue-500 bg-blue-50'
                                     : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                                 }
@@ -62,20 +62,20 @@ const ReadingQuestion: React.FC<ReadingQuestionProps> = ({
                                     type="radio"
                                     id={`option-${index}`}
                                     name="question-option"
-                                    value={index}
-                                    checked={selectedAnswer === index}
-                                    onChange={() => handleOptionSelect(index)}
+                                    value={option.id}
+                                    checked={selectedAnswer === option.id}
+                                    onChange={() => handleOptionSelect(option.id)}
                                     className="sr-only"
                                     aria-describedby={`option-${index}-label`}
                                 />
                                 <div className={`
                   flex-shrink-0 w-5 h-5 rounded-full border-2 mr-4 flex items-center justify-center
-                  ${selectedAnswer === index
+                  ${selectedAnswer === option.id
                                     ? 'border-blue-500 bg-blue-500'
                                     : 'border-gray-300'
                                 }
                 `}>
-                                    {selectedAnswer === index && (
+                                    {selectedAnswer === option.id && (
                                         <div className="w-2 h-2 rounded-full bg-white" />
                                     )}
                                 </div>
@@ -83,7 +83,7 @@ const ReadingQuestion: React.FC<ReadingQuestionProps> = ({
                                     id={`option-${index}-label`}
                                     className="text-gray-900 font-medium"
                                 >
-                  {option}
+                  {option.value}
                 </span>
                             </label>
                         ))}

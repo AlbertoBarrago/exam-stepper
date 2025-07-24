@@ -4,7 +4,7 @@ export type ReadingQuestionProps = {
     questionNumber?: number;
     totalQuestions?: number;
     sentence: string;
-    options?: string[];
+    options?: IdValue[];
     onNextAction?: (selectedAnswer: number) => void;
     onAnswerChangeAction?: (optionIndex: number) => void;
     initialAnswer?: number | null;
