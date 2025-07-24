@@ -41,14 +41,14 @@ export default function SpeakingStep({ durationMs, onNextAction }: SpeakingStepT
   };
 
   useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (recorderRef.current?.state === 'recording') {
-        recorderRef.current.stop();
-      }
-      stream?.getTracks().forEach((t) => t.stop());
-    };
-  }, []);
+        return () => {
+            if (timerRef.current) clearTimeout(timerRef.current);
+            if (recorderRef.current?.state === 'recording') {
+                recorderRef.current.stop();
+            }
+            stream?.getTracks().forEach(t => t.stop());
+        };
+    }, [stream]);
 
   return (
     <SpeakingTask
