@@ -12,7 +12,7 @@ export type ReadingQuestionProps = {
 
 export type Question = {
     id: number;
-    question: number;
+    question: string;
     options: IdValue[];
     type: 'single' | 'multiple';
 }

@@ -12,7 +12,7 @@ export type AudioQuestion = {
 
 export interface Question {
     id: number;
-    question: number;
+    question: string;
     options: IdValue[];
     type: 'single' | 'multiple';
 }
