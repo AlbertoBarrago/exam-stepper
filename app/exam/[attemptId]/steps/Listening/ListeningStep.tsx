@@ -1,7 +1,7 @@
 'use client';
 import AudioPlayer from "@/components/AudioPlayer";
 import {useState} from "react";
-import {AudioQuestion} from "@/types/stepTypes";
+import {AudioQuestion, IdValue} from "@/types/stepTypes";
 
 
 export default function ListeningStep({
@@ -13,21 +13,22 @@ export default function ListeningStep({
     onNextAction: () => void;
     questions: AudioQuestion[]
 }) {
-    const [answers, setAnswers] = useState<string[]>(Array(questions.length).fill(""));
+    const [answers, setAnswers] = useState<(IdValue | null)[]>(Array(questions.length).fill(null));
     const [showError, setShowError] = useState(false);
 
 
     const handleNext = () => {
-        const allFilled = answers.every((ans: string) => ans.trim() !== "");
+        const allFilled = answers.every((ans) => ans !== null);
         if (!allFilled) {
             setShowError(true);
             return;
         }
         setShowError(false);
+        console.log("Quiz completed! ", answers);
         onNextAction();
     };
 
-    const handleAnswerChange = (i: number, value: string) => {
+    const handleAnswerChange = (i: number, value: IdValue) => {
         setAnswers((prev) => {
             const newAnswers = [...prev];
             newAnswers[i] = value;
@@ -39,7 +40,6 @@ export default function ListeningStep({
     return (
         <div className="max-w-6xl mx-auto p-6 bg-white">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-left">
-                {/* Left Column - Text and Audio Player */}
                 <div className="text-left p-6">
                     <div className="mb-6">
                         <p className="text-gray-700 mb-4">
@@ -47,7 +47,8 @@ export default function ListeningStep({
                             Read the 6 options and decide which one matches each announcement.
                         </p>
                         <p className="text-gray-700 mb-4">
-                            You can play the recording <span className="font-bold bg-gray-100 px-1 rounded">TWO</span> times.
+                            You can play the recording <span
+                            className="font-bold bg-gray-100 px-1 rounded">TWO</span> times.
                         </p>
                     </div>
 
@@ -56,7 +57,6 @@ export default function ListeningStep({
                     </div>
                 </div>
 
-                {/* Right Column - Questions List */}
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
                     <div className="space-y-4">
                         {questions.map((q, i) => (
@@ -68,30 +68,26 @@ export default function ListeningStep({
                                     <div className="text-gray-700 mb-3">
                                         {q.before}
                                     </div>
-                                    <div className="relative">
-                                        <select
-                                            value={answers[i]}
-                                            onChange={e => handleAnswerChange(i, e.target.value)}
-                                            className={`w-full p-3 border rounded-md bg-white appearance-none cursor-pointer transition-colors ${
-                                                showError && !answers[i].trim()
-                                                    ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-                                                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200'
-                                            } focus:outline-none focus:ring-2`}
-                                            aria-label={`Select answer for announcement ${i + 1}`}
-                                        >
-                                            <option value="">Choose one option</option>
-                                            {q.options.map(option => (
-                                                <option key={option} value={option}>
-                                                    {option}
-                                                </option>
-                                            ))}
-                                        </select>
-
-                                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                                            </svg>
-                                        </div>
+                                    <div className="space-y-2">
+                                        {q.options.map((option, index) => (
+                                            <div key={index} className="flex items-center">
+                                                <input
+                                                    type="radio"
+                                                    id={`${q.id}-${option.id}`}
+                                                    name={`announcement-${i}`}
+                                                    value={option.value}
+                                                    checked={answers[i]?.id === option.id}
+                                                    onChange={() => handleAnswerChange(i, option)}
+                                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                                                />
+                                                <label
+                                                    htmlFor={`${q.id}-${option.id}`}
+                                                    className="ml-2 block text-sm text-gray-700"
+                                                >
+                                                    {option.value}
+                                                </label>
+                                            </div>
+                                        ))}
                                     </div>
                                 </label>
                             </div>
@@ -100,7 +96,6 @@ export default function ListeningStep({
                 </div>
             </div>
 
-            {/* Error Message */}
             {showError && (
                 <div className="mt-6 p-3 bg-red-50 border border-red-200 rounded-md" role="alert">
                     <p className="text-red-700 text-sm font-medium">
@@ -109,7 +104,6 @@ export default function ListeningStep({
                 </div>
             )}
 
-            {/* Next Button */}
             <div className="flex justify-end mt-8">
                 <button
                     onClick={handleNext}
