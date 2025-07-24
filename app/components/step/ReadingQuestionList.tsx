@@ -135,7 +135,7 @@ const ReadingPassage: React.FC<ReadingPassageProps> = ({
                                             </div>
 
                                             <span className="text-gray-900 text-sm leading-relaxed">
-                                            {option}
+                                            {option.value}
                                         </span>
                                         </label>
                                     );

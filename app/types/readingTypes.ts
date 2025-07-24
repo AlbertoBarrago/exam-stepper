@@ -1,3 +1,5 @@
+import {IdValue} from "@/types/stepTypes";
+
 export type ReadingQuestionProps = {
     questionNumber?: number;
     totalQuestions?: number;
@@ -9,9 +11,9 @@ export type ReadingQuestionProps = {
 }
 
 export type Question = {
-    id: string;
-    question: string;
-    options: string[];
+    id: number;
+    question: number;
+    options: IdValue[];
     type: 'single' | 'multiple';
 }
 
@@ -19,9 +21,9 @@ export type ReadingPassageProps = {
     passage: string;
     questions: Question[];
     currentQuestionIndex?: number;
-    onAnswerChange: (questionId: string, answer: number | number[]) => void;
+    onAnswerChange: (questionId: number, answer: number | number[]) => void;
     onNextAction: () => void;
     onPrevious?: () => void;
-    answers: Record<string, number | number[]>;
+    answers: Record<number, number | number[]>;
     showPrevious?: boolean;
 }

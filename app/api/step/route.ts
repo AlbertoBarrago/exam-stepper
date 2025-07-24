@@ -24,7 +24,7 @@ const StepsConfig: Step[] = [
         kind: 'reading-question',
         title: 'Reading',
         sentence: "France is a good ____ for tourists.",
-        options:['walk', 'play', 'traveling'],
+        options: [{id: 1, value: 'walk'}, {id: 2, value: 'play'}, {id: 3, value: 'traveling'}],
     },
     {
         id: 1.2,
@@ -37,11 +37,11 @@ const StepsConfig: Step[] = [
                 "question": "According to the passage, underground markets operate in which of the following locations?",
                 "type": "multiple",
                 "options": [
-                    "Natural caves",
-                    "Abandoned subway tunnels",
-                    "Purpose-built underground chambers",
-                    "Active shopping malls",
-                    "Rooftop spaces"
+                    {id: 1, value: "Natural caves"},
+                    {id: 2, value: "Abandoned subway tunnels"},
+                    {id: 3, value: "Purpose-built underground chambers"},
+                    {id: 4, value: "Active shopping malls"},
+                    {id: 5, value: "Rooftop spaces"}
                 ]
             },
             {
@@ -49,10 +49,10 @@ const StepsConfig: Step[] = [
                 "question": "What is the primary payment method used in Tokyo's underground markets?",
                 "type": "single",
                 "options": [
-                    "Credit cards only",
-                    "Cash only",
-                    "Digital payments",
-                    "Barter system"
+                    {id: 1, value: "Credit cards only"},
+                    {id: 2, value: "Cash only"},
+                    {id: 3, value: "Digital payments"},
+                    {id: 4, value: "Barter system"}
                 ]
             },
             {
@@ -60,11 +60,11 @@ const StepsConfig: Step[] = [
                 "question": "Which challenges do underground markets face?",
                 "type": "multiple",
                 "options": [
-                    "Legal issues with permits and taxation",
-                    "Safety regulation concerns",
-                    "Authority raids forcing relocation",
-                    "Lack of proper ventilation and lighting",
-                    "Competition from online retailers"
+                    {id: 1, value: "Legal issues with permits and taxation"},
+                    {id: 2, value: "Safety regulation concerns"},
+                    {id: 3, value: "Authority raids forcing relocation"},
+                    {id: 4, value: "Lack of proper ventilation and lighting"},
+                    {id: 5, value: "Competition from online retailers"}
                 ]
             },
             {
@@ -72,10 +72,10 @@ const StepsConfig: Step[] = [
                 "question": "In Paris, the underground markets primarily deal in:",
                 "type": "single",
                 "options": [
-                    "Fresh food and groceries",
-                    "Electronics and gadgets",
-                    "Rare books and historical artifacts",
-                    "Clothing and accessories"
+                    {id: 1, value: "Fresh food and groceries"},
+                    {id: 2, value: "Electronics and gadgets"},
+                    {id: 3, value: "Rare books and historical artifacts"},
+                    {id: 4, value: "Clothing and accessories"}
                 ]
             },
             {
@@ -83,10 +83,10 @@ const StepsConfig: Step[] = [
                 "question": "What creates a sense of belonging in underground markets according to the passage?",
                 "type": "single",
                 "options": [
-                    "Low prices and discounts",
-                    "Modern facilities and amenities",
-                    "Secrecy and exclusivity",
-                    "Government endorsement"
+                    {id: 1, value: "Low prices and discounts"},
+                    {id: 2, value: "Modern facilities and amenities"},
+                    {id: 3, value: "Secrecy and exclusivity"},
+                    {id: 4, value: "Government endorsement"}
                 ]
             }
         ],
@@ -124,20 +124,53 @@ const StepsConfig: Step[] = [
             {
                 id: 1,
                 before: "The speaker thinks the weather is",
-                options: ["sunny", "cloudy", "rainy"],
-                correctAnswer: "sunny",
+                options: [{
+                    id: 1,
+                    value: "sunny"
+                }, {
+                    id: 2,
+                    value: "cloudy"
+                },{
+                    id: 3,
+                    value: "rainy"
+                }],
+                correctAnswer: {
+                    id: 1,
+                    value:"sunny"},
             },
             {
                 id: 2,
                 before: "The conversation is about",
-                options: ["the weather", "the sun", "the moon"],
-                correctAnswer: "the sun",
+                options: [{
+                    id: 1,
+                    value: "the weather"
+                }, {
+                    id: 2,
+                    value: "the sun"
+                },{
+                    id: 3,
+                    value: "the moon"
+                }],
+                correctAnswer: {
+                    id: 2,
+                    value:"the sun"},
             },
             {
                 id: 3,
                 before: "The subject is about",
-                options: ["a men", "a dog", "a cat"],
-                correctAnswer: "a cat",
+                options: [{
+                    id: 1,
+                    value: "a men"
+                }, {
+                    id: 2,
+                    value: "a dog"
+                },{
+                    id: 3,
+                    value: "a cat"
+                }],
+                correctAnswer: {
+                    id: 3,
+                    value:"a cat"},
             },
         ],
     },

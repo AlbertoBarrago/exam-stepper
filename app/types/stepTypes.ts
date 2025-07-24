@@ -1,14 +1,19 @@
+export type IdValue = {
+    id: number;
+    value: string;
+}
+
 export type AudioQuestion = {
     id: number;
     before: string;
-    options: string[];
-    correctAnswer: string;
+    options: IdValue[];
+    correctAnswer: IdValue;
 };
 
 export interface Question {
-    id: string;
-    question: string;
-    options: string[];
+    id: number;
+    question: number;
+    options: IdValue[];
     type: 'single' | 'multiple';
 }
 
@@ -31,7 +36,7 @@ type IntroStepKind =
 
 
 export type Step =
-    | { id: number; kind: 'reading-question'; title: string; sentence: string, options: string[] }
+    | { id: number; kind: 'reading-question'; title: string; sentence: string, options: IdValue[] }
     | { id: number; kind: 'reading-question-list'; title: string; passage: string, questions: Question[], componentProps: object, sampleAnswers: object}
     | { id: number; kind: 'listening-question'; title: string; audioUrl: string; questions: AudioQuestion[] }
     | { id: number; kind: 'speaking-question'; title: string; durationMs: number }

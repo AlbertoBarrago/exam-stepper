@@ -13,7 +13,7 @@ const ReadingQuestionList = ({passage, questions, onNextAction} : Props) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [answers, setAnswers] = useState({});
 
-    const handleAnswerChange = (questionId: string, answer: number | number[]) => {
+    const handleAnswerChange = (questionId: number, answer: number | number[]) => {
         setAnswers(prevAnswers => ({
             ...prevAnswers,
             [questionId]: answer
