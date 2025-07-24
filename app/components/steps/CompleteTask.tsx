@@ -2,7 +2,7 @@ import React from 'react';
 import { Check } from 'lucide-react';
 import { SectionCompleteProps } from '@/types/commonTypes';
 
-const SectionComplete: React.FC<SectionCompleteProps> = ({
+const CompleteTask: React.FC<SectionCompleteProps> = ({
   completedSection,
   nextSection,
   onContinue,
@@ -16,7 +16,6 @@ const SectionComplete: React.FC<SectionCompleteProps> = ({
     if (!nextSection) {
       return 'You have completed all sections of the test!';
     }
-
     const nextSectionName = sections.find((s) => s.id === nextSection)?.name || 'next';
     return `You are about to start the ${nextSectionName.toLowerCase()} section.`;
   };
@@ -103,4 +102,4 @@ const SectionComplete: React.FC<SectionCompleteProps> = ({
   );
 };
 
-export default SectionComplete;
+export default CompleteTask;

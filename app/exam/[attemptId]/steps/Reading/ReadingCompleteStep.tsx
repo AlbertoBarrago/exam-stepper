@@ -1,5 +1,6 @@
-import SectionComplete from '@/components/steps/CompleteTask';
 import { TitleAndNextActionType } from '@/types/commonTypes';
+import CompleteTask from '@/components/steps/CompleteTask';
+import { SECTION_DATA } from '@/const/clientShellConst';
 
 export default function ReadingCompleteStep({ onNextAction }: TitleAndNextActionType) {
   const handleNext = () => {
@@ -7,6 +8,11 @@ export default function ReadingCompleteStep({ onNextAction }: TitleAndNextAction
   };
 
   return (
-    <SectionComplete completedSection="reading" nextSection="listening" onContinue={handleNext} />
+    <CompleteTask
+      completedSection="reading"
+      nextSection="listening"
+      sections={SECTION_DATA}
+      onContinue={handleNext}
+    />
   );
 }

@@ -51,3 +51,10 @@ export type Step =
   | { id: number; kind: 'speaking-question'; title: string; durationMs: number }
   | { id: number; kind: IntroStepKind; title: string; subTitle: string; durationMs: number }
   | { id: number; kind: SimpleStepKind; title: string };
+
+export type StepState = {
+  steps: Step[];
+  fetchSteps: () => Promise<void>;
+  isLoading: boolean;
+  error: string | null;
+};

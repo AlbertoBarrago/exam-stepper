@@ -95,7 +95,7 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
         onClick={onNextAction}
         disabled={!audioURL}
       >
-        Yes work, proceed to the next step
+        Yes works, proceed!
       </button>
     </section>
   );

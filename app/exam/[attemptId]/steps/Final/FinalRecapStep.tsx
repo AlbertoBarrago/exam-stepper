@@ -3,12 +3,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTimerStore } from '@/state/timerStore';
 import { useUserStore } from '@/state/userStore';
-
-function formatTime(secs: number) {
-  const m = Math.floor(secs / 60);
-  const s = secs % 60;
-  return `${m}:${s.toString().padStart(2, '0')}`;
-}
+import { formatTime } from '@/services/commonService';
 
 export default function FinalRecapStep() {
   const pause = useTimerStore((s) => s.pause);

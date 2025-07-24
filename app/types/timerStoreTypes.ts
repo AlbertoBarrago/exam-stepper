@@ -1,6 +1,6 @@
 import { Section } from '@/types/clientShellTypes';
 
-interface TimerState {
+export type TimerState = {
   globalTimeLeft: number;
   sectionTimeLeft: number;
   currentSection: Section | null;
@@ -11,6 +11,4 @@ interface TimerState {
   start: () => void;
   pause: () => void;
   reset: () => void;
-}
-
-export type { TimerState };
+};

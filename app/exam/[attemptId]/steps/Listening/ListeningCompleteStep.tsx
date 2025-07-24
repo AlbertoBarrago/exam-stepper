@@ -1,52 +1,28 @@
-import SectionComplete from '@/components/steps/CompleteTask';
+import CompleteTask from '@/components/steps/CompleteTask';
 import { TitleAndNextActionType } from '@/types/commonTypes';
-import { BookOpen, Headphones, Mic, PenTool } from 'lucide-react';
+import { useStepStore } from '@/state/stepStore';
+import { useTimerStore } from '@/state/timerStore';
+import { SECTION_DATA } from '@/const/clientShellConst';
 
 export default function ListeningCompleteStep({ onNextAction }: TitleAndNextActionType) {
+  const { steps } = useStepStore();
+  const { nextStep } = useTimerStore();
+
   const handleNext = () => {
-    onNextAction();
+    const writingIntroStepIndex = steps.findIndex((step) => step.kind === 'writing-intro');
+    if (writingIntroStepIndex !== -1) {
+      nextStep();
+    } else {
+      // Fallback if writing-intro step is not found, though it should be.
+      onNextAction();
+    }
   };
 
-  const sections = [
-    {
-      id: 'reading',
-      name: 'Reading',
-      duration: '20 mins',
-      icon: BookOpen,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-50',
-    },
-    {
-      id: 'listening',
-      name: 'Listening',
-      duration: '20 mins',
-      icon: Headphones,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-50',
-    },
-    {
-      id: 'writing',
-      name: 'Writing',
-      duration: '35 mins',
-      icon: PenTool,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-50',
-    },
-    {
-      id: 'speaking',
-      name: 'Speaking',
-      duration: '15 mins',
-      icon: Mic,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-50',
-    },
-  ];
-
   return (
-    <SectionComplete
+    <CompleteTask
       completedSection="listening"
       nextSection="writing"
-      sections={sections}
+      sections={SECTION_DATA}
       onContinue={handleNext}
     />
   );
