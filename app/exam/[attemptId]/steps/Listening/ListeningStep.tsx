@@ -1,7 +1,7 @@
 'use client';
 import AudioPlayer from "@/components/AudioPlayer";
 import {useState} from "react";
-import {AudioQuestion, IdValue} from "@/types/stepTypes";
+import {AudioQuestion} from "@/types/stepTypes";
 
 
 export default function ListeningStep({
@@ -13,7 +13,7 @@ export default function ListeningStep({
     onNextAction: () => void;
     questions: AudioQuestion[]
 }) {
-    const [answers, setAnswers] = useState<(IdValue | null)[]>(Array(questions.length).fill(null));
+    const [answers, setAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
     const [showError, setShowError] = useState(false);
 
 
@@ -28,7 +28,7 @@ export default function ListeningStep({
         onNextAction();
     };
 
-    const handleAnswerChange = (i: number, value: IdValue) => {
+    const handleAnswerChange = (i: number, value: number) => {
         setAnswers((prev) => {
             const newAnswers = [...prev];
             newAnswers[i] = value;
@@ -76,8 +76,8 @@ export default function ListeningStep({
                                                     id={`${q.id}-${option.id}`}
                                                     name={`announcement-${i}`}
                                                     value={option.value}
-                                                    checked={answers[i]?.id === option.id}
-                                                    onChange={() => handleAnswerChange(i, option)}
+                                                    checked={answers[i] === option.id}
+                                                    onChange={() => handleAnswerChange(i, option.id)}
                                                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                                                 />
                                                 <label
