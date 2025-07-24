@@ -1,8 +1,7 @@
 import SectionComplete from '@/components/steps/Final';
+import { NextTypes } from '@/types/commonTypes';
 
-type Props = { onNextAction: () => void };
-
-export default function SpeakingCompleteStep({ onNextAction }: Props) {
+export default function SpeakingCompleteStep({ onNextAction }: NextTypes) {
   const handleNext = () => {
     onNextAction();
   };

@@ -1,4 +1,3 @@
-'use client';
 import ReadingTask from '@/components/steps/ReadingTask';
 import { IdValue } from '@/types/stepTypes';
 

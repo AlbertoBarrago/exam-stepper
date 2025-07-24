@@ -1,5 +1,3 @@
-'use client';
-
 import IntroComponent from '@/components/steps/Intro';
 import { IntroProps } from '@/types/introTypes';
 

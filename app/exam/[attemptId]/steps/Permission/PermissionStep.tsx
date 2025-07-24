@@ -1,9 +1,6 @@
 import PermissionTask from '@/components/steps/PermissionTask';
+import { NextTypes } from '@/types/commonTypes';
 
-type PermissionStepProps = {
-  onNextAction: () => void;
-};
-
-export default function PermissionStep({ onNextAction }: PermissionStepProps) {
+export default function PermissionStep({ onNextAction }: NextTypes) {
   return <PermissionTask onNextAction={onNextAction} />;
 }

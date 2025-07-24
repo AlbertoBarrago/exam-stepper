@@ -1,10 +1,7 @@
-'use client';
-
 import SectionComplete from '@/components/steps/Final';
+import { TitleAndNextActionType } from '@/types/commonTypes';
 
-type Props = { title: string; onNextAction: () => void };
-
-export default function ReadingCompleteStep({ onNextAction }: Props) {
+export default function ReadingCompleteStep({ onNextAction }: TitleAndNextActionType) {
   const handleNext = () => {
     onNextAction();
   };

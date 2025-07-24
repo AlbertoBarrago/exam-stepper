@@ -1,5 +1,3 @@
-'use client';
-
 import WritingTask from '@/components/steps/WritingTask';
 import { WritingTypes } from '@/types/writingTypes';
 
