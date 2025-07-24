@@ -48,7 +48,7 @@ export default function SpeakingStep({ durationMs, onNextAction }: SpeakingStepT
       }
       stream?.getTracks().forEach((t) => t.stop());
     };
-    //IMPORTANT: don't edit me, I need to be run on first shot
+    //IMPORTANT: don't edit me, I need to be run on the first load
   }, []);
 
   return (
