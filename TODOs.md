@@ -4,8 +4,8 @@
 - [x] Create `state/timerStore.ts` to share step/result/timing types across the app with zustand
 
 ## Step Navigation
-- [x] Implement `StepController` or a custom `useStepMachine` hook to manage step logic, timing, and navigation
-- [ ] Build out context (`ExamContext`) for global exam state (progress, results, navigation)
+- [x] Implement `StepController` or a custom `useStepMachine` hook to manage step logic, timing, and navigation. solved with zustand.
+- [x] Build out context (`ExamContext`) for global exam state (progress, results, navigation), is called stepStore.tsx
 
 ## UI Reusability
 - [x] Make shared UI components (Audio check, Spectrum, Timer, Progress bar) highly reusable via props
@@ -26,13 +26,14 @@
 - [x] Choices, long text, intro/complete
 
 ### Listening
-- [ ] Audio player, answer choices, intro/complete
+- [x] Audio player, answer choices, intro/complete
 
 ### Writing
-- [ ] Word counter, AI result hook-up
+- [x] Word counter, AI result hook-up
 
 ### Speaking
 - [ ] Microphone permission, audio visualization, practice, main questions, repeat parts
+- [ ] Review the start of the timer, now start when the user enters inside the step, but maybe it is better to take trace after the user presses the button to record voice?
 
 ## Timer
 - [ ] Handle time off, fail exam (what's the right behavior?)

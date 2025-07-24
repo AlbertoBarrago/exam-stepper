@@ -59,7 +59,7 @@ export default function PermissionStep({ onNextAction }: PermissionStepProps) {
     }
 
     return (
-        <section className={"mt-20"}>
+        <section className={"mt-10"}>
             <h1 className="text-2xl font-bold mb-4">Microphone Check</h1>
             <p className="mb-2">{hint}</p>
 

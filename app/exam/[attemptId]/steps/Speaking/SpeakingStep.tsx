@@ -1,14 +1,8 @@
-'use client';
+import {useEffect, useRef, useState} from 'react';
+import SpeakingTask from "@/components/step/SpeakingTask";
+import {SpeakingStepTypes} from "@/types/speakingTypes";
 
-import { useEffect, useRef, useState } from 'react';
-import Spectrum from '@/components/Spectrum';
-
-type Props = {
-    durationMs: number;
-    onNextAction: (blob: Blob) => void;
-};
-
-export default function SpeakingStep({ durationMs, onNextAction }: Props) {
+export default function SpeakingStep({durationMs, onNextAction}: SpeakingStepTypes) {
     const [stream, setStream] = useState<MediaStream | null>(null);
     const recorderRef = useRef<MediaRecorder | null>(null);
     const chunksRef = useRef<Blob[]>([]);
@@ -18,7 +12,7 @@ export default function SpeakingStep({ durationMs, onNextAction }: Props) {
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     const startRecording = async () => {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({audio: true});
         setStream(stream);
 
         const recorder = new MediaRecorder(stream);
@@ -27,7 +21,7 @@ export default function SpeakingStep({ durationMs, onNextAction }: Props) {
         recorder.ondataavailable = e => chunksRef.current.push(e.data);
 
         recorder.onstop = () => {
-            const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+            const blob = new Blob(chunksRef.current, {type: 'audio/webm'});
             const url = URL.createObjectURL(blob);
             // here we can add persistence for the voice recorded
             setAudioURL(url);
@@ -57,39 +51,14 @@ export default function SpeakingStep({ durationMs, onNextAction }: Props) {
     }, []);
 
     return (
-        <div className="space-y-4">
-            <p>  Talk about yourself in  {
-                durationMs < 60000
-                    ? `${durationMs / 1000} seconds`
-                    : `${durationMs / 60000} minutes`
-            }...
-            </p>
-            {!recording && !done && (
-                <button className="btn" onClick={startRecording}>
-                    Start to record
-                </button>
-            )}
-
-            {recording && <p className="text-blue-600 font-semibold">🎙️ Record in progress... {
-                durationMs < 60000
-                    ? `${durationMs / 1000} seconds`
-                    : `${durationMs / 60000} minutes`
-            }</p>}
-
-            {stream && recording && <Spectrum stream={stream} />}
-
-            {audioURL && (
-                <div className="space-y-2 flex flex-col items-center gap-4">
-                    <p className="text-green-600">✅ Record completed</p>
-                    <audio controls src={audioURL} />
-                    <button
-                        className="btn mt-4"
-                        onClick={() => onNextAction(new Blob(chunksRef.current, { type: 'audio/webm' }))}
-                    >
-                        Next →
-                    </button>
-                </div>
-            )}
-        </div>
+        <SpeakingTask durationMs={durationMs}
+                      startRecording={startRecording}
+                      onNextAction={onNextAction}
+                      recording={recording}
+                      done={done}
+                      recorderRef={recorderRef}
+                      chunksRef={chunksRef}
+                      audioURL={audioURL}
+                      stream={stream}/>
     );
 }
