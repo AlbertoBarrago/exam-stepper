@@ -1,4 +1,4 @@
-import PermissionTask from "@/components/step/PermissionTask";
+import PermissionTask from '@/components/steps/PermissionTask';
 
 type PermissionStepProps = {
   onNextAction: () => void;

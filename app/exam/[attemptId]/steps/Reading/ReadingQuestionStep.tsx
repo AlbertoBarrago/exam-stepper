@@ -1,5 +1,5 @@
 'use client';
-import ReadingQuestion from '@/components/step/ReadingQuestion';
+import ReadingTask from '@/components/steps/ReadingTask';
 import { IdValue } from '@/types/stepTypes';
 
 type Props = {
@@ -18,7 +18,7 @@ const ReadingQuestionStep = ({ sentence, options, onNextAction }: Props) => {
   };
 
   return (
-    <ReadingQuestion
+    <ReadingTask
       questionNumber={1}
       totalQuestions={10}
       sentence={sentence}

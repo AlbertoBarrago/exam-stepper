@@ -1,6 +1,6 @@
 'use client';
 
-import WritingTask from '@/components/step/WritingTask';
+import WritingTask from '@/components/steps/WritingTask';
 import { WritingTypes } from '@/types/writingTypes';
 
 export default function WritingStep({ onNextAction }: WritingTypes) {

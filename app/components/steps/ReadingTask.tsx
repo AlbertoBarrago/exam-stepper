@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { ReadingQuestionProps } from '@/types/readingTypes';
 
-const ReadingQuestion: React.FC<ReadingQuestionProps> = ({
+const ReadingTask: React.FC<ReadingQuestionProps> = ({
   questionNumber,
   totalQuestions,
   sentence,
@@ -120,4 +120,4 @@ const ReadingQuestion: React.FC<ReadingQuestionProps> = ({
   );
 };
 
-export default ReadingQuestion;
+export default ReadingTask;

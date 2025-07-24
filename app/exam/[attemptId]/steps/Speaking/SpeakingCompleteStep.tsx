@@ -1,4 +1,4 @@
-import SectionComplete from '@/components/step/Final';
+import SectionComplete from '@/components/steps/Final';
 
 type Props = { onNextAction: () => void };
 

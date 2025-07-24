@@ -1,4 +1,4 @@
-import ReadingQuestionList from '@/components/step/ReadingQuestionList';
+import ReadingQuestionList from '@/components/steps/ReadingTaskList';
 import { useState } from 'react';
 import { QuestionListProps } from '@/types/readingTypes';
 

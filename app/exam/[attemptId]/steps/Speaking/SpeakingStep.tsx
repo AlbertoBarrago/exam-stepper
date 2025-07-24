@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import SpeakingTask from '@/components/step/SpeakingTask';
+import SpeakingTask from '@/components/steps/SpeakingTask';
 import { SpeakingStepTypes } from '@/types/speakingTypes';
 
 export default function SpeakingStep({ durationMs, onNextAction }: SpeakingStepTypes) {
@@ -41,14 +41,14 @@ export default function SpeakingStep({ durationMs, onNextAction }: SpeakingStepT
   };
 
   useEffect(() => {
-        return () => {
-            if (timerRef.current) clearTimeout(timerRef.current);
-            if (recorderRef.current?.state === 'recording') {
-                recorderRef.current.stop();
-            }
-            stream?.getTracks().forEach(t => t.stop());
-        };
-    }, [stream]);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      if (recorderRef.current?.state === 'recording') {
+        recorderRef.current.stop();
+      }
+      stream?.getTracks().forEach((t) => t.stop());
+    };
+  }, [stream]);
 
   return (
     <SpeakingTask
