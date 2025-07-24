@@ -46,3 +46,6 @@ next-env.d.ts
 #Test files
 .swc
 coverage
+
+#Forge
+forge.yaml
