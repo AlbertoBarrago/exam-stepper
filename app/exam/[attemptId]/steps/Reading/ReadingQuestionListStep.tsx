@@ -1,15 +1,9 @@
-'use client';
-import ReadingPassage from "@/components/step/ReadingQuestionList";
-import { Question } from "@/types/stepTypes";
+import ReadingQuestionList from "@/components/step/ReadingQuestionList";
 import {useState} from "react";
+import {QuestionListProps} from "@/types/readingTypes";
 
-type Props = {
-    questions: Question[],
-    passage: string,
-    onNextAction: (results: boolean[]) => void;
-};
 
-const ReadingQuestionList = ({passage, questions, onNextAction} : Props) => {
+const ReadingQuestionListStep = ({passage, questions, onNextAction} : QuestionListProps) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [answers, setAnswers] = useState({});
 
@@ -36,7 +30,7 @@ const ReadingQuestionList = ({passage, questions, onNextAction} : Props) => {
     };
 
     return (
-        <ReadingPassage
+        <ReadingQuestionList
             passage={passage}
             questions={questions}
             currentQuestionIndex={currentQuestionIndex}
@@ -49,4 +43,4 @@ const ReadingQuestionList = ({passage, questions, onNextAction} : Props) => {
     );
 };
 
-export default ReadingQuestionList;
+export default ReadingQuestionListStep;

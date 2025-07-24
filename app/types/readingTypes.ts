@@ -27,3 +27,9 @@ export type ReadingPassageProps = {
     answers: Record<number, number | number[]>;
     showPrevious?: boolean;
 }
+
+export type QuestionListProps = {
+    questions: Question[],
+    passage: string,
+    onNextAction: (results: boolean[]) => void;
+};
