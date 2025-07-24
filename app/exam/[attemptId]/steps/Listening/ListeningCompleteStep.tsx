@@ -1,20 +1,15 @@
 'use client';
 
-import SectionComplete from "@/components/step/Final";
+import SectionComplete from '@/components/step/Final';
 
-type Props = { title: string, onNextAction: () => void };
+type Props = { title: string; onNextAction: () => void };
 
-export default function ListeningCompleteStep({onNextAction}: Props) {
+export default function ListeningCompleteStep({ onNextAction }: Props) {
+  const handleNext = () => {
+    onNextAction();
+  };
 
-    const handleNext = () => {
-        onNextAction();
-    }
-
-    return (
-        <SectionComplete
-            completedSection="listening"
-            nextSection="writing"
-            onContinue={handleNext}
-        />
-    );
+  return (
+    <SectionComplete completedSection="listening" nextSection="writing" onContinue={handleNext} />
+  );
 }

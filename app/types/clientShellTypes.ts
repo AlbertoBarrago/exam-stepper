@@ -1,3 +1,3 @@
-import {SECTIONS} from "@/const/clientShellConst";
+import { SECTIONS } from '@/const/clientShellConst';
 
-export type Section = typeof SECTIONS[number];
+export type Section = (typeof SECTIONS)[number];

@@ -1,20 +1,24 @@
-import IntroComponent from "@/components/step/Intro";
-import {IntroProps} from "@/types/introTypes";
+import IntroComponent from '@/components/step/Intro';
+import { IntroProps } from '@/types/introTypes';
 
+export default function ListeningIntroStep({
+  title,
+  subtitle,
+  kind,
+  durationMs,
+  onNextAction,
+}: IntroProps) {
+  const handleNext = () => {
+    onNextAction();
+  };
 
-export default function ListeningIntroStep({title, subtitle, kind, durationMs, onNextAction}: IntroProps) {
-
-    const handleNext = () => {
-        onNextAction();
-    }
-
-    return (
-        <IntroComponent
-            onStartAction={handleNext}
-            duration={durationMs}
-            title={title}
-            subtitle={subtitle}
-            kind={kind}
-        />
-    );
+  return (
+    <IntroComponent
+      onStartAction={handleNext}
+      duration={durationMs}
+      title={title}
+      subtitle={subtitle}
+      kind={kind}
+    />
+  );
 }

@@ -1,18 +1,11 @@
-import SectionComplete from "@/components/step/Final";
+import SectionComplete from '@/components/step/Final';
 
 type Props = { onNextAction: () => void };
 
-export default function SpeakingCompleteStep({onNextAction}: Props) {
+export default function SpeakingCompleteStep({ onNextAction }: Props) {
+  const handleNext = () => {
+    onNextAction();
+  };
 
-    const handleNext = () => {
-        onNextAction();
-    }
-
-    return (
-        <SectionComplete
-            completedSection="speaking"
-            nextSection={null}
-            onContinue={handleNext}
-        />
-    );
+  return <SectionComplete completedSection="speaking" nextSection={null} onContinue={handleNext} />;
 }

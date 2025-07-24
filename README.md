@@ -19,12 +19,14 @@ A modern web application designed to assess English language proficiency with in
 ## 🚀 Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/your-repo/exam-stepper-fe.git
    cd exam-stepper-fe
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
@@ -43,6 +45,7 @@ A modern web application designed to assess English language proficiency with in
 ## 📂 Project Structure
 
 All exam sections are organized in their own folders under `exam/[attemptId]/steps/`:
+
 - Welcome/
 - Reading/
 - Listening/
@@ -53,6 +56,7 @@ All exam sections are organized in their own folders under `exam/[attemptId]/ste
 ## 🤝 Contributing
 
 Contributions are welcome! Please follow these steps:
+
 1. Fork the repository.
 2. Create a new branch for your feature or bugfix.
 3. Submit a pull request with a detailed description of your changes.
