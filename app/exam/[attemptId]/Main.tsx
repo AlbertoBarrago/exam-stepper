@@ -10,7 +10,7 @@ import WritingIntroStep from '@/exam/[attemptId]/steps/Writing/WritingIntroStep'
 import WritingStep from '@/exam/[attemptId]/steps/Writing/WritingStep';
 import WritingCompleteStep from '@/exam/[attemptId]/steps/Writing/WritingCompleteStep';
 import SpeakingIntroStep from '@/exam/[attemptId]/steps/Speaking/SpeakingIntroStep';
-import SpeakingStep from '@/exam/[attemptId]/steps/Speaking/SpeakingStep';
+import SpeakingInstructionsStep from '@/exam/[attemptId]/steps/Speaking/SpeakingInstructionsStep';
 import FinalRecapStep from '@/exam/[attemptId]/steps/Final/FinalRecapStep';
 import { JSX, useEffect } from 'react';
 import { useTimerStore } from '@/state/timerStore';
@@ -33,7 +33,7 @@ function StepBody({ current, next }: { current: number; next: () => void }) {
       return <WelcomeStep onNextAction={next} />;
     case 'permission':
       return <PermissionStep onNextAction={next} />;
-    case 'reading-intro':
+    case 'reading-start':
       return (
         <ReadingIntroStep
           title={step.title}
@@ -57,7 +57,7 @@ function StepBody({ current, next }: { current: number; next: () => void }) {
       );
     case 'reading-complete':
       return <ReadingCompleteStep title={step.title} onNextAction={next} />;
-    case 'listening-intro':
+    case 'listening-start':
       return (
         <ListeningIntroStep
           title={step.title}
@@ -73,7 +73,7 @@ function StepBody({ current, next }: { current: number; next: () => void }) {
       );
     case 'listening-complete':
       return <ListeningCompleteStep title={step.title} onNextAction={next} />;
-    case 'writing-intro':
+    case 'writing-start':
       return (
         <WritingIntroStep
           title={step.title}
@@ -87,7 +87,7 @@ function StepBody({ current, next }: { current: number; next: () => void }) {
       return <WritingStep title={step.title} onNextAction={next} />;
     case 'writing-complete':
       return <WritingCompleteStep title={step.title} onNextAction={next} />;
-    case 'speaking-intro':
+    case 'speaking-start':
       return (
         <SpeakingIntroStep
           title={step.title}
@@ -98,7 +98,13 @@ function StepBody({ current, next }: { current: number; next: () => void }) {
         />
       );
     case 'speaking-question':
-      return <SpeakingStep durationMs={step.durationMs} onNextAction={next} />;
+      return (
+        <SpeakingInstructionsStep
+          recDurationMs={10000}
+          audioFileUrl={step.audioUrl}
+          onNextAction={next}
+        />
+      );
     case 'speaking-complete':
       return <SpeakingCompleteStep onNextAction={next} />;
     case 'final':

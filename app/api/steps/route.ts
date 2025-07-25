@@ -14,7 +14,7 @@ const StepsConfig: Step[] = [
   },
   {
     id: 1,
-    kind: 'reading-intro',
+    kind: 'reading-start',
     title: 'Reading Section Intro',
     subTitle: 'You are about to start the reading section.',
     durationMs: 1200000,
@@ -117,7 +117,7 @@ const StepsConfig: Step[] = [
   },
   {
     id: 2,
-    kind: 'listening-intro',
+    kind: 'listening-start',
     title: 'Listening Section Intro',
     subTitle: 'Now you have to listen some audio',
     durationMs: 1200000,
@@ -203,7 +203,7 @@ const StepsConfig: Step[] = [
   },
   {
     id: 3,
-    kind: 'writing-intro',
+    kind: 'writing-start',
     title: 'Writing Section Intro',
     subTitle: 'Now you have write some content',
     durationMs: 2100000,
@@ -220,7 +220,7 @@ const StepsConfig: Step[] = [
   },
   {
     id: 4,
-    kind: 'speaking-intro',
+    kind: 'speaking-start',
     title: 'Speaking Section',
     subTitle: 'Now you have speaking a little',
     durationMs: 900000,
@@ -228,8 +228,8 @@ const StepsConfig: Step[] = [
   {
     id: 4.1,
     kind: 'speaking-question',
-    title: 'Speaking',
-    durationMs: 10000,
+    audioUrl: '/audio/hello_robot.wav',
+    title: 'Practice question',
   },
   {
     id: 4.2,

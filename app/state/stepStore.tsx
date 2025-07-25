@@ -1,20 +1,6 @@
 import { create } from 'zustand';
-import { Step } from '@/types/stepTypes';
-
-interface StepState {
-  steps: Step[];
-  fetchSteps: () => Promise<void>;
-  isLoading: boolean;
-  error: string | null;
-}
-
-async function fetchStepsConfig(): Promise<Step[]> {
-  const response = await fetch('/api/step');
-  if (!response.ok) {
-    throw new Error('Failed to fetch steps config');
-  }
-  return await response.json();
-}
+import { StepState } from '@/types/stepTypes';
+import { fetchStepsConfig } from '@/services/commonService';
 
 export const useStepStore = create<StepState>((set) => ({
   steps: [],

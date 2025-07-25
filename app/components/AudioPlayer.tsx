@@ -1,5 +1,7 @@
+'use client';
 import React, { useRef, useState, useEffect } from 'react';
 import { Play, Pause } from 'lucide-react';
+import Spectrum from '@/components/Spectrum';
 
 interface CircularAudioPlayerProps {
   src: string | null;
@@ -7,6 +9,9 @@ interface CircularAudioPlayerProps {
   permissionStep?: boolean;
   limitPlays?: boolean;
   showMetrics?: boolean;
+  showSpectrum?: boolean;
+  onPlay?: () => void;
+  onEnded?: () => void; // Added onEnded prop
 }
 
 export default function AudioPlayer({
@@ -15,18 +20,26 @@ export default function AudioPlayer({
   permissionStep,
   limitPlays = true,
   showMetrics = false,
+  showSpectrum = false,
+  onPlay,
+  onEnded, // Destructure onEnded prop
 }: CircularAudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioSourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [audioDuration, setAudioDuration] = useState(duration || 1);
   const [playCount, setPlayCount] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
 
+  // Reset progress when playback stops or src changes
   useEffect(() => {
     if (!isPlaying) setProgress(0);
   }, [isPlaying, src]);
 
+  // Set up audio listeners
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -42,20 +55,34 @@ export default function AudioPlayer({
     const handleEnded = () => {
       setIsPlaying(false);
       setProgress(0);
+      if (onEnded) {
+        onEnded(); // Trigger onEnded callback when playback ends
+      }
     };
 
     audio.addEventListener('timeupdate', updateProgress);
     audio.addEventListener('loadedmetadata', setMetaDuration);
-    audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('ended', handleEnded); // Attach the ended event
 
     return () => {
       audio.removeEventListener('timeupdate', updateProgress);
       audio.removeEventListener('loadedmetadata', setMetaDuration);
-      audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('ended', handleEnded); // Cleanup the ended event
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
+        audioSourceNodeRef.current = null;
+      }
     };
-  }, [duration, src]);
+  }, [duration, src, onEnded]); // Add onEnded as a dependency
 
+  // Handle play logic
   const handlePlay = () => {
+    if (onPlay) {
+      onPlay();
+      return;
+    }
+
     const audio = audioRef.current;
     if (!audio) return;
 
@@ -67,8 +94,24 @@ export default function AudioPlayer({
     setPlayCount((count) => count + 1);
     setProgress(0);
     setElapsedTime(0);
+
+    // Setup spectrum if enabled
+    if (showSpectrum && !audioSourceNodeRef.current) {
+      const AudioContext = window.AudioContext;
+      if (AudioContext) {
+        const context = new AudioContext();
+        audioContextRef.current = context;
+        const source = context.createMediaElementSource(audio);
+        audioSourceNodeRef.current = source;
+        const destination = context.createMediaStreamDestination();
+        source.connect(destination);
+        source.connect(context.destination);
+        setAudioStream(destination.stream);
+      }
+    }
   };
 
+  // Handle pause logic
   const handlePause = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -79,6 +122,7 @@ export default function AudioPlayer({
     setElapsedTime(0);
   };
 
+  // Toggle play/pause
   const handleButtonClick = () => {
     if (isPlaying) {
       handlePause();
@@ -87,6 +131,7 @@ export default function AudioPlayer({
     }
   };
 
+  // Format elapsed time
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -105,7 +150,15 @@ export default function AudioPlayer({
   return (
     <div className="flex items-center gap-6">
       <div className="relative w-32 h-32 flex items-center justify-center">
-        {src && <audio ref={audioRef} src={src} preload="auto" style={{ display: 'none' }} />}
+        {src && (
+          <audio
+            ref={audioRef}
+            src={src}
+            preload="auto"
+            style={{ display: 'none' }}
+            crossOrigin="anonymous"
+          />
+        )}
 
         <button
           onClick={handleButtonClick}
@@ -157,6 +210,12 @@ export default function AudioPlayer({
             }}
           />
         </svg>
+
+        {isPlaying && showSpectrum && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-screen h-full flex items-center justify-center -z-10">
+            <Spectrum stream={audioStream} />
+          </div>
+        )}
       </div>
 
       {showMetrics && (

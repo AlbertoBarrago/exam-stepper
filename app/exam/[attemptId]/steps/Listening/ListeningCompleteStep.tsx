@@ -9,11 +9,11 @@ export default function ListeningCompleteStep({ onNextAction }: TitleAndNextActi
   const { nextStep } = useTimerStore();
 
   const handleNext = () => {
-    const writingIntroStepIndex = steps.findIndex((step) => step.kind === 'writing-intro');
+    const writingIntroStepIndex = steps.findIndex((step) => step.kind === 'writing-start');
     if (writingIntroStepIndex !== -1) {
       nextStep();
     } else {
-      // Fallback if writing-intro step is not found, though it should be.
+      // Fallback if writing-intro steps is not found, though it should be.
       onNextAction();
     }
   };

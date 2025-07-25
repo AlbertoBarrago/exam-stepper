@@ -1,53 +1,77 @@
 import Spectrum from '@/components/Spectrum';
 import { SpeakingTypes } from '@/types/speakingTypes';
+import AudioPlayer from '@/components/AudioPlayer';
+import { RepeatIcon } from 'lucide-react';
 
 const SpeakingTask = ({
-  durationMs,
   onNextAction,
   done,
   recording,
   stream,
   audioURL,
+  audioFileUrl,
   startRecording,
   chunksRef,
+  resetAudioUrl,
+  remainingTime,
+  audioFinished,
+  handleAudioEnd,
 }: SpeakingTypes) => {
   return (
-    <>
-      <div className="space-y-4">
-        <p>
-          {' '}
-          Talk about yourself in{' '}
-          {durationMs < 60000 ? `${durationMs / 1000} seconds` : `${durationMs / 60000} minutes`}...
-        </p>
-        {!recording && !done && (
-          <button className="btn" onClick={startRecording}>
-            Start to record
-          </button>
-        )}
+    <div className="space-y-6 flex flex-col items-center mt-10">
+      <p className={'text-4xl'}>Practice question</p>
 
-        {recording && (
-          <p className="text-blue-600 font-semibold">
-            🎙️ Record in progress...{' '}
-            {durationMs < 60000 ? `${durationMs / 1000} seconds` : `${durationMs / 60000} minutes`}
+      {/* Step 1: Play the question audio */}
+      {!recording && !done && audioFileUrl && !audioFinished && (
+        <div className="relative flex flex-col items-center gap-4">
+          <AudioPlayer src={audioFileUrl} permissionStep={true} onEnded={handleAudioEnd} />
+          <p className="text-gray-500">Start to listen</p>
+        </div>
+      )}
+
+      {/* Step 2: Start recording or display a question after the audio ends */}
+      {audioFinished && !recording && !done && (
+        <div className="relative flex flex-col items-center gap-4">
+          <AudioPlayer src={null} onPlay={startRecording} permissionStep={true} />
+          <p className="text-gray-600 font-bold">
+            Please answer the question by starting your recording.
           </p>
-        )}
+        </div>
+      )}
 
-        {stream && recording && <Spectrum stream={stream} />}
+      {/* Step 3: Record and show spectrum */}
+      {stream && recording && (
+        <div className="relative flex flex-col items-center gap-2 w-full">
+          <div className="flex flex-col items-center">
+            <Spectrum stream={stream} />
 
-        {audioURL && (
-          <div className="space-y-2 flex flex-col items-center gap-4">
-            <p className="text-green-600">✅ Record completed</p>
-            <audio controls src={audioURL} />
+            <p className="text-gray-600 font-semibold animate-pulse text-center mt-5">
+              🎙️ Record in progress, {remainingTime} seconds...
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Step 4: Display recorded audio with Next and Retry options */}
+      {audioURL && (
+        <div className="space-y-4 flex flex-col items-center">
+          <AudioPlayer src={audioURL} showSpectrum={true} permissionStep={true} />
+          <div className="flex gap-4">
+            <button className="btn bg-red-950" onClick={resetAudioUrl}>
+              <span className={'flex items-center gap-1'}>
+                Retry <RepeatIcon size={15} />
+              </span>
+            </button>
             <button
-              className="btn mt-4"
+              className="btn"
               onClick={() => onNextAction(new Blob(chunksRef.current, { type: 'audio/webm' }))}
             >
               Next →
             </button>
           </div>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+    </div>
   );
 };
 
