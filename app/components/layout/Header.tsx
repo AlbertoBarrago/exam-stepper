@@ -85,7 +85,7 @@ export default function Header() {
       if (
         prevKind &&
         stepKindToSection(prevKind) === thisSection &&
-        prevKind.endsWith('-intro') &&
+        prevKind.endsWith('-start') &&
         isSection(thisSection)
       ) {
         startSection(thisSection);

@@ -32,23 +32,22 @@ const SpeakingTask = ({
       {/* Step 2: Start recording or display a question after the audio ends */}
       {audioFinished && !recording && !done && (
         <div className="relative flex flex-col items-center gap-4">
+          <AudioPlayer src={null} onPlay={startRecording} permissionStep={true} />
           <p className="text-gray-600 font-bold">
             Please answer the question by starting your recording.
           </p>
-          <button className="btn bg-blue-600" onClick={startRecording}>
-            Start Recording
-          </button>
         </div>
       )}
 
       {/* Step 3: Record and show spectrum */}
       {stream && recording && (
-        <div className="relative flex flex-col items-center gap-4 w-full">
-          <p className="text-blue-600 font-semibold animate-pulse">
-            🎙️ Record in progress, {remainingTime} seconds...
-          </p>
-          <div className="w-full flex justify-center mt-4">
+        <div className="relative flex flex-col items-center gap-2 w-full">
+          <div className="flex flex-col items-center">
             <Spectrum stream={stream} />
+
+            <p className="text-gray-600 font-semibold animate-pulse text-center mt-5">
+              🎙️ Record in progress, {remainingTime} seconds...
+            </p>
           </div>
         </div>
       )}
@@ -59,7 +58,9 @@ const SpeakingTask = ({
           <AudioPlayer src={audioURL} showSpectrum={true} permissionStep={true} />
           <div className="flex gap-4">
             <button className="btn bg-red-950" onClick={resetAudioUrl}>
-              <RepeatIcon />
+              <span className={'flex items-center gap-1'}>
+                Retry <RepeatIcon size={15} />
+              </span>
             </button>
             <button
               className="btn"
