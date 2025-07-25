@@ -79,7 +79,7 @@ export default function Header() {
     const prevKind = prevStepKindRef.current;
     const thisSection = stepKindToSection(currentKind);
 
-    if (QUESTION_KINDS.includes(currentKind) || currentKind.endsWith('-intro')) {
+    if (QUESTION_KINDS.includes(currentKind) || currentKind.endsWith('-start')) {
       // Show time bar for intro and question steps
       setShowTimeBar(true);
       if (

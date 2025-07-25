@@ -2,7 +2,10 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import SpeakingTask from '@/components/steps/SpeakingTask';
 import { SpeakingStepTypes } from '@/types/speakingTypes';
 
-export default function SpeakingStep({ recDurationMs, onNextAction }: SpeakingStepTypes) {
+export default function SpeakingInstructionsStep({
+  recDurationMs,
+  onNextAction,
+}: SpeakingStepTypes) {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -10,6 +13,7 @@ export default function SpeakingStep({ recDurationMs, onNextAction }: SpeakingSt
   const [done, setDone] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [remainingTime, setRemainingTime] = useState(recDurationMs! / 1000);
 
   const stopRecording = useCallback(() => {
     if (recorderRef.current && recorderRef.current.state === 'recording') {
@@ -42,7 +46,6 @@ export default function SpeakingStep({ recDurationMs, onNextAction }: SpeakingSt
           setAudioURL(url);
           setDone(true);
         }
-        // Stop media tracks after recording is complete
         if (mediaStream) {
           mediaStream.getTracks().forEach((track) => track.stop());
         }
@@ -58,6 +61,28 @@ export default function SpeakingStep({ recDurationMs, onNextAction }: SpeakingSt
       console.error('Failed to start recording:', err);
     }
   };
+
+  const resetAudioUrl = () => {
+    setAudioURL(null);
+    setDone(false);
+    setRemainingTime(recDurationMs! / 1000);
+  };
+
+  useEffect(() => {
+    if (recording) {
+      const timer = setInterval(() => {
+        setRemainingTime((prevTime) => {
+          if (prevTime! <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prevTime! - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [recording]);
 
   useEffect(() => {
     return () => {
@@ -75,8 +100,9 @@ export default function SpeakingStep({ recDurationMs, onNextAction }: SpeakingSt
 
   return (
     <SpeakingTask
-      durationMs={recDurationMs}
+      remainingTime={remainingTime}
       startRecording={startRecording}
+      resetAudioUrl={resetAudioUrl}
       onNextAction={onNextAction}
       recording={recording}
       done={done}
