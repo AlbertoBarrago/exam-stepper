@@ -9,22 +9,39 @@ const SpeakingTask = ({
   recording,
   stream,
   audioURL,
+  audioFileUrl,
   startRecording,
   chunksRef,
   resetAudioUrl,
   remainingTime,
+  audioFinished,
+  handleAudioEnd,
 }: SpeakingTypes) => {
   return (
     <div className="space-y-6 flex flex-col items-center mt-10">
-      <p className={'text-4xl'}>Practice question </p>
+      <p className={'text-4xl'}>Practice question</p>
 
-      {!recording && !done && (
+      {/* Step 1: Play the question audio */}
+      {!recording && !done && audioFileUrl && !audioFinished && (
         <div className="relative flex flex-col items-center gap-4">
-          <AudioPlayer src={null} onPlay={startRecording} permissionStep={true} />
-          <p className="text-gray-500">Start to record</p>
+          <AudioPlayer src={audioFileUrl} permissionStep={true} onEnded={handleAudioEnd} />
+          <p className="text-gray-500">Start to listen</p>
         </div>
       )}
 
+      {/* Step 2: Start recording or display a question after the audio ends */}
+      {audioFinished && !recording && !done && (
+        <div className="relative flex flex-col items-center gap-4">
+          <p className="text-gray-600 font-bold">
+            Please answer the question by starting your recording.
+          </p>
+          <button className="btn bg-blue-600" onClick={startRecording}>
+            Start Recording
+          </button>
+        </div>
+      )}
+
+      {/* Step 3: Record and show spectrum */}
       {stream && recording && (
         <div className="relative flex flex-col items-center gap-4 w-full">
           <p className="text-blue-600 font-semibold animate-pulse">
@@ -36,11 +53,12 @@ const SpeakingTask = ({
         </div>
       )}
 
+      {/* Step 4: Display recorded audio with Next and Retry options */}
       {audioURL && (
         <div className="space-y-4 flex flex-col items-center">
           <AudioPlayer src={audioURL} showSpectrum={true} permissionStep={true} />
           <div className="flex gap-4">
-            <button className="btn bg-red-950 " onClick={resetAudioUrl}>
+            <button className="btn bg-red-950" onClick={resetAudioUrl}>
               <RepeatIcon />
             </button>
             <button

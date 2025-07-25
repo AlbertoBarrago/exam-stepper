@@ -5,6 +5,7 @@ import { SpeakingStepTypes } from '@/types/speakingTypes';
 export default function SpeakingInstructionsStep({
   recDurationMs,
   onNextAction,
+  audioFileUrl,
 }: SpeakingStepTypes) {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
@@ -14,6 +15,7 @@ export default function SpeakingInstructionsStep({
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [remainingTime, setRemainingTime] = useState(recDurationMs! / 1000);
+  const [audioFinished, setAudioFinished] = useState(false);
 
   const stopRecording = useCallback(() => {
     if (recorderRef.current && recorderRef.current.state === 'recording') {
@@ -68,6 +70,10 @@ export default function SpeakingInstructionsStep({
     setRemainingTime(recDurationMs! / 1000);
   };
 
+  const handleAudioEnd = () => {
+    setAudioFinished(true);
+  };
+
   useEffect(() => {
     if (recording) {
       const timer = setInterval(() => {
@@ -100,10 +106,13 @@ export default function SpeakingInstructionsStep({
 
   return (
     <SpeakingTask
+      audioFileUrl={audioFileUrl}
       remainingTime={remainingTime}
       startRecording={startRecording}
       resetAudioUrl={resetAudioUrl}
       onNextAction={onNextAction}
+      handleAudioEnd={handleAudioEnd}
+      audioFinished={audioFinished}
       recording={recording}
       done={done}
       recorderRef={recorderRef}

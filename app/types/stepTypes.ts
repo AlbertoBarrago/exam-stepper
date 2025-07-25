@@ -26,7 +26,6 @@ type SimpleStepKind =
   | 'writing-question'
   | 'writing-complete'
   | 'speaking-complete'
-  | 'speaking-question'
   | 'final';
 
 type StartStepKind =
@@ -35,6 +34,8 @@ type StartStepKind =
   | 'writing-start'
   | 'speaking-start'
   | 'speaking-question-list-start';
+
+type SpeakingStepKind = 'speaking-question';
 
 export type Step =
   | { id: number; kind: 'reading-question'; title: string; sentence: string; options: IdValue[] }
@@ -54,13 +55,19 @@ export type Step =
       audioUrl: string;
       questions: AudioQuestion[];
     }
-  | { id: number; kind: 'speaking-question'; title: string; durationMs: number }
   | {
       id: number;
       kind: StartStepKind;
       title: string;
       subTitle: string;
       durationMs: number;
+      recordMs?: number;
+    }
+  | {
+      id: number;
+      kind: SpeakingStepKind;
+      title: string;
+      audioUrl: string;
       recordMs?: number;
     }
   | { id: number; kind: SimpleStepKind; title: string };

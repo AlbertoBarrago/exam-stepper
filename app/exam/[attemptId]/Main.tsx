@@ -98,7 +98,13 @@ function StepBody({ current, next }: { current: number; next: () => void }) {
         />
       );
     case 'speaking-question':
-      return <SpeakingInstructionsStep recDurationMs={10000} onNextAction={next} />;
+      return (
+        <SpeakingInstructionsStep
+          recDurationMs={10000}
+          audioFileUrl={step.audioUrl}
+          onNextAction={next}
+        />
+      );
     case 'speaking-complete':
       return <SpeakingCompleteStep onNextAction={next} />;
     case 'final':
