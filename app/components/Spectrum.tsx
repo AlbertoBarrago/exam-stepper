@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 
 export default function Spectrum({ stream }: { stream: MediaStream | null }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationFrameRef = useRef<number>(undefined);
+  const animationFrameRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     if (!stream || !canvasRef.current) return;

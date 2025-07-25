@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import SpeakingTask from '@/components/steps/SpeakingTask';
 import { SpeakingStepTypes } from '@/types/speakingTypes';
 
@@ -11,15 +11,15 @@ export default function SpeakingStep({ recDurationMs, onNextAction }: SpeakingSt
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const stopRecording = () => {
+  const stopRecording = useCallback(() => {
     if (recorderRef.current && recorderRef.current.state === 'recording') {
       recorderRef.current.stop();
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
-      setRecording(false);
     }
-  };
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    setRecording(false);
+  }, []);
 
   const startRecording = async () => {
     try {
@@ -42,6 +42,10 @@ export default function SpeakingStep({ recDurationMs, onNextAction }: SpeakingSt
           setAudioURL(url);
           setDone(true);
         }
+        // Stop media tracks after recording is complete
+        if (mediaStream) {
+          mediaStream.getTracks().forEach((track) => track.stop());
+        }
       };
 
       recorder.start(100);
@@ -60,7 +64,9 @@ export default function SpeakingStep({ recDurationMs, onNextAction }: SpeakingSt
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
-      stopRecording();
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
       if (audioURL) {
         URL.revokeObjectURL(audioURL);
       }
