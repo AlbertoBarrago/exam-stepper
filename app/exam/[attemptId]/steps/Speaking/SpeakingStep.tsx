@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import SpeakingTask from '@/components/steps/SpeakingTask';
 import { SpeakingStepTypes } from '@/types/speakingTypes';
 
-export default function SpeakingStep({ durationMs, onNextAction }: SpeakingStepTypes) {
+export default function SpeakingStep({ recDurationMs, onNextAction }: SpeakingStepTypes) {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -11,49 +11,65 @@ export default function SpeakingStep({ durationMs, onNextAction }: SpeakingStepT
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    setStream(stream);
-
-    const recorder = new MediaRecorder(stream);
-    chunksRef.current = [];
-
-    recorder.ondataavailable = (e) => chunksRef.current.push(e.data);
-
-    recorder.onstop = () => {
-      const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
-      const url = URL.createObjectURL(blob);
-      // here we can add persistence for the voice recorded
-      setAudioURL(url);
-      setDone(true);
-    };
-
-    recorder.start();
-    recorderRef.current = recorder;
-    setRecording(true);
-
-    timerRef.current = setTimeout(() => {
-      recorder.stop();
-      stream.getTracks().forEach((t) => t.stop());
+  const stopRecording = () => {
+    if (recorderRef.current && recorderRef.current.state === 'recording') {
+      recorderRef.current.stop();
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
       setRecording(false);
-      //TODO: Add here the logic for analyze text with an ai and return a score, add persistence on DB and implement the Audit flux
-    }, durationMs);
+    }
+  };
+
+  const startRecording = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      setStream(mediaStream);
+
+      const recorder = new MediaRecorder(mediaStream);
+      chunksRef.current = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunksRef.current.push(e.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        if (chunksRef.current.length > 0) {
+          const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+          const url = URL.createObjectURL(blob);
+          setAudioURL(url);
+          setDone(true);
+        }
+      };
+
+      recorder.start(100);
+      recorderRef.current = recorder;
+      setRecording(true);
+
+      // Set the timer to stop recording after recDurationMs
+      timerRef.current = setTimeout(stopRecording, recDurationMs);
+    } catch (err) {
+      console.error('Failed to start recording:', err);
+    }
   };
 
   useEffect(() => {
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (recorderRef.current?.state === 'recording') {
-        recorderRef.current.stop();
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
       }
-      stream?.getTracks().forEach((t) => t.stop());
+      stopRecording();
+      if (audioURL) {
+        URL.revokeObjectURL(audioURL);
+      }
     };
-    //IMPORTANT: don't edit me, I need to be run on the first load
   }, []);
 
   return (
     <SpeakingTask
-      durationMs={durationMs}
+      durationMs={recDurationMs}
       startRecording={startRecording}
       onNextAction={onNextAction}
       recording={recording}

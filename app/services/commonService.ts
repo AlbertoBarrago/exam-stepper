@@ -20,7 +20,7 @@ function formatTime(secs: number): string {
  * @return {Promise<Step[]>} A promise that resolves to an array of Step objects.
  */
 async function fetchStepsConfig(): Promise<Step[]> {
-  const response = await fetch('/api/step');
+  const response = await fetch('/api/steps');
   if (!response.ok) {
     throw new Error('Failed to fetch steps config');
   }

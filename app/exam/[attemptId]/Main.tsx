@@ -98,7 +98,7 @@ function StepBody({ current, next }: { current: number; next: () => void }) {
         />
       );
     case 'speaking-question':
-      return <SpeakingStep durationMs={step.durationMs} onNextAction={next} />;
+      return <SpeakingStep recDurationMs={step.durationMs} onNextAction={next} />;
     case 'speaking-complete':
       return <SpeakingCompleteStep onNextAction={next} />;
     case 'final':

@@ -13,6 +13,6 @@ export type SpeakingTypes = {
 };
 
 export type SpeakingStepTypes = {
-  durationMs: number;
+  recDurationMs: number;
   onNextAction: (blob: Blob) => void;
 };

@@ -4,21 +4,32 @@ import { useEffect, useRef } from 'react';
 
 export default function Spectrum({ stream }: { stream: MediaStream | null }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationFrameRef = useRef<number>(undefined);
 
   useEffect(() => {
-    if (!stream) return;
+    if (!stream || !canvasRef.current) return;
 
+    const handleResize = () => {
+      if (canvasRef.current) {
+        canvasRef.current.width = window.innerWidth;
+        canvasRef.current.height = 120;
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
     const audioCtx = new AudioContext();
     const src = audioCtx.createMediaStreamSource(stream);
     const analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 256;
-    analyser.smoothingTimeConstant = 0.4;
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.6;
 
     src.connect(analyser);
 
     const buffer = new Uint8Array(analyser.frequencyBinCount);
-    const canvas = canvasRef.current!;
-    const ctx = canvas.getContext('2d')!;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) return;
 
     canvas.width = window.innerWidth;
     canvas.height = 120;
@@ -30,8 +41,8 @@ export default function Spectrum({ stream }: { stream: MediaStream | null }) {
 
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const barCount = 128;
-      const barWidth = 10;
+      const barCount = 2048;
+      const barWidth = 1;
       const barSpacing = 1;
       const totalBarWidth = barWidth + barSpacing;
 
@@ -40,7 +51,6 @@ export default function Spectrum({ stream }: { stream: MediaStream | null }) {
         const barHeight = (value / 255) * centerY;
 
         const rightX = centerX + i * totalBarWidth + barSpacing;
-
         const leftX = centerX - i * totalBarWidth - barWidth - barSpacing;
 
         ctx.fillStyle = '#3bbf2b';
@@ -54,12 +64,16 @@ export default function Spectrum({ stream }: { stream: MediaStream | null }) {
         }
       }
 
-      requestAnimationFrame(draw);
+      animationFrameRef.current = requestAnimationFrame(draw);
     };
 
     audioCtx.resume().then(draw);
 
     return () => {
+      window.removeEventListener('resize', handleResize);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
       audioCtx.close();
     };
   }, [stream]);

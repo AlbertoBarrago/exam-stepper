@@ -8,6 +8,24 @@ const StepsConfig: Step[] = [
     title: 'Welcome',
   },
   {
+    id: 4,
+    kind: 'speaking-intro',
+    title: 'Speaking Section',
+    subTitle: 'Now you have speaking a little',
+    durationMs: 900000,
+  },
+  {
+    id: 4.1,
+    kind: 'speaking-question',
+    title: 'Speaking',
+    durationMs: 10000,
+  },
+  {
+    id: 4.2,
+    kind: 'speaking-complete',
+    title: 'Speaking',
+  },
+  {
     id: 1,
     kind: 'permission',
     title: 'Audio Check',

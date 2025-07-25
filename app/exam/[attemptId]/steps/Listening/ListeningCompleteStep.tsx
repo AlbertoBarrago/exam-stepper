@@ -13,7 +13,7 @@ export default function ListeningCompleteStep({ onNextAction }: TitleAndNextActi
     if (writingIntroStepIndex !== -1) {
       nextStep();
     } else {
-      // Fallback if writing-intro step is not found, though it should be.
+      // Fallback if writing-intro steps is not found, though it should be.
       onNextAction();
     }
   };
