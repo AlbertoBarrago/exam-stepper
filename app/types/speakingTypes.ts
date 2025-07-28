@@ -14,6 +14,9 @@ export type SpeakingTypes = {
   remainingTime?: number;
   audioFinished: boolean;
   handleAudioEnd: () => void;
+  mode: 'record' | 'play' | 'init' | 'recording';
+  stopEndRecording: () => void;
+  durationMs?: number;
 };
 
 export type SpeakingStepTypes = {

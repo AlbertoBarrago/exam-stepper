@@ -1,0 +1,1 @@
+export const DURATION_INTRODUCTION_MS = 5000;

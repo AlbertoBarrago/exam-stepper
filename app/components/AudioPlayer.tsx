@@ -7,7 +7,7 @@ import { CircularAudioPlayerProps } from '@/types/audioPlayerTypes';
 export default function AudioPlayer({
   src,
   duration,
-  permissionStep,
+  canPlayInfiniteTimes,
   limitPlays = true,
   showMetrics = false,
   showSpectrum = false,
@@ -17,6 +17,7 @@ export default function AudioPlayer({
   onRecordStartAction,
   onRecordEndAction,
   autoStopRecording = false,
+  stream,
 }: CircularAudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -40,7 +41,7 @@ export default function AudioPlayer({
     const audio = audioRef.current;
     if (!audio) return;
 
-    if (!permissionStep && limitPlays && playCount >= 2) return;
+    if (!canPlayInfiniteTimes && limitPlays && playCount >= 2) return;
 
     audio.currentTime = 0;
     void audio.play();
@@ -117,6 +118,12 @@ export default function AudioPlayer({
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
+
+  useEffect(() => {
+    if (stream && isRecordMode) {
+      setAudioStream(stream);
+    }
+  }, [stream, isRecordMode]);
 
   useEffect(() => {
     if (!isPlaying) setProgress(0);
@@ -207,11 +214,11 @@ export default function AudioPlayer({
 
   const isButtonDisabled = isRecordMode
     ? false
-    : permissionStep
+    : canPlayInfiniteTimes
       ? false
       : limitPlays && playCount >= 2 && !isPlaying;
 
-  const maxPlays = permissionStep ? Infinity : 2;
+  const maxPlays = canPlayInfiniteTimes ? Infinity : 2;
   const remainingPlays = maxPlays === Infinity ? Infinity : Math.max(0, maxPlays - playCount);
 
   // Determine which icon to show
@@ -322,7 +329,7 @@ export default function AudioPlayer({
           />
         </svg>
 
-        {(isPlaying || isRecording) && showSpectrum && (
+        {(isPlaying || isRecording) && showSpectrum && audioStream && (
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-screen h-full flex items-center justify-center -z-10">
             <Spectrum stream={audioStream} />
           </div>
@@ -341,7 +348,7 @@ export default function AudioPlayer({
             </div>
           </div>
 
-          {!permissionStep && limitPlays && !isRecordMode && (
+          {!canPlayInfiniteTimes && limitPlays && !isRecordMode && (
             <div className="bg-gray-50 px-3 py-2 rounded-lg">
               <div className="font-medium text-gray-700 mb-1">Plays Remaining</div>
               <div
