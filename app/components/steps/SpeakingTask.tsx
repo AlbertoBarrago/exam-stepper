@@ -21,15 +21,18 @@ const SpeakingTask = ({
     <div className="space-y-6 flex flex-col items-center mt-10">
       <p className={'text-4xl'}>Practice question</p>
 
-      {/* Step 1: Play the question audio */}
       {!recording && !done && audioFileUrl && !audioFinished && (
         <div className="relative flex flex-col items-center gap-4">
-          <AudioPlayer src={audioFileUrl} permissionStep={true} onEndedAction={handleAudioEnd} />
+          <AudioPlayer
+            src={audioFileUrl}
+            permissionStep={true}
+            isRecordMode={true}
+            onEndedAction={handleAudioEnd}
+          />
           <p className="text-gray-500">Start to listen</p>
         </div>
       )}
 
-      {/* Step 2: Start recording or display a question after the audio ends */}
       {audioFinished && !recording && !done && (
         <div className="relative flex flex-col items-center gap-4">
           <AudioPlayer src={null} onPlayAction={startRecording} permissionStep={true} />
@@ -39,7 +42,6 @@ const SpeakingTask = ({
         </div>
       )}
 
-      {/* Step 3: Record and show spectrum */}
       {stream && recording && (
         <div className="relative flex flex-col items-center gap-2 w-full">
           <div className="flex flex-col items-center">
@@ -52,7 +54,6 @@ const SpeakingTask = ({
         </div>
       )}
 
-      {/* Step 4: Display recorded audio with Next and Retry options */}
       {audioURL && (
         <div className="space-y-4 flex flex-col items-center">
           <AudioPlayer src={audioURL} showSpectrum={true} permissionStep={true} />
