@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Play, Pause, Mic } from 'lucide-react';
 import Spectrum from '@/components/Spectrum';
 import { CircularAudioPlayerProps } from '@/types/audioPlayerTypes';
@@ -83,12 +83,12 @@ export default function AudioPlayer({
     }
   };
 
-  const stopRecording = () => {
+  const stopRecording = useCallback(() => {
     setIsRecording(false);
     if (onRecordEndAction) {
       onRecordEndAction();
     }
-  };
+  }, [onRecordEndAction]);
 
   const handleRecordToggle = () => {
     if (isRecording) {
@@ -189,7 +189,7 @@ export default function AudioPlayer({
         }
       };
     }
-  }, [isRecording, autoStopRecording, duration, audioDuration]);
+  }, [isRecording, autoStopRecording, duration, audioDuration, stopRecording]);
 
   useEffect(() => {
     if (!isRecording) {
