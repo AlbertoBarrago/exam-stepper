@@ -1,6 +1,6 @@
 'use client';
 import React, { useRef, useState, useEffect } from 'react';
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause, Mic } from 'lucide-react';
 import Spectrum from '@/components/Spectrum';
 
 interface CircularAudioPlayerProps {
@@ -11,7 +11,10 @@ interface CircularAudioPlayerProps {
   showMetrics?: boolean;
   showSpectrum?: boolean;
   onPlay?: () => void;
-  onEnded?: () => void; // Added onEnded prop
+  onEnded?: () => void;
+  isRecordMode?: boolean;
+  onRecordStart?: () => void;
+  onRecordEnd?: () => void;
 }
 
 export default function AudioPlayer({
@@ -22,12 +25,16 @@ export default function AudioPlayer({
   showMetrics = false,
   showSpectrum = false,
   onPlay,
-  onEnded, // Destructure onEnded prop
+  onEnded,
+  isRecordMode = false,
+  onRecordStart,
+  onRecordEnd,
 }: CircularAudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const audioSourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const [progress, setProgress] = useState(0);
   const [audioDuration, setAudioDuration] = useState(duration || 1);
   const [playCount, setPlayCount] = useState(0);
@@ -56,25 +63,25 @@ export default function AudioPlayer({
       setIsPlaying(false);
       setProgress(0);
       if (onEnded) {
-        onEnded(); // Trigger onEnded callback when playback ends
+        onEnded();
       }
     };
 
     audio.addEventListener('timeupdate', updateProgress);
     audio.addEventListener('loadedmetadata', setMetaDuration);
-    audio.addEventListener('ended', handleEnded); // Attach the ended event
+    audio.addEventListener('ended', handleEnded);
 
     return () => {
       audio.removeEventListener('timeupdate', updateProgress);
       audio.removeEventListener('loadedmetadata', setMetaDuration);
-      audio.removeEventListener('ended', handleEnded); // Cleanup the ended event
+      audio.removeEventListener('ended', handleEnded);
       if (audioContextRef.current) {
         audioContextRef.current.close();
         audioContextRef.current = null;
         audioSourceNodeRef.current = null;
       }
     };
-  }, [duration, src, onEnded]); // Add onEnded as a dependency
+  }, [duration, src, onEnded]);
 
   // Handle play logic
   const handlePlay = () => {
@@ -122,12 +129,31 @@ export default function AudioPlayer({
     setElapsedTime(0);
   };
 
-  // Toggle play/pause
-  const handleButtonClick = () => {
-    if (isPlaying) {
-      handlePause();
+  // Toggle recording
+  const handleRecordToggle = () => {
+    if (isRecording) {
+      setIsRecording(false);
+      if (onRecordEnd) {
+        onRecordEnd();
+      }
     } else {
-      handlePlay();
+      setIsRecording(true);
+      if (onRecordStart) {
+        onRecordStart();
+      }
+    }
+  };
+
+  // Toggle play/pause or recording
+  const handleButtonClick = () => {
+    if (isRecordMode) {
+      handleRecordToggle();
+    } else {
+      if (isPlaying) {
+        handlePause();
+      } else {
+        handlePlay();
+      }
     }
   };
 
@@ -142,10 +168,69 @@ export default function AudioPlayer({
   const circumference = 2 * Math.PI * radius;
   const displayProgress = progress;
 
-  const isButtonDisabled = permissionStep ? false : limitPlays && playCount >= 2 && !isPlaying;
+  // Button is disabled if not in record mode and over play limit
+  const isButtonDisabled = isRecordMode
+    ? false
+    : permissionStep
+      ? false
+      : limitPlays && playCount >= 2 && !isPlaying;
 
   const maxPlays = permissionStep ? Infinity : 2;
   const remainingPlays = maxPlays === Infinity ? Infinity : Math.max(0, maxPlays - playCount);
+
+  // Determine which icon to show
+  const renderIcon = () => {
+    if (isRecordMode) {
+      return isRecording ? (
+        <Pause
+          size={40}
+          strokeWidth={2}
+          style={{
+            color: '#2563eb',
+            transition: 'color 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        />
+      ) : (
+        <Mic
+          size={40}
+          strokeWidth={2}
+          style={{
+            color: '#ffffff',
+            transition: 'color 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        />
+      );
+    } else {
+      return isPlaying ? (
+        <Pause
+          size={40}
+          strokeWidth={2}
+          style={{
+            color: '#2563eb',
+            transition: 'color 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        />
+      ) : (
+        <Play
+          size={40}
+          strokeWidth={2}
+          style={{
+            color: '#ffffff',
+            transition: 'color 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        />
+      );
+    }
+  };
+
+  // Determine button background color
+  const getButtonBackgroundColor = () => {
+    if (isRecordMode) {
+      return isRecording ? '#ffffff' : '#d21d1d';
+    } else {
+      return isPlaying ? '#ffffff' : '#2563eb';
+    }
+  };
 
   return (
     <div className="flex items-center gap-6">
@@ -162,35 +247,25 @@ export default function AudioPlayer({
 
         <button
           onClick={handleButtonClick}
-          aria-label={isPlaying ? 'Pause Audio' : 'Play Audio'}
+          aria-label={
+            isRecordMode
+              ? isRecording
+                ? 'Stop Recording'
+                : 'Start Recording'
+              : isPlaying
+                ? 'Pause Audio'
+                : 'Play Audio'
+          }
           disabled={isButtonDisabled}
           className="z-10 rounded-full shadow-lg w-16 h-16 flex items-center justify-center focus:outline-none"
           style={{
-            backgroundColor: isPlaying ? '#ffffff' : '#2563eb',
+            backgroundColor: getButtonBackgroundColor(),
             opacity: isButtonDisabled ? 0.6 : 1,
             cursor: isButtonDisabled ? 'not-allowed' : 'pointer',
             transition: 'background-color 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
-          {isPlaying ? (
-            <Pause
-              size={40}
-              strokeWidth={2}
-              style={{
-                color: '#2563eb',
-                transition: 'color 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
-              }}
-            />
-          ) : (
-            <Play
-              size={40}
-              strokeWidth={2}
-              style={{
-                color: '#ffffff',
-                transition: 'color 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
-              }}
-            />
-          )}
+          {renderIcon()}
         </button>
 
         <svg className="absolute top-0 left-0" width={128} height={128}>
@@ -211,7 +286,7 @@ export default function AudioPlayer({
           />
         </svg>
 
-        {isPlaying && showSpectrum && (
+        {(isPlaying || isRecording) && showSpectrum && (
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-screen h-full flex items-center justify-center -z-10">
             <Spectrum stream={audioStream} />
           </div>
@@ -227,7 +302,7 @@ export default function AudioPlayer({
             </div>
           </div>
 
-          {!permissionStep && limitPlays && (
+          {!permissionStep && limitPlays && !isRecordMode && (
             <div className="bg-gray-50 px-3 py-2 rounded-lg">
               <div className="font-medium text-gray-700 mb-1">Plays Remaining</div>
               <div
