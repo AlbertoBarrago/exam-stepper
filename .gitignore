@@ -47,5 +47,8 @@ next-env.d.ts
 .swc
 coverage
 
+#Note
+NOTE.md
+
 #Gemini CLI
 GEMINI.md
