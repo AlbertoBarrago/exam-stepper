@@ -49,7 +49,6 @@ const ReadingPassage: React.FC<ReadingPassageProps> = ({
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* Passage Section */}
       <div className="bg-white rounded-lg shadow-lg text-left">
         <div className="p-6 max-h-[80vh] overflow-y-auto">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
@@ -66,7 +65,6 @@ const ReadingPassage: React.FC<ReadingPassageProps> = ({
         </div>
       </div>
 
-      {/* Questions Section */}
       <div className="bg-white rounded-lg shadow-lg flex flex-col max-h-[80vh]">
         <div className="p-6 flex-1 overflow-y-auto">
           {currentQuestion && (
@@ -81,7 +79,6 @@ const ReadingPassage: React.FC<ReadingPassageProps> = ({
                 )}
               </div>
 
-              {/* Answer Options - Fixed spacing */}
               <div className="space-y-2">
                 {currentQuestion.options.map((option, index) => {
                   const isSelected = isOptionSelected(index);
@@ -106,7 +103,6 @@ const ReadingPassage: React.FC<ReadingPassageProps> = ({
                         className="sr-only"
                       />
 
-                      {/* Fixed checkbox/radio styling */}
                       <div
                         className={`
                                             flex-shrink-0 mr-3 border-2 flex items-center justify-center transition-all duration-200
@@ -149,7 +145,6 @@ const ReadingPassage: React.FC<ReadingPassageProps> = ({
           )}
         </div>
 
-        {/* Navigation Footer - Fixed positioning */}
         <div className="border-t border-gray-200 p-4 bg-gray-50 flex-shrink-0">
           <div className="flex justify-between items-center">
             {showPrevious && onPrevious ? (

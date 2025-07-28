@@ -16,38 +16,36 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
-  const handleCircularInteraction = async () => {
+  const startRecording = async () => {
     setError(null);
+    try {
+      setHint('Im recording, say something... 5sec!');
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStreamRef.current = stream;
+      const recorder = new MediaRecorder(stream);
+      audioChunksRef.current = [];
+      recorder.ondataavailable = (e) => audioChunksRef.current.push(e.data);
+      recorder.onstop = () => {
+        const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const url = URL.createObjectURL(blob);
+        console.log('Recording blob url:', url);
+        setAudioURL(url);
+        setMode('ready');
+        setHint('Press play and verify if you can hear the recording...');
+      };
+      mediaRecorderRef.current = recorder;
+      recorder.start();
+      setMode('recording');
+    } catch (err) {
+      setError(`Access denied: ${err}`);
+      setHint(`Access denied: ${err}`);
+    }
+  };
 
-    if (mode === 'init') {
-      try {
-        setHint('Im recording, say something... 5sec!');
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaStreamRef.current = stream;
-        const recorder = new MediaRecorder(stream);
-        audioChunksRef.current = [];
-        recorder.ondataavailable = (e) => audioChunksRef.current.push(e.data);
-        recorder.onstop = () => {
-          const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-          const url = URL.createObjectURL(blob);
-          console.log('Recording blob url:', url);
-          setAudioURL(url);
-          setMode('ready');
-          setHint('Press play and verify if you can hear the recording...');
-        };
-        mediaRecorderRef.current = recorder;
-        recorder.start();
-        setMode('recording');
-        setTimeout(() => {
-          if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-            mediaRecorderRef.current.stop();
-            mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
-          }
-        }, 5000);
-      } catch (err) {
-        setError(`Access denied: ${err}`);
-        setHint(`Access denied: ${err}`);
-      }
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+      mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
     }
   };
 
@@ -62,7 +60,6 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
 
       <div
         style={{
-          cursor: 'pointer',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -70,11 +67,22 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
         }}
         aria-label={mode === 'init' ? 'Inizia registrazione' : 'Player audio'}
         tabIndex={0}
-        onClick={mode === 'init' ? handleCircularInteraction : undefined}
       >
-        <AudioPlayer src={audioURL} duration={3} permissionStep={true} />
+        <AudioPlayer
+          src={audioURL}
+          duration={5}
+          permissionStep={true}
+          isRecordMode={mode === 'init' || mode === 'recording'}
+          onRecordStartAction={startRecording}
+          onRecordEndAction={stopRecording}
+          autoStopRecording={true}
+          showMetrics={false}
+          showSpectrum={false}
+        />
         {mode === 'init' && (
-          <div className="mt-1 text-sm text-blue-500 animate-pulse">Press play button</div>
+          <div className="mt-1 text-sm text-blue-500 animate-pulse">
+            Press mic button to start recording
+          </div>
         )}
         {mode === 'recording' && (
           <div className="mt-1 text-sm text-red-500 animate-pulse">Recording...</div>
@@ -86,7 +94,10 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
 
       {error && <div className="text-red-500 mt-2">{error}</div>}
 
-      <button className="mt-4 px-4 py-2 bg-white-600 border rounded mr-2" onClick={stepBack}>
+      <button
+        className="mt-4 px-4 py-2 bg-white-600 border rounded mr-2 cursor-pointer"
+        onClick={stepBack}
+      >
         No
       </button>
 

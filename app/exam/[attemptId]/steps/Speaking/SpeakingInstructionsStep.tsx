@@ -102,6 +102,7 @@ export default function SpeakingInstructionsStep({
         URL.revokeObjectURL(audioURL);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
