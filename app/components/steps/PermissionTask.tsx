@@ -52,16 +52,6 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
     }
   };
 
-  // Auto-stop recording after 5 seconds
-  React.useEffect(() => {
-    if (mode === 'recording') {
-      const timer = setTimeout(() => {
-        stopRecording();
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [mode]);
-
   const stepBack: () => void = () => {
     router.back();
   };
@@ -83,11 +73,14 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
       >
         <AudioPlayer
           src={audioURL}
-          duration={3}
+          duration={5}
           permissionStep={true}
           isRecordMode={mode === 'init' || mode === 'recording'}
-          onRecordStart={startRecording}
-          onRecordEnd={stopRecording}
+          onRecordStartAction={startRecording}
+          onRecordEndAction={stopRecording}
+          autoStopRecording={true}
+          showMetrics={false}
+          showSpectrum={false}
         />
         {mode === 'init' && (
           <div className="mt-1 text-sm text-blue-500 animate-pulse">
@@ -104,7 +97,10 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
 
       {error && <div className="text-red-500 mt-2">{error}</div>}
 
-      <button className="mt-4 px-4 py-2 bg-white-600 border rounded mr-2" onClick={stepBack}>
+      <button
+        className="mt-4 px-4 py-2 bg-white-600 border rounded mr-2 cursor-pointer"
+        onClick={stepBack}
+      >
         No
       </button>
 

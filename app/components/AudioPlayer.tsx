@@ -2,20 +2,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Play, Pause, Mic } from 'lucide-react';
 import Spectrum from '@/components/Spectrum';
-
-interface CircularAudioPlayerProps {
-  src: string | null;
-  duration?: number;
-  permissionStep?: boolean;
-  limitPlays?: boolean;
-  showMetrics?: boolean;
-  showSpectrum?: boolean;
-  onPlay?: () => void;
-  onEnded?: () => void;
-  isRecordMode?: boolean;
-  onRecordStart?: () => void;
-  onRecordEnd?: () => void;
-}
+import { CircularAudioPlayerProps } from '@/types/audioPlayerTypes';
 
 export default function AudioPlayer({
   src,
@@ -24,69 +11,29 @@ export default function AudioPlayer({
   limitPlays = true,
   showMetrics = false,
   showSpectrum = false,
-  onPlay,
-  onEnded,
+  onPlayAction,
+  onEndedAction,
   isRecordMode = false,
-  onRecordStart,
-  onRecordEnd,
+  onRecordStartAction,
+  onRecordEndAction,
+  autoStopRecording = false,
 }: CircularAudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const audioSourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [audioDuration, setAudioDuration] = useState(duration || 1);
+  const [audioDuration, setAudioDuration] = useState(duration || 0);
+  const [recordingElapsedTime, setRecordingElapsedTime] = useState(0);
   const [playCount, setPlayCount] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
 
-  // Reset progress when playback stops or src changes
-  useEffect(() => {
-    if (!isPlaying) setProgress(0);
-  }, [isPlaying, src]);
-
-  // Set up audio listeners
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const updateProgress = () => {
-      if (!audio.duration) return;
-      setProgress(audio.currentTime / audio.duration);
-      setElapsedTime(audio.currentTime);
-    };
-
-    const setMetaDuration = () => setAudioDuration(audio.duration || duration || 1);
-
-    const handleEnded = () => {
-      setIsPlaying(false);
-      setProgress(0);
-      if (onEnded) {
-        onEnded();
-      }
-    };
-
-    audio.addEventListener('timeupdate', updateProgress);
-    audio.addEventListener('loadedmetadata', setMetaDuration);
-    audio.addEventListener('ended', handleEnded);
-
-    return () => {
-      audio.removeEventListener('timeupdate', updateProgress);
-      audio.removeEventListener('loadedmetadata', setMetaDuration);
-      audio.removeEventListener('ended', handleEnded);
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-        audioContextRef.current = null;
-        audioSourceNodeRef.current = null;
-      }
-    };
-  }, [duration, src, onEnded]);
-
-  // Handle play logic
   const handlePlay = () => {
-    if (onPlay) {
-      onPlay();
+    if (onPlayAction) {
+      onPlayAction();
       return;
     }
 
@@ -118,7 +65,6 @@ export default function AudioPlayer({
     }
   };
 
-  // Handle pause logic
   const handlePause = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -129,22 +75,29 @@ export default function AudioPlayer({
     setElapsedTime(0);
   };
 
-  // Toggle recording
-  const handleRecordToggle = () => {
-    if (isRecording) {
-      setIsRecording(false);
-      if (onRecordEnd) {
-        onRecordEnd();
-      }
-    } else {
-      setIsRecording(true);
-      if (onRecordStart) {
-        onRecordStart();
-      }
+  const startRecording = () => {
+    setIsRecording(true);
+    setProgress(0);
+    if (onRecordStartAction) {
+      onRecordStartAction();
     }
   };
 
-  // Toggle play/pause or recording
+  const stopRecording = () => {
+    setIsRecording(false);
+    if (onRecordEndAction) {
+      onRecordEndAction();
+    }
+  };
+
+  const handleRecordToggle = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+
   const handleButtonClick = () => {
     if (isRecordMode) {
       handleRecordToggle();
@@ -157,18 +110,101 @@ export default function AudioPlayer({
     }
   };
 
-  // Format elapsed time
   const formatTime = (seconds: number) => {
+    if (!Number.isFinite(seconds)) return '0:00';
+
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  useEffect(() => {
+    if (!isPlaying) setProgress(0);
+  }, [isPlaying, src]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const updateProgress = () => {
+      if (!audio.duration) return;
+      setProgress(audio.currentTime / audio.duration);
+      setElapsedTime(audio.currentTime);
+    };
+
+    const setMetaDuration = () => {
+      // Make sure we have a valid, finite duration
+      const actualDuration = Number.isFinite(audio.duration)
+        ? audio.duration
+        : Number.isFinite(duration)
+          ? duration
+          : 0;
+      setAudioDuration(actualDuration!);
+    };
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setProgress(0);
+      if (onEndedAction) {
+        onEndedAction();
+      }
+    };
+
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('loadedmetadata', setMetaDuration);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('timeupdate', updateProgress);
+      audio.removeEventListener('loadedmetadata', setMetaDuration);
+      audio.removeEventListener('ended', handleEnded);
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
+        audioSourceNodeRef.current = null;
+      }
+    };
+  }, [duration, src, onEndedAction]);
+
+  useEffect(() => {
+    if (isRecording && autoStopRecording && duration && Number.isFinite(duration)) {
+      const updateInterval = setInterval(() => {
+        setRecordingElapsedTime((prev) => {
+          const newTime = prev + 0.1;
+          if (audioDuration > 0) {
+            setProgress(newTime / audioDuration);
+          }
+          return newTime;
+        });
+      }, 100);
+
+      recordingTimerRef.current = setTimeout(() => {
+        stopRecording();
+      }, duration * 1000);
+
+      return () => {
+        clearInterval(updateInterval);
+        if (recordingTimerRef.current) {
+          clearTimeout(recordingTimerRef.current);
+        }
+      };
+    }
+  }, [isRecording, autoStopRecording, duration, audioDuration]);
+
+  useEffect(() => {
+    if (!isRecording) {
+      setRecordingElapsedTime(0);
+      if (recordingTimerRef.current) {
+        clearTimeout(recordingTimerRef.current);
+        recordingTimerRef.current = null;
+      }
+    }
+  }, [isRecording]);
+
   const radius = 36;
   const circumference = 2 * Math.PI * radius;
   const displayProgress = progress;
 
-  // Button is disabled if not in record mode and over play limit
   const isButtonDisabled = isRecordMode
     ? false
     : permissionStep
@@ -298,7 +334,10 @@ export default function AudioPlayer({
           <div className="bg-gray-50 px-3 py-2 rounded-lg">
             <div className="font-medium text-gray-700 mb-1">Time Elapsed</div>
             <div className="font-mono text-blue-600">
-              {formatTime(elapsedTime)}/{formatTime(audioDuration)}
+              {formatTime(isRecording ? recordingElapsedTime : elapsedTime)}/
+              {audioDuration > 0
+                ? formatTime(audioDuration)
+                : formatTime(isRecording ? duration || 0 : 0)}
             </div>
           </div>
 

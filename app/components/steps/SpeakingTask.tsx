@@ -24,7 +24,7 @@ const SpeakingTask = ({
       {/* Step 1: Play the question audio */}
       {!recording && !done && audioFileUrl && !audioFinished && (
         <div className="relative flex flex-col items-center gap-4">
-          <AudioPlayer src={audioFileUrl} permissionStep={true} onEnded={handleAudioEnd} />
+          <AudioPlayer src={audioFileUrl} permissionStep={true} onEndedAction={handleAudioEnd} />
           <p className="text-gray-500">Start to listen</p>
         </div>
       )}
@@ -32,7 +32,7 @@ const SpeakingTask = ({
       {/* Step 2: Start recording or display a question after the audio ends */}
       {audioFinished && !recording && !done && (
         <div className="relative flex flex-col items-center gap-4">
-          <AudioPlayer src={null} onPlay={startRecording} permissionStep={true} />
+          <AudioPlayer src={null} onPlayAction={startRecording} permissionStep={true} />
           <p className="text-gray-600 font-bold">
             Please answer the question by starting your recording.
           </p>
