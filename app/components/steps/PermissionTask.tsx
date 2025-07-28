@@ -15,7 +15,6 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
-  const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
 
   const startRecording = async () => {
     setError(null);
@@ -23,7 +22,6 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
       setHint('Im recording, say something... 5sec!');
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaStreamRef.current = stream;
-      setAudioStream(stream);
       const recorder = new MediaRecorder(stream);
       audioChunksRef.current = [];
       recorder.ondataavailable = (e) => audioChunksRef.current.push(e.data);
@@ -48,7 +46,6 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
       mediaRecorderRef.current.stop();
       mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
-      setAudioStream(null);
     }
   };
 
