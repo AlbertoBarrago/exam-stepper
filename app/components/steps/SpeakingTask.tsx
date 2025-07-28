@@ -1,4 +1,3 @@
-import Spectrum from '@/components/Spectrum';
 import { SpeakingTypes } from '@/types/speakingTypes';
 import AudioPlayer from '@/components/AudioPlayer';
 import { RepeatIcon } from 'lucide-react';
@@ -16,6 +15,9 @@ const SpeakingTask = ({
   remainingTime,
   audioFinished,
   handleAudioEnd,
+  mode,
+  stopEndRecording,
+  durationMs = 5000,
 }: SpeakingTypes) => {
   return (
     <div className="space-y-6 flex flex-col items-center mt-10">
@@ -25,38 +27,47 @@ const SpeakingTask = ({
         <div className="relative flex flex-col items-center gap-4">
           <AudioPlayer
             src={audioFileUrl}
-            permissionStep={true}
-            isRecordMode={true}
+            canPlayInfiniteTimes={true}
             onEndedAction={handleAudioEnd}
           />
           <p className="text-gray-500">Start to listen</p>
         </div>
       )}
 
-      {audioFinished && !recording && !done && (
+      {audioFinished && !done && (
         <div className="relative flex flex-col items-center gap-4">
-          <AudioPlayer src={null} onPlayAction={startRecording} permissionStep={true} />
+          <AudioPlayer
+            src={audioURL}
+            duration={durationMs! / 1000}
+            canPlayInfiniteTimes={true}
+            isRecordMode={mode === 'init' || mode === 'recording'}
+            onRecordStartAction={startRecording}
+            onRecordEndAction={stopEndRecording}
+            autoStopRecording={true}
+            showSpectrum={true}
+            stream={stream}
+          />
           <p className="text-gray-600 font-bold">
-            Please answer the question by starting your recording.
+            {recording ? (
+              <span className="flex items-center animate-pulse">
+                🎙️ Registrazione in corso, {remainingTime} secondi...
+              </span>
+            ) : (
+              <span>Inizia a registrare la tua risposta (durata: {durationMs / 1000} secondi)</span>
+            )}
           </p>
         </div>
       )}
 
       {stream && recording && (
         <div className="relative flex flex-col items-center gap-2 w-full">
-          <div className="flex flex-col items-center">
-            <Spectrum stream={stream} />
-
-            <p className="text-gray-600 font-semibold animate-pulse text-center mt-5">
-              🎙️ Record in progress, {remainingTime} seconds...
-            </p>
-          </div>
+          <div className="flex flex-col items-center"></div>
         </div>
       )}
 
       {audioURL && (
         <div className="space-y-4 flex flex-col items-center">
-          <AudioPlayer src={audioURL} showSpectrum={true} permissionStep={true} />
+          <AudioPlayer src={audioURL} showSpectrum={true} canPlayInfiniteTimes={true} />
           <div className="flex gap-4">
             <button className="btn bg-red-950" onClick={resetAudioUrl}>
               <span className={'flex items-center gap-1'}>

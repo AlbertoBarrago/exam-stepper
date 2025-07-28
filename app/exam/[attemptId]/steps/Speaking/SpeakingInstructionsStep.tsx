@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import SpeakingTask from '@/components/steps/SpeakingTask';
 import { SpeakingStepTypes } from '@/types/speakingTypes';
+import { DURATION_INTRODUCTION_MS } from '@/const/stepConst';
 
 export default function SpeakingInstructionsStep({
   recDurationMs,
@@ -16,7 +17,6 @@ export default function SpeakingInstructionsStep({
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [remainingTime, setRemainingTime] = useState(recDurationMs! / 1000);
   const [audioFinished, setAudioFinished] = useState(false);
-
   const stopRecording = useCallback(() => {
     if (recorderRef.current && recorderRef.current.state === 'recording') {
       recorderRef.current.stop();
@@ -116,6 +116,9 @@ export default function SpeakingInstructionsStep({
       audioFinished={audioFinished}
       recording={recording}
       done={done}
+      durationMs={DURATION_INTRODUCTION_MS}
+      mode={'recording'}
+      stopEndRecording={stopRecording}
       recorderRef={recorderRef}
       chunksRef={chunksRef}
       audioURL={audioURL}

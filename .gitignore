@@ -46,3 +46,9 @@ next-env.d.ts
 #Test files
 .swc
 coverage
+
+#Note
+NOTE.md
+
+#Gemini CLI
+GEMINI.md
