@@ -43,7 +43,7 @@ export default function AudioPlayer({
     if (!permissionStep && limitPlays && playCount >= 2) return;
 
     audio.currentTime = 0;
-    audio.play();
+    void audio.play();
     setIsPlaying(true);
     setPlayCount((count) => count + 1);
     setProgress(0);
@@ -159,7 +159,7 @@ export default function AudioPlayer({
       audio.removeEventListener('loadedmetadata', setMetaDuration);
       audio.removeEventListener('ended', handleEnded);
       if (audioContextRef.current) {
-        audioContextRef.current.close();
+        void audioContextRef.current.close();
         audioContextRef.current = null;
         audioSourceNodeRef.current = null;
       }
