@@ -53,6 +53,15 @@ All exam sections are organized in their own folders under `exam/[attemptId]/ste
 - Speaking/
 - Final/
 
+
+## ⚙️ How Steps Work
+
+- Step comes from api route `api/steps`
+- Steps are controlled by their naming convention, where `-start` and `-complete` suffixes designate the entry and exit
+  points of each section respectively.
+  This pattern helps manage the exam flow systematically.
+- So, if you need it, you can N steps through these two keys
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please follow these steps:
@@ -67,7 +76,7 @@ This project is licensed under the MIT License.
 
 ---
 
-### Steps Flow (Visualized)
+### 📍 Steps Flow (Visualized)
 
 ```mermaid
 sequenceDiagram
