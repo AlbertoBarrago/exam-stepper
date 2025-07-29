@@ -237,7 +237,6 @@ export default function AudioPlayer({
   const maxPlays = limitPlays ? 2 : Infinity;
   const remainingPlays = maxPlays === Infinity ? Infinity : Math.max(0, maxPlays - playCount);
 
-  // Determine which icon to show
   const renderIcon = () => {
     if (isRecordMode) {
       return isRecording ? (
@@ -282,7 +281,6 @@ export default function AudioPlayer({
     }
   };
 
-  // Determine button background color
   const getButtonBackgroundColor = () => {
     if (isRecordMode) {
       return isRecording ? '#ffffff' : '#d21d1d';
