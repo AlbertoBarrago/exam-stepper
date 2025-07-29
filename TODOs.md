@@ -3,6 +3,7 @@
 ## Data & Types
 
 - [x] Create `state/timerStore.ts` to share step/result/timing types across the app with zustand
+- [ ] Add Zod Validation for DTO
 
 ## Step Navigation
 
