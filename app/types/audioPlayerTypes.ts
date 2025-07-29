@@ -1,15 +1,14 @@
 export type CircularAudioPlayerProps = {
   src: string | null;
-  duration?: number;
-  canPlayInfiniteTimes?: boolean;
   limitPlays?: boolean;
   showMetrics?: boolean;
   showSpectrum?: boolean;
+  isRecordMode?: boolean;
   onPlayAction?: () => void;
   onEndedAction?: () => void;
-  isRecordMode?: boolean;
-  onRecordStartAction?: () => void;
-  onRecordEndAction?: () => void;
-  autoStopRecording?: boolean;
+  recordingDuration?: number;
   stream?: MediaStream | null;
+  autoStopRecording?: boolean;
+  onRecordEndAction?: () => void;
+  onRecordStartAction?: () => void;
 };

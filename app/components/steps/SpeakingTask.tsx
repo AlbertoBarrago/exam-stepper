@@ -25,11 +25,7 @@ const SpeakingTask = ({
 
       {!recording && !done && audioFileUrl && !audioFinished && (
         <div className="relative flex flex-col items-center gap-4">
-          <AudioPlayer
-            src={audioFileUrl}
-            canPlayInfiniteTimes={true}
-            onEndedAction={handleAudioEnd}
-          />
+          <AudioPlayer src={audioFileUrl} limitPlays={false} onEndedAction={handleAudioEnd} />
           <p className="text-gray-500">Start to listen</p>
         </div>
       )}
@@ -38,8 +34,8 @@ const SpeakingTask = ({
         <div className="relative flex flex-col items-center gap-4">
           <AudioPlayer
             src={audioURL}
-            duration={durationMs! / 1000}
-            canPlayInfiniteTimes={true}
+            recordingDuration={durationMs! / 1000}
+            limitPlays={false}
             isRecordMode={mode === 'init' || mode === 'recording'}
             onRecordStartAction={startRecording}
             onRecordEndAction={stopEndRecording}
@@ -67,7 +63,7 @@ const SpeakingTask = ({
 
       {audioURL && (
         <div className="space-y-4 flex flex-col items-center">
-          <AudioPlayer src={audioURL} showSpectrum={true} canPlayInfiniteTimes={true} />
+          <AudioPlayer src={audioURL} showSpectrum={true} limitPlays={false} />
           <div className="flex gap-4">
             <button className="btn bg-red-950" onClick={resetAudioUrl}>
               <span className={'flex items-center gap-1'}>

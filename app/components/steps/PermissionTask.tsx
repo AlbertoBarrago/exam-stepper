@@ -70,8 +70,8 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
       >
         <AudioPlayer
           src={audioURL}
-          duration={5}
-          canPlayInfiniteTimes={true}
+          recordingDuration={5}
+          limitPlays={false}
           isRecordMode={mode === 'init' || mode === 'recording'}
           onRecordStartAction={startRecording}
           onRecordEndAction={stopRecording}

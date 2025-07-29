@@ -6,8 +6,7 @@ import { CircularAudioPlayerProps } from '@/types/audioPlayerTypes';
 
 export default function AudioPlayer({
   src,
-  duration,
-  canPlayInfiniteTimes,
+  recordingDuration,
   limitPlays = true,
   showMetrics = false,
   showSpectrum = false,
@@ -26,13 +25,13 @@ export default function AudioPlayer({
   const [isPlaying, setIsPlaying] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [audioDuration, setAudioDuration] = useState(duration || 0);
+  const [audioDuration, setAudioDuration] = useState(recordingDuration || 0);
   const [recordingElapsedTime, setRecordingElapsedTime] = useState(0);
   const [playCount, setPlayCount] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
 
-  const handlePlay = () => {
+  const handlePlay = async () => {
     if (onPlayAction) {
       onPlayAction();
       return;
@@ -41,16 +40,32 @@ export default function AudioPlayer({
     const audio = audioRef.current;
     if (!audio) return;
 
-    if (!canPlayInfiniteTimes && limitPlays && playCount >= 2) return;
+    if (limitPlays && playCount >= 2) return;
 
-    audio.currentTime = 0;
-    void audio.play();
+    if (!audio.duration && audio.readyState === 0) {
+      try {
+        await new Promise((resolve, reject) => {
+          audio.addEventListener('loadedmetadata', resolve, { once: true });
+          audio.addEventListener('error', reject, { once: true });
+        });
+      } catch (e) {
+        console.error('Error loading audio metadata:', e);
+        return;
+      }
+    }
+
+    setTimeout(() => {
+      const audio = audioRef.current;
+      if (!audio) return;
+      audio.currentTime = 0;
+      void audio.play();
+    }, 0);
+
     setIsPlaying(true);
     setPlayCount((count) => count + 1);
     setProgress(0);
     setElapsedTime(0);
 
-    // Setup spectrum if enabled
     if (showSpectrum && !audioSourceNodeRef.current) {
       const AudioContext = window.AudioContext;
       if (AudioContext) {
@@ -143,8 +158,8 @@ export default function AudioPlayer({
       // Make sure we have a valid, finite duration
       const actualDuration = Number.isFinite(audio.duration)
         ? audio.duration
-        : Number.isFinite(duration)
-          ? duration
+        : Number.isFinite(recordingDuration)
+          ? recordingDuration
           : 0;
       setAudioDuration(actualDuration!);
     };
@@ -171,10 +186,15 @@ export default function AudioPlayer({
         audioSourceNodeRef.current = null;
       }
     };
-  }, [duration, src, onEndedAction]);
+  }, [recordingDuration, src, onEndedAction]);
 
   useEffect(() => {
-    if (isRecording && autoStopRecording && duration && Number.isFinite(duration)) {
+    if (
+      isRecording &&
+      autoStopRecording &&
+      recordingDuration &&
+      Number.isFinite(recordingDuration)
+    ) {
       const updateInterval = setInterval(() => {
         setRecordingElapsedTime((prev) => {
           const newTime = prev + 0.1;
@@ -187,7 +207,7 @@ export default function AudioPlayer({
 
       recordingTimerRef.current = setTimeout(() => {
         stopRecording();
-      }, duration * 1000);
+      }, recordingDuration * 1000);
 
       return () => {
         clearInterval(updateInterval);
@@ -196,7 +216,7 @@ export default function AudioPlayer({
         }
       };
     }
-  }, [isRecording, autoStopRecording, duration, audioDuration, stopRecording]);
+  }, [isRecording, autoStopRecording, recordingDuration, audioDuration, stopRecording]);
 
   useEffect(() => {
     if (!isRecording) {
@@ -212,13 +232,9 @@ export default function AudioPlayer({
   const circumference = 2 * Math.PI * radius;
   const displayProgress = progress;
 
-  const isButtonDisabled = isRecordMode
-    ? false
-    : canPlayInfiniteTimes
-      ? false
-      : limitPlays && playCount >= 2 && !isPlaying;
+  const isButtonDisabled = isRecordMode ? false : limitPlays && playCount >= 2 && !isPlaying;
 
-  const maxPlays = canPlayInfiniteTimes ? Infinity : 2;
+  const maxPlays = limitPlays ? 2 : Infinity;
   const remainingPlays = maxPlays === Infinity ? Infinity : Math.max(0, maxPlays - playCount);
 
   // Determine which icon to show
@@ -344,11 +360,11 @@ export default function AudioPlayer({
               {formatTime(isRecording ? recordingElapsedTime : elapsedTime)}/
               {audioDuration > 0
                 ? formatTime(audioDuration)
-                : formatTime(isRecording ? duration || 0 : 0)}
+                : formatTime(isRecording ? recordingDuration || 0 : 0)}
             </div>
           </div>
 
-          {!canPlayInfiniteTimes && limitPlays && !isRecordMode && (
+          {limitPlays && !isRecordMode && (
             <div className="bg-gray-50 px-3 py-2 rounded-lg">
               <div className="font-medium text-gray-700 mb-1">Plays Remaining</div>
               <div
