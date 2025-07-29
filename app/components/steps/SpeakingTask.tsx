@@ -25,11 +25,7 @@ const SpeakingTask = ({
 
       {!recording && !done && audioFileUrl && !audioFinished && (
         <div className="relative flex flex-col items-center gap-4">
-          <AudioPlayer
-            src={audioFileUrl}
-            canPlayInfiniteTimes={true}
-            onEndedAction={handleAudioEnd}
-          />
+          <AudioPlayer src={audioFileUrl} limitPlays={false} onEndAction={handleAudioEnd} />
           <p className="text-gray-500">Start to listen</p>
         </div>
       )}
@@ -38,22 +34,24 @@ const SpeakingTask = ({
         <div className="relative flex flex-col items-center gap-4">
           <AudioPlayer
             src={audioURL}
-            duration={durationMs! / 1000}
-            canPlayInfiniteTimes={true}
-            isRecordMode={mode === 'init' || mode === 'recording'}
-            onRecordStartAction={startRecording}
-            onRecordEndAction={stopEndRecording}
-            autoStopRecording={true}
+            limitPlays={false}
             showSpectrum={true}
             stream={stream}
+            recordingOptions={{
+              enabled: mode === 'init' || mode === 'recording',
+              onStart: startRecording,
+              onEnd: stopEndRecording,
+              duration: durationMs! / 1000,
+              autoStop: true,
+            }}
           />
           <p className="text-gray-600 font-bold">
             {recording ? (
               <span className="flex items-center animate-pulse">
-                🎙️ Registrazione in corso, {remainingTime} secondi...
+                🎙️ Start to Recording... {remainingTime} seconds left...
               </span>
             ) : (
-              <span>Inizia a registrare la tua risposta (durata: {durationMs / 1000} secondi)</span>
+              <span>Answer to question in (time: {durationMs / 1000} seconds)</span>
             )}
           </p>
         </div>
@@ -67,7 +65,7 @@ const SpeakingTask = ({
 
       {audioURL && (
         <div className="space-y-4 flex flex-col items-center">
-          <AudioPlayer src={audioURL} showSpectrum={true} canPlayInfiniteTimes={true} />
+          <AudioPlayer src={audioURL} showSpectrum={true} limitPlays={false} />
           <div className="flex gap-4">
             <button className="btn bg-red-950" onClick={resetAudioUrl}>
               <span className={'flex items-center gap-1'}>

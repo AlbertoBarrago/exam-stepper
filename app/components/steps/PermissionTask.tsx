@@ -70,12 +70,14 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
       >
         <AudioPlayer
           src={audioURL}
-          duration={5}
-          canPlayInfiniteTimes={true}
-          isRecordMode={mode === 'init' || mode === 'recording'}
-          onRecordStartAction={startRecording}
-          onRecordEndAction={stopRecording}
-          autoStopRecording={true}
+          recordingOptions={{
+            enabled: mode === 'init' || mode === 'recording',
+            onStart: startRecording,
+            onEnd: stopRecording,
+            duration: 5,
+            autoStop: true,
+          }}
+          limitPlays={false}
         />
         {mode === 'init' && (
           <div className="mt-1 text-sm text-blue-500 animate-pulse">
