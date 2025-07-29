@@ -4,20 +4,36 @@ import { Play, Pause, Mic } from 'lucide-react';
 import Spectrum from '@/components/Spectrum';
 import { CircularAudioPlayerProps } from '@/types/audioPlayerTypes';
 
+/**
+ * A versatile audio component that can function as both an audio player and a voice recorder.
+ * It displays a circular progress bar and can show a spectrum analysis of the audio.
+ *
+ * @component
+ * @param {string} [src] - The URL of the audio file to be played. Required for player mode.
+ * @param {MediaStream} [stream] - The media stream to use for recording or visualization.
+ * @param {() => void} [onPlayAction] - A custom function to execute when the play button is clicked. Overrides the default play behavior.
+ * @param {() => void} [onEndAction] - A callback function that is triggered when the audio playback completes.
+ * @param {boolean} [limitPlays=true] - If true, limits the number of times the audio can be played to a maximum of two.
+ * @param {boolean} [showMetrics=false] - If true, displays playback time, duration, and remaining plays.
+ * @param {boolean} [showSpectrum=false] - If true, displays a spectrum visualizer during playback or recording.
+ * @param {object} [recordingOptions] - Configuration for recording functionality.
+ * @param {boolean} [recordingOptions.enabled=false] - If true, the component operates in recording mode.
+ * @param {number} [recordingOptions.duration] - The maximum duration of the recording in seconds.
+ * @param {boolean} [recordingOptions.autoStop=false] - If true, the recording stops automatically after the specified duration.
+ * @param {() => void} [recordingOptions.onStart] - A callback function executed when recording starts.
+ * @param {() => void} [recordingOptions.onEnd] - A callback function executed when recording ends.
+ * @returns {React.ReactElement} The rendered AudioPlayer component.
+ */
 export default function AudioPlayer({
   src,
-  recordingDuration,
+  stream,
+  onPlayAction,
+  onEndAction,
   limitPlays = true,
   showMetrics = false,
   showSpectrum = false,
-  onPlayAction,
-  onEndedAction,
-  isRecordMode = false,
-  onRecordStartAction,
-  onRecordEndAction,
-  autoStopRecording = false,
-  stream,
-}: CircularAudioPlayerProps) {
+  recordingOptions,
+}: CircularAudioPlayerProps): React.ReactElement {
   const audioRef = useRef<HTMLAudioElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const audioSourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
@@ -25,7 +41,7 @@ export default function AudioPlayer({
   const [isPlaying, setIsPlaying] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [audioDuration, setAudioDuration] = useState(recordingDuration || 0);
+  const [audioDuration, setAudioDuration] = useState(recordingOptions?.duration || 0);
   const [recordingElapsedTime, setRecordingElapsedTime] = useState(0);
   const [playCount, setPlayCount] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -94,17 +110,17 @@ export default function AudioPlayer({
   const startRecording = () => {
     setIsRecording(true);
     setProgress(0);
-    if (onRecordStartAction) {
-      onRecordStartAction();
+    if (recordingOptions?.onStart) {
+      recordingOptions?.onStart();
     }
   };
 
   const stopRecording = useCallback(() => {
     setIsRecording(false);
-    if (onRecordEndAction) {
-      onRecordEndAction();
+    if (recordingOptions?.onEnd) {
+      recordingOptions?.onEnd();
     }
-  }, [onRecordEndAction]);
+  }, [recordingOptions]);
 
   const handleRecordToggle = () => {
     if (isRecording) {
@@ -115,13 +131,13 @@ export default function AudioPlayer({
   };
 
   const handleButtonClick = () => {
-    if (isRecordMode) {
+    if (recordingOptions?.enabled) {
       handleRecordToggle();
     } else {
       if (isPlaying) {
         handlePause();
       } else {
-        handlePlay();
+        void handlePlay();
       }
     }
   };
@@ -135,10 +151,10 @@ export default function AudioPlayer({
   };
 
   useEffect(() => {
-    if (stream && isRecordMode) {
+    if (stream && recordingOptions?.enabled) {
       setAudioStream(stream);
     }
-  }, [stream, isRecordMode]);
+  }, [stream, recordingOptions?.enabled]);
 
   useEffect(() => {
     if (!isPlaying) setProgress(0);
@@ -158,8 +174,8 @@ export default function AudioPlayer({
       // Make sure we have a valid, finite duration
       const actualDuration = Number.isFinite(audio.duration)
         ? audio.duration
-        : Number.isFinite(recordingDuration)
-          ? recordingDuration
+        : Number.isFinite(recordingOptions?.duration)
+          ? recordingOptions?.duration
           : 0;
       setAudioDuration(actualDuration!);
     };
@@ -167,8 +183,8 @@ export default function AudioPlayer({
     const handleEnded = () => {
       setIsPlaying(false);
       setProgress(0);
-      if (onEndedAction) {
-        onEndedAction();
+      if (onEndAction) {
+        onEndAction();
       }
     };
 
@@ -186,14 +202,14 @@ export default function AudioPlayer({
         audioSourceNodeRef.current = null;
       }
     };
-  }, [recordingDuration, src, onEndedAction]);
+  }, [recordingOptions?.duration, src, onEndAction]);
 
   useEffect(() => {
     if (
       isRecording &&
-      autoStopRecording &&
-      recordingDuration &&
-      Number.isFinite(recordingDuration)
+      recordingOptions?.autoStop &&
+      recordingOptions?.duration &&
+      Number.isFinite(recordingOptions?.duration)
     ) {
       const updateInterval = setInterval(() => {
         setRecordingElapsedTime((prev) => {
@@ -207,7 +223,7 @@ export default function AudioPlayer({
 
       recordingTimerRef.current = setTimeout(() => {
         stopRecording();
-      }, recordingDuration * 1000);
+      }, recordingOptions?.duration * 1000);
 
       return () => {
         clearInterval(updateInterval);
@@ -216,7 +232,13 @@ export default function AudioPlayer({
         }
       };
     }
-  }, [isRecording, autoStopRecording, recordingDuration, audioDuration, stopRecording]);
+  }, [
+    isRecording,
+    recordingOptions?.autoStop,
+    recordingOptions?.duration,
+    audioDuration,
+    stopRecording,
+  ]);
 
   useEffect(() => {
     if (!isRecording) {
@@ -232,13 +254,15 @@ export default function AudioPlayer({
   const circumference = 2 * Math.PI * radius;
   const displayProgress = progress;
 
-  const isButtonDisabled = isRecordMode ? false : limitPlays && playCount >= 2 && !isPlaying;
+  const isButtonDisabled = recordingOptions?.enabled
+    ? false
+    : limitPlays && playCount >= 2 && !isPlaying;
 
   const maxPlays = limitPlays ? 2 : Infinity;
   const remainingPlays = maxPlays === Infinity ? Infinity : Math.max(0, maxPlays - playCount);
 
   const renderIcon = () => {
-    if (isRecordMode) {
+    if (recordingOptions?.enabled) {
       return isRecording ? (
         <Pause
           size={40}
@@ -282,7 +306,7 @@ export default function AudioPlayer({
   };
 
   const getButtonBackgroundColor = () => {
-    if (isRecordMode) {
+    if (recordingOptions?.enabled) {
       return isRecording ? '#ffffff' : '#d21d1d';
     } else {
       return isPlaying ? '#ffffff' : '#2563eb';
@@ -305,7 +329,7 @@ export default function AudioPlayer({
         <button
           onClick={handleButtonClick}
           aria-label={
-            isRecordMode
+            recordingOptions?.enabled
               ? isRecording
                 ? 'Stop Recording'
                 : 'Start Recording'
@@ -358,11 +382,11 @@ export default function AudioPlayer({
               {formatTime(isRecording ? recordingElapsedTime : elapsedTime)}/
               {audioDuration > 0
                 ? formatTime(audioDuration)
-                : formatTime(isRecording ? recordingDuration || 0 : 0)}
+                : formatTime(isRecording ? recordingOptions?.duration || 0 : 0)}
             </div>
           </div>
 
-          {limitPlays && !isRecordMode && (
+          {limitPlays && !recordingOptions?.enabled && (
             <div className="bg-gray-50 px-3 py-2 rounded-lg">
               <div className="font-medium text-gray-700 mb-1">Plays Remaining</div>
               <div

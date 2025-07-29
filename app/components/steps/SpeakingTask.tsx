@@ -25,7 +25,7 @@ const SpeakingTask = ({
 
       {!recording && !done && audioFileUrl && !audioFinished && (
         <div className="relative flex flex-col items-center gap-4">
-          <AudioPlayer src={audioFileUrl} limitPlays={false} onEndedAction={handleAudioEnd} />
+          <AudioPlayer src={audioFileUrl} limitPlays={false} onEndAction={handleAudioEnd} />
           <p className="text-gray-500">Start to listen</p>
         </div>
       )}
@@ -34,22 +34,24 @@ const SpeakingTask = ({
         <div className="relative flex flex-col items-center gap-4">
           <AudioPlayer
             src={audioURL}
-            recordingDuration={durationMs! / 1000}
             limitPlays={false}
-            isRecordMode={mode === 'init' || mode === 'recording'}
-            onRecordStartAction={startRecording}
-            onRecordEndAction={stopEndRecording}
-            autoStopRecording={true}
             showSpectrum={true}
             stream={stream}
+            recordingOptions={{
+              enabled: mode === 'init' || mode === 'recording',
+              onStart: startRecording,
+              onEnd: stopEndRecording,
+              duration: durationMs! / 1000,
+              autoStop: true,
+            }}
           />
           <p className="text-gray-600 font-bold">
             {recording ? (
               <span className="flex items-center animate-pulse">
-                🎙️ Registrazione in corso, {remainingTime} secondi...
+                🎙️ Start to Recording... {remainingTime} seconds left...
               </span>
             ) : (
-              <span>Inizia a registrare la tua risposta (durata: {durationMs / 1000} secondi)</span>
+              <span>Answer to question in (time: {durationMs / 1000} seconds)</span>
             )}
           </p>
         </div>

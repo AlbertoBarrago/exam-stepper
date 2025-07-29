@@ -1,14 +1,18 @@
+type AudioRecordingOptions = {
+  enabled: boolean;
+  autoStop?: boolean;
+  duration?: number;
+  onEnd: () => void;
+  onStart: () => void;
+};
+
 export type CircularAudioPlayerProps = {
   src: string | null;
   limitPlays?: boolean;
   showMetrics?: boolean;
   showSpectrum?: boolean;
-  isRecordMode?: boolean;
   onPlayAction?: () => void;
-  onEndedAction?: () => void;
-  recordingDuration?: number;
+  onEndAction?: () => void;
   stream?: MediaStream | null;
-  autoStopRecording?: boolean;
-  onRecordEndAction?: () => void;
-  onRecordStartAction?: () => void;
+  recordingOptions?: AudioRecordingOptions;
 };
