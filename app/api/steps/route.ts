@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { StepSchema } from '@/types/stepTypes.zod';
+import { StepSchema } from '@/types/zodValidation/stepTypes.zod';
 import { Step } from '@/types/stepTypes';
 
 const StepsConfig: Step[] = [
@@ -105,11 +105,11 @@ const StepsConfig: Step[] = [
       showPrevious: false,
     },
     sampleAnswers: {
-      "1": [0, 1, 2],
-      "2": 1,
-      "3": [0, 1, 2, 3],
-      "4": 2,
-      "5": 2,
+      '1': [0, 1, 2],
+      '2': 1,
+      '3': [0, 1, 2, 3],
+      '4': 2,
+      '5': 2,
     },
   },
   {

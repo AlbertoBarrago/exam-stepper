@@ -1,5 +1,9 @@
 import { z } from 'zod';
-import { StepSchema, IdValueSchema, AudioQuestionSchema } from './stepTypes.zod';
+import {
+  StepSchema,
+  IdValueSchema,
+  AudioQuestionSchema,
+} from '@/types/zodValidation/stepTypes.zod';
 
 export type IdValue = z.infer<typeof IdValueSchema>;
 export type AudioQuestion = z.infer<typeof AudioQuestionSchema>;

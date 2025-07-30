@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { SignJWT } from 'jose';
-import { UserDataSchema } from '@/types/userTypes.zod';
+import { UserDataSchema } from '@/types/zodValidation/userTypes.zod';
 
 const PRIVATE_KEY = process.env.JWT_PRIVATE_KEY as string;
 
