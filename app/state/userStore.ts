@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { UserData, UserStore } from '@/types/userTypes';
+import { API_BASE, API_LOGIN } from '@/const/api';
 
 export const useUserStore = create<
   UserStore & {
@@ -12,7 +13,7 @@ export const useUserStore = create<
   fetchUser: async () => {
     set({ loading: true, error: null });
     try {
-      const res = await fetch('/api/start', { method: 'POST' });
+      const res = await fetch(`${API_BASE}${API_LOGIN}`, { method: 'POST' });
       const { userData } = await res.json();
       set({ user: userData, loading: false });
     } catch (err) {
