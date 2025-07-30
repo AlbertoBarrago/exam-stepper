@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { SignJWT } from 'jose';
 import { z } from 'zod';
 import { UserData } from '@/types/userTypes';
-import { createClient } from '@/utils/server';
+import { createClient } from '@/utils/supabase';
 
 const PRIVATE_KEY = process.env.JWT_PRIVATE_KEY;
 
