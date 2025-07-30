@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { SignJWT } from 'jose';
 import { z } from 'zod';
-import { query } from '@/lib/db';
 import { UserData } from '@/types/userTypes';
+import { createClient } from '@/utils/server';
 
 const PRIVATE_KEY = process.env.JWT_PRIVATE_KEY;
 
@@ -26,23 +26,31 @@ export async function POST(request: Request) {
   const { username, password } = validationResult.data;
 
   try {
-    const users = await query<UserData[]>({
-      query:
-        'SELECT id, username, email, registration_date, last_login FROM users WHERE username = ? AND password = ?',
-      values: [username, password],
-    });
+    const supabase = await createClient();
+    const { data: users, error: selectError } = await supabase
+      .from('users')
+      .select('id, username, email, registration_date, last_login')
+      .eq('username', username)
+      .eq('password', password);
 
-    if (users.length === 0) {
+    if (selectError) {
+      throw selectError;
+    }
+
+    if (!users || users.length === 0) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
     const user: UserData = users[0];
 
-    // Update last_login timestamp
-    await query({
-      query: 'UPDATE users SET last_login = NOW() WHERE id = ?',
-      values: [user.id],
-    });
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ last_login: new Date().toISOString() })
+      .eq('id', user.id);
+
+    if (updateError) {
+      throw updateError;
+    }
 
     const token = await new SignJWT({ username: user.username, id: user.id })
       .setProtectedHeader({ alg: 'HS256' })

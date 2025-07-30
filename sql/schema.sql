@@ -1,9 +1,6 @@
-CREATE DATABASE IF NOT EXISTS EXAM_STEPPER_DB;
-USE EXAM_STEPPER_DB;
-
 -- Create the user's table
 CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE,
@@ -14,7 +11,7 @@ CREATE TABLE users (
 
 -- Create the exam table
 CREATE TABLE exams (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
@@ -22,7 +19,7 @@ CREATE TABLE exams (
 
 -- Create the step table
 CREATE TABLE steps (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     kind VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,
     sub_title VARCHAR(255),
@@ -35,7 +32,7 @@ CREATE TABLE steps (
 
 -- Create the options table for reading questions
 CREATE TABLE reading_options (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     step_id INT NOT NULL,
     value VARCHAR(255) NOT NULL,
     FOREIGN KEY (step_id) REFERENCES steps(id)
@@ -43,7 +40,7 @@ CREATE TABLE reading_options (
 
 -- Create the questions table for reading question lists
 CREATE TABLE reading_questions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     step_id INT NOT NULL,
     question TEXT NOT NULL,
     type VARCHAR(50) NOT NULL,
@@ -52,7 +49,7 @@ CREATE TABLE reading_questions (
 
 -- Create the options for reading question list questions
 CREATE TABLE reading_question_options (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     question_id INT NOT NULL,
     value VARCHAR(255) NOT NULL,
     FOREIGN KEY (question_id) REFERENCES reading_questions(id)
@@ -60,7 +57,7 @@ CREATE TABLE reading_question_options (
 
 -- Create the question table for listening questions
 CREATE TABLE listening_questions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     step_id INT NOT NULL,
     before_text TEXT,
     correct_answer_id INT,
@@ -69,7 +66,7 @@ CREATE TABLE listening_questions (
 
 -- Create the options for listening to questions
 CREATE TABLE listening_question_options (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     question_id INT NOT NULL,
     value VARCHAR(255) NOT NULL,
     FOREIGN KEY (question_id) REFERENCES listening_questions(id)
@@ -77,7 +74,7 @@ CREATE TABLE listening_question_options (
 
 -- Create a table to store the relationship between exams and steps
 CREATE TABLE exam_steps (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     exam_id INT NOT NULL,
     step_id INT NOT NULL,
     step_order INT NOT NULL,

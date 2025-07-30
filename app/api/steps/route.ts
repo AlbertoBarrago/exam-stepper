@@ -1,63 +1,85 @@
 import { NextResponse } from 'next/server';
-import { query } from '@/lib/db';
-import { z } from 'zod';
-import {
-  IdValueSchema,
-  QuestionSchema,
-  AudioQuestionSchema,
-} from '@/types/zodValidation/stepTypes.zod';
+import { createClient } from '@/utils/server';
 import { Step } from '@/types/stepTypes';
 
 export async function GET() {
   try {
-    const steps = await query<Step[]>({ query: 'SELECT * FROM steps ORDER BY id ASC' });
+    const supabase = await createClient();
+    const { data: steps, error: stepsError } = await supabase
+      .from('steps')
+      .select('*')
+      .order('id', { ascending: true });
+
+    if (stepsError || !steps) {
+      throw stepsError || new Error('No steps found');
+    }
 
     const stepsWithDetails = await Promise.all(
       steps.map(async (step) => {
         switch (step.kind) {
           case 'reading-question':
-            const readingOptions = await query<z.infer<typeof IdValueSchema>[]>({
-              query: 'SELECT * FROM reading_options WHERE step_id = ?',
-              values: [step.id],
-            });
-            return { ...step, options: readingOptions };
+            const { data: readingOptions, error: readingOptionsError } = await supabase
+              .from('reading_options')
+              .select('*')
+              .eq('step_id', step.id);
+
+            if (readingOptionsError || !readingOptions) {
+              throw readingOptionsError || new Error('No reading options found');
+            }
+
+            return { ...step, options: readingOptions } as Step;
 
           case 'reading-question-list':
-            const readingQuestions = await query<z.infer<typeof QuestionSchema>[]>({
-              query: 'SELECT * FROM reading_questions WHERE step_id = ?',
-              values: [step.id],
-            });
-            // Fetch the options for each question in parallel
+            const { data: readingQuestions, error: readingQuestionsError } = await supabase
+              .from('reading_questions')
+              .select('*')
+              .eq('step_id', step.id);
+
+            if (readingQuestionsError || !readingQuestions) {
+              throw readingQuestionsError || new Error('No reading questions found');
+            }
+
             const readingQuestionsWithDetails = await Promise.all(
               readingQuestions.map(async (question) => {
-                const options = await query<z.infer<typeof IdValueSchema>[]>({
-                  query: 'SELECT * FROM reading_question_options WHERE question_id = ?',
-                  values: [question.id],
-                });
+                const { data: options, error: optionsError } = await supabase
+                  .from('reading_question_options')
+                  .select('*')
+                  .eq('question_id', question.id);
+
+                if (optionsError || !options) {
+                  throw optionsError || new Error('No reading question options found');
+                }
                 return { ...question, options };
               })
             );
-            return { ...step, questions: readingQuestionsWithDetails };
+            return { ...step, questions: readingQuestionsWithDetails } as Step;
 
           case 'listening-question':
-            const listeningQuestions = await query<z.infer<typeof AudioQuestionSchema>[]>({
-              query: 'SELECT * FROM listening_questions WHERE step_id = ?',
-              values: [step.id],
-            });
-            // Fetch the options for each question in parallel
+            const { data: listeningQuestions, error: listeningQuestionsError } = await supabase
+              .from('listening_questions')
+              .select('*')
+              .eq('step_id', step.id);
+
+            if (listeningQuestionsError || !listeningQuestions) {
+              throw listeningQuestionsError || new Error('No listening questions found');
+            }
             const listeningQuestionsWithDetails = await Promise.all(
               listeningQuestions.map(async (question) => {
-                const options = await query<z.infer<typeof IdValueSchema>[]>({
-                  query: 'SELECT * FROM listening_question_options WHERE question_id = ?',
-                  values: [question.id],
-                });
+                const { data: options, error: optionsError } = await supabase
+                  .from('listening_question_options')
+                  .select('*')
+                  .eq('question_id', question.id);
+
+                if (optionsError || !options) {
+                  throw optionsError || new Error('No listening question options found');
+                }
                 return { ...question, options };
               })
             );
-            return { ...step, questions: listeningQuestionsWithDetails };
+            return { ...step, questions: listeningQuestionsWithDetails } as Step;
 
           case 'speaking-question':
-            return step;
+            return { ...step, audioUrl: step.audioUrl };
 
           default:
             return step;
@@ -66,7 +88,10 @@ export async function GET() {
     );
 
     return NextResponse.json(stepsWithDetails);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'An unknown error occurred' },
+      { status: 500 }
+    );
   }
 }
