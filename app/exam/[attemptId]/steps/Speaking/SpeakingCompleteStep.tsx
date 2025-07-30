@@ -1,6 +1,6 @@
 import CompleteTask from '@/components/steps/CompleteTask';
 import { NextTypes } from '@/types/commonTypes';
-import { SECTION_DATA } from '@/const/clientShellConst';
+import { SECTION_DATA } from '@/constants/clientShellConst';
 
 export default function SpeakingCompleteStep({ onNextAction }: NextTypes) {
   const handleNext = () => {

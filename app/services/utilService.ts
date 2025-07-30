@@ -1,5 +1,5 @@
 import { Section } from '@/types/clientShellTypes';
-import { SECTIONS } from '@/const/clientShellConst';
+import { SECTIONS } from '@/constants/clientShellConst';
 
 /**
  * Converts a time duration from seconds into a string formatted as minutes and seconds (MM:SS).

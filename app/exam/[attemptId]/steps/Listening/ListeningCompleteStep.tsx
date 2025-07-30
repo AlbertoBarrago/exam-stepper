@@ -2,7 +2,7 @@ import CompleteTask from '@/components/steps/CompleteTask';
 import { TitleAndNextActionType } from '@/types/commonTypes';
 import { useStepStore } from '@/state/stepStore';
 import { useTimerStore } from '@/state/timerStore';
-import { SECTION_DATA } from '@/const/clientShellConst';
+import { SECTION_DATA } from '@/constants/clientShellConst';
 
 export default function ListeningCompleteStep({ onNextAction }: TitleAndNextActionType) {
   const { steps } = useStepStore();

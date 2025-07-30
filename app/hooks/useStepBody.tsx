@@ -16,7 +16,7 @@ import PermissionStep from '@/exam/[attemptId]/steps/Permission/PermissionStep';
 import SpeakingCompleteStep from '@/exam/[attemptId]/steps/Speaking/SpeakingCompleteStep';
 import { useStepStore } from '@/state/stepStore';
 import ReadingQuestionListStep from '@/exam/[attemptId]/steps/Reading/ReadingQuestionListStep';
-import { DURATION_INTRODUCTION_MS } from '@/const/stepConst';
+import { DURATION_INTRODUCTION_MS } from '@/constants/stepConst';
 
 export function useStepBody({ current, next }: { current: number; next: () => void }) {
   const steps = useStepStore((s) => s.steps);
