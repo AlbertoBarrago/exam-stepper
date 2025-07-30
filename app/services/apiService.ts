@@ -1,5 +1,6 @@
 import { Step } from '@/types/stepTypes';
 import { API_BASE, API_LOGIN, API_STEPS } from '@/const/api';
+import { UserData } from '@/types/userTypes';
 
 /**
  * Fetches the configuration for steps from the API.
@@ -16,19 +17,30 @@ async function fetchStepsConfig(): Promise<Step[]> {
   return await response.json();
 }
 
-async function login(email: string, password: string) {
-  const response = await fetch(`${API_BASE}${API_LOGIN}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  });
-
-  return response.json();
+/**
+ * Authenticates a user with the provided email and password.
+ *
+ * @param username
+ * @param {string} password - The password associated with the user's account.
+ * @return {UserData} A promise that resolves to the JSON response of the authentication request.
+ */
+async function login(username: string, password: string): Promise<{ success: boolean; user?: UserData; error?: string }> {
+  let response = null;
+  try {
+    response = await fetch(`${API_BASE}${API_LOGIN}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    });
+  } catch (error) {
+    if (error instanceof Error) throw new Error(error.message);
+  }
+  return response!.json();
 }
 
-export { fetchStepsConfig };
+export { fetchStepsConfig, login };

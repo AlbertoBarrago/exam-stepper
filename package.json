@@ -14,7 +14,9 @@
   },
   "dependencies": {
     "jose": "^6.0.12",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.525.0",
+    "mysql2": "^3.14.3",
     "next": "15.4.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -29,6 +31,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

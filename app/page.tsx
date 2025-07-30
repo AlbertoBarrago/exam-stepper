@@ -21,24 +21,16 @@ export default function Home() {
     setIsStarting(true);
     setStartError(null);
     try {
-      const res = await fetch('/api/login', { method: 'POST' });
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: 'Failed to login the exam.' }));
-        console.error(errorData);
-      }
-
-      const { userData } = await res.json();
-      setUser(userData);
+      setUser(user!);
       startTimer();
-      router.push(`/exam/${userData.interceptId}`);
+      router.push(`/exam/01`);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unknown error occurred';
       setStartError(message);
     } finally {
       setIsStarting(false);
     }
-  }, [router, setUser, startTimer]);
+  }, [router, setUser, startTimer, user]);
 
   const renderActionArea = () => {
     if (loadingUser) {
