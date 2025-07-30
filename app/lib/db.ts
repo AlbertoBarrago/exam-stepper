@@ -13,7 +13,7 @@ export async function query<T>({
   values = [],
 }: {
   query: string;
-  values?: any[];
+  values?: unknown[];
 }): Promise<T> {
   const client = await pool.connect();
   try {
