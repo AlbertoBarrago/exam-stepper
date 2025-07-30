@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { SignJWT } from 'jose';
+import { UserDataSchema } from '@/types/userTypes.zod';
 
 const PRIVATE_KEY = process.env.JWT_PRIVATE_KEY as string;
 
@@ -20,6 +21,12 @@ async function createMockJWT(payload: object) {
 }
 
 export async function POST() {
+  const validationResult = UserDataSchema.safeParse(mockUserData);
+
+  if (!validationResult.success) {
+    return NextResponse.json(validationResult.error, { status: 400 });
+  }
+
   const token = await createMockJWT(mockUserData);
   const userData = { ...mockUserData, token };
   const response = NextResponse.json({ userData });

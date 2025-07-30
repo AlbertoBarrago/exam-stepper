@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
+import { StepSchema } from '@/types/stepTypes.zod';
 import { Step } from '@/types/stepTypes';
 
 const StepsConfig: Step[] = [
@@ -35,7 +37,7 @@ const StepsConfig: Step[] = [
     kind: 'reading-question-list',
     title: 'Reading',
     passage:
-      "The Hidden World of Underground Markets\n\nBeneath the bustling streets of major cities around the world lies a fascinating network of underground markets that have operated for centuries. These subterranean commercial spaces, carved out of natural caves, abandoned subway tunnels, or purpose-built underground chambers, represent a unique form of urban commerce that thrives away from the surface world's regulations and oversight.\n\nIn Tokyo, the sprawling underground shopping complexes beneath major train stations have evolved into legitimate commercial districts. However, deeper below, in forgotten maintenance tunnels and abandoned sections of the old subway system, informal markets have emerged where vendors sell everything from vintage electronics to rare collectibles. These markets operate on a cash-only basis and rely heavily on word-of-mouth advertising.\n\nSimilarly, in Paris, the famous catacombs have spawned numerous unauthorized markets in adjacent tunnel systems. Here, traders gather weekly to exchange rare books, antique maps, and historical artifacts. The atmosphere is both mysterious and entrepreneurial, with transactions conducted by candlelight and hushed negotiations echoing through stone corridors.\n\nThe appeal of these underground markets extends beyond mere commerce. For many participants, they represent a form of urban exploration and community building. Regular customers and vendors form tight-knit networks, sharing information about new locations, upcoming events, and valuable items. The secrecy and exclusivity create a sense of belonging that traditional retail environments cannot replicate.\n\nHowever, these markets also face significant challenges. Legal issues surrounding permits, taxation, and safety regulations create constant uncertainty. Authorities regularly conduct raids, forcing markets to relocate or operate even more discreetly. Additionally, the lack of proper ventilation, lighting, and emergency exits poses genuine safety risks to participants.\n\nDespite these challenges, underground markets continue to flourish, adapting to technological changes and urban development. Some have embraced digital communication methods to coordinate meetings and share information, while others have partnered with legitimate businesses to create hybrid above-ground and below-ground operations. As cities continue to grow and evolve, these hidden commercial networks will likely find new ways to survive and thrive in the urban underground.",
+      "The Hidden World of Underground Markets\n\nBeneath the bustling streets of major cities around the world lies a fascinating network of underground markets that have operated for centuries. These subterranean commercial spaces, carved out of natural caves, abandoned subway tunnels, or purpose-built underground chambers, represent a unique form of urban commerce that thrives away from the surface world's regulations and oversight.\n\nIn Tokyo, the sprawling underground shopping complexes beneath major train stations have evolved into legitimate commercial districts. However, deeper below, in forgotten maintenance tunnels and abandoned sections of the old subway system, informal markets have emerged where vendors sell everything from vintage electronics to rare collectibles. These markets operate on a cash-only basis and rely heavily on word-of-mouth advertising.\n\nSimilarly, in Paris, the famous catacombs have spawned numerous unauthorized markets in adjacent tunnel systems. Here, traders gather weekly to exchange rare books, antique maps, and historical artifacts. The atmosphere is both mysterious and entrepreneurial, with transactions conducted by candlelight and hushed negotiations echoing through stone corridors.\n\nThe appeal of these underground markets extends beyond mere commerce. For many participants, they represent a form of urban exploration and community building. Regular customers and vendors form tight-knit networks, sharing information about new locations, upcoming events, and valuable items. The secrecy and exclusivity create a sense of belonging that traditional retail environments cannot replicate.\n\nHowever, these markets also face significant challenges. Legal issues surrounding permits, taxation, and safety regulations create constant uncertainty. Authorities regularly conduct raids, forcing markets to relocate or operate even more discreetly. Additionally, the lack of proper ventilation, lighting, and emergency exits poses genuine safety risks to both vendors and patrons, a reality that contrasts sharply with the highly regulated environments of mainstream retail.",
     questions: [
       {
         id: 1,
@@ -103,11 +105,11 @@ const StepsConfig: Step[] = [
       showPrevious: false,
     },
     sampleAnswers: {
-      q1: [0, 1, 2],
-      q2: 1,
-      q3: [0, 1, 2, 3],
-      q4: 2,
-      q5: 2,
+      "1": [0, 1, 2],
+      "2": 1,
+      "3": [0, 1, 2, 3],
+      "4": 2,
+      "5": 2,
     },
   },
   {
@@ -244,5 +246,11 @@ const StepsConfig: Step[] = [
 ];
 
 export async function GET() {
+  const validationResult = z.array(StepSchema).safeParse(StepsConfig);
+
+  if (!validationResult.success) {
+    return NextResponse.json(validationResult.error, { status: 400 });
+  }
+
   return NextResponse.json(StepsConfig);
 }
