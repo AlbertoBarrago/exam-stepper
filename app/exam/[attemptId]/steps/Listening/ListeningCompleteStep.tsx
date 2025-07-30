@@ -9,7 +9,7 @@ export default function ListeningCompleteStep({ onNextAction }: TitleAndNextActi
   const { nextStep } = useTimerStore();
 
   const handleNext = () => {
-    const writingIntroStepIndex = steps.findIndex((step) => step.kind === 'writing-start');
+    const writingIntroStepIndex = steps.findIndex((step) => step.kind === 'writing-login');
     if (writingIntroStepIndex !== -1) {
       nextStep();
     } else {

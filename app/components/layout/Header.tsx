@@ -4,23 +4,10 @@ import { useTimerStore } from '@/state/timerStore';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SectionTimerBar from '@/components/TimeBar';
-import { QUESTION_KINDS, SECTIONS, stepKindToSection } from '@/const/clientShellConst';
-import { Section } from '@/types/clientShellTypes';
-import { useStepStore } from '@/state/stepStore'; // <-- Import the new store
+import { QUESTION_KINDS, stepKindToSection } from '@/const/clientShellConst';
+import { useStepStore } from '@/state/stepStore';
+import { isSection } from '@/services/utilService';
 
-/**
- * Checks if the provided value is a valid section.
- *
- * @param {string | null} val - The value to be checked.
- * @return {boolean} Returns true if the value is a valid section, otherwise false.
- */
-function isSection(val: string | null): val is Section {
-  return !!val && SECTIONS.includes(val as Section);
-}
-
-/**
- * TickController is a functional component responsible for managing the timer's ticking behavior.
- */
 function TickController(): null {
   const tick = useTimerStore((s) => s.tick);
   const isRunning = useTimerStore((s) => s.isRunning);
@@ -34,7 +21,9 @@ function TickController(): null {
 }
 
 export default function Header() {
-  const { user, fetchUser, logout } = useUserStore();
+  const user = useUserStore((state) => state.user);
+  const fetchUser = useUserStore((state) => state.fetchUser);
+  const logout = useUserStore((state) => state.logout);
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -79,25 +68,27 @@ export default function Header() {
     const prevKind = prevStepKindRef.current;
     const thisSection = stepKindToSection(currentKind);
 
-    if (QUESTION_KINDS.includes(currentKind) || currentKind.endsWith('-start')) {
-      // Show time bar for intro and question steps
+    if (QUESTION_KINDS.includes(currentKind) || currentKind.endsWith('-login')) {
       setShowTimeBar(true);
       if (
         prevKind &&
         stepKindToSection(prevKind) === thisSection &&
-        prevKind.endsWith('-start') &&
+        prevKind.endsWith('-login') &&
         isSection(thisSection)
       ) {
         startSection(thisSection);
       }
     } else if (currentKind.endsWith('-complete')) {
-      // Hide the time bar for complete steps and pause the timer
       pause();
       setShowTimeBar(false);
     }
 
     prevStepKindRef.current = currentKind;
   }, [currentStepIndex, startSection, pause, step, setShowTimeBar]);
+
+  useEffect(() => {
+    void fetchUser();
+  }, [fetchUser]);
 
   return (
     <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50 border-b-blue-600 border-b-3">
@@ -113,9 +104,9 @@ export default function Header() {
             onClick={() => setOpen((v) => !v)}
           >
             <span className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-lg font-bold text-blue-800">
-              {user.name.charAt(0)}
+              {user.username?.charAt(0).toUpperCase() || 'U'}
             </span>
-            <span className="font-medium">{user.name}</span>
+            <span className="font-medium">{user.username}</span>
             <svg
               className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`}
               fill="none"

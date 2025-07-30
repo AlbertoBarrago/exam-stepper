@@ -1,9 +1,7 @@
-export type UserData = {
-  name: string;
-  surname: string;
-  email: string;
-  interceptId: string;
-};
+import { z } from 'zod';
+import { UserDataSchema } from '@/types/zodValidation/userTypes.zod';
+
+export type UserData = z.infer<typeof UserDataSchema>;
 
 export interface UserStore {
   user: UserData | null;

@@ -60,7 +60,7 @@ export default function SpeakingInstructionsStep({
       // Set the timer to stop recording after recDurationMs
       timerRef.current = setTimeout(stopRecording, recDurationMs);
     } catch (err) {
-      console.error('Failed to start recording:', err);
+      console.error('Failed to login recording:', err);
     }
   };
 

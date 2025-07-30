@@ -1,4 +1,4 @@
-import { formatTime } from '@/services/commonService';
+import { formatTime } from '@/services/utilService';
 import { FinalType } from '@/types/finalTypes';
 
 const FinalRecap = ({ sectionTimes, totalSeconds, analyzing, backToHome }: FinalType) => {

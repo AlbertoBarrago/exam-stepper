@@ -74,7 +74,7 @@ export default function Spectrum({ stream }: { stream: MediaStream | null }) {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
-      audioCtx.close();
+      void audioCtx.close();
     };
   }, [stream]);
 
