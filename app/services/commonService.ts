@@ -1,4 +1,5 @@
 import { Step } from '@/types/stepTypes';
+import { API_BASE, API_STEPS } from '@/const/api';
 
 /**
  * Converts a time duration from seconds into a string formatted as minutes and seconds (MM:SS).
@@ -20,7 +21,7 @@ function formatTime(secs: number): string {
  * @return {Promise<Step[]>} A promise that resolves to an array of Step objects.
  */
 async function fetchStepsConfig(): Promise<Step[]> {
-  const response = await fetch('/api/steps');
+  const response = await fetch(`${API_BASE}${API_STEPS}`);
   if (!response.ok) {
     throw new Error('Failed to fetch steps config');
   }

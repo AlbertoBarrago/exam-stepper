@@ -4,7 +4,7 @@ import { BookOpenIcon, PencilIcon, SpeakerIcon, MicIcon } from 'lucide-react';
 const WelcomeComponent = ({
   onNextAction: onNextAction = () => {},
   title = 'Welcome',
-  subtitle = 'You are about to start the test',
+  subtitle = 'You are about to login the test',
 }) => {
   //TODO: can be moved inside a service or can be fetched from remote with little adjustment
   const welcomeConfig = [

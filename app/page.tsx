@@ -21,10 +21,10 @@ export default function Home() {
     setIsStarting(true);
     setStartError(null);
     try {
-      const res = await fetch('/api/start', { method: 'POST' });
+      const res = await fetch('/api/login', { method: 'POST' });
 
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: 'Failed to start the exam.' }));
+        const errorData = await res.json().catch(() => ({ message: 'Failed to login the exam.' }));
         console.error(errorData);
       }
 

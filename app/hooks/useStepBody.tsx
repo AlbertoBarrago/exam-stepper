@@ -31,7 +31,7 @@ export function useStepBody({ current, next }: { current: number; next: () => vo
       return { StepComponent: () => <WelcomeStep onNextAction={next} /> };
     case 'permission':
       return { StepComponent: () => <PermissionStep onNextAction={next} /> };
-    case 'reading-start':
+    case 'reading-login':
       return {
         StepComponent: () => (
           <ReadingIntroStep
@@ -67,7 +67,7 @@ export function useStepBody({ current, next }: { current: number; next: () => vo
       return {
         StepComponent: () => <ReadingCompleteStep title={step.title} onNextAction={next} />,
       };
-    case 'listening-start':
+    case 'listening-login':
       return {
         StepComponent: () => (
           <ListeningIntroStep
@@ -89,7 +89,7 @@ export function useStepBody({ current, next }: { current: number; next: () => vo
       return {
         StepComponent: () => <ListeningCompleteStep title={step.title} onNextAction={next} />,
       };
-    case 'writing-start':
+    case 'writing-login':
       return {
         StepComponent: () => (
           <WritingIntroStep
@@ -107,7 +107,7 @@ export function useStepBody({ current, next }: { current: number; next: () => vo
       return {
         StepComponent: () => <WritingCompleteStep title={step.title} onNextAction={next} />,
       };
-    case 'speaking-start':
+    case 'speaking-login':
       return {
         StepComponent: () => (
           <SpeakingIntroStep

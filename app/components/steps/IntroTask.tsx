@@ -5,7 +5,7 @@ const IntroComponent = ({
   onStartAction: onStart = () => {},
   duration = 1200000,
   title = 'Reading',
-  subtitle = 'You are about to start the reading section.',
+  subtitle = 'You are about to login the reading section.',
   kind = 'reading',
 }) => {
   return (

@@ -79,13 +79,13 @@ export default function Header() {
     const prevKind = prevStepKindRef.current;
     const thisSection = stepKindToSection(currentKind);
 
-    if (QUESTION_KINDS.includes(currentKind) || currentKind.endsWith('-start')) {
+    if (QUESTION_KINDS.includes(currentKind) || currentKind.endsWith('-login')) {
       // Show time bar for intro and question steps
       setShowTimeBar(true);
       if (
         prevKind &&
         stepKindToSection(prevKind) === thisSection &&
-        prevKind.endsWith('-start') &&
+        prevKind.endsWith('-login') &&
         isSection(thisSection)
       ) {
         startSection(thisSection);

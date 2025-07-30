@@ -1,15 +1,9 @@
 import { NextResponse } from 'next/server';
 import { SignJWT } from 'jose';
 import { UserDataSchema } from '@/types/zodValidation/userTypes.zod';
+import mockUserData from '@/api/mock/login';
 
 const PRIVATE_KEY = process.env.JWT_PRIVATE_KEY as string;
-
-const mockUserData = {
-  name: 'John',
-  surname: 'Doe',
-  email: 'jhon@gmail.com',
-  interceptId: '123456789',
-};
 
 async function createMockJWT(payload: object) {
   const secret = new TextEncoder().encode(PRIVATE_KEY);
