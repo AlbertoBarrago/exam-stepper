@@ -86,10 +86,6 @@ export default function Header() {
     prevStepKindRef.current = currentKind;
   }, [currentStepIndex, startSection, pause, step, setShowTimeBar]);
 
-  useEffect(() => {
-    void fetchUser();
-  }, [fetchUser]);
-
   return (
     <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50 border-b-blue-600 border-b-3">
       <div className="text-xl font-bold text-blue-700 cursor-pointer" onClick={goToHome}>
@@ -104,9 +100,9 @@ export default function Header() {
             onClick={() => setOpen((v) => !v)}
           >
             <span className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-lg font-bold text-blue-800">
-              {user.username?.charAt(0).toUpperCase() || 'U'}
+              {user.user_metadata?.display_name.charAt(0).toUpperCase() || 'U'}
             </span>
-            <span className="font-medium">{user.username}</span>
+            <span className="font-medium">{user.user_metadata?.display_name}</span>
             <svg
               className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`}
               fill="none"
