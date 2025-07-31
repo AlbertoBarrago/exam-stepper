@@ -22,9 +22,11 @@ const FinalRecap = ({ sectionTimes, totalSeconds, analyzing, finalScore, cefrLev
       ) : (
         <>
           {error && <p className="text-red-600">Error: {error}</p>}
-          {finalScore !== null && cefrLevel !== null && (
+          {(finalScore || finalScore === 0) && cefrLevel !== null && (
             <div className="mt-4 p-4 bg-green-100 rounded-md">
-              <p className="text-green-800 text-lg font-semibold">Final Score: {finalScore.toFixed(2)}%</p>
+              <p className="text-green-800 text-lg font-semibold">
+                Final Score: {finalScore ? `${finalScore.toFixed(2)}%` : 'Pending'}
+              </p>
               <p className="text-green-800 text-lg font-semibold">CEFR Level: {cefrLevel}</p>
             </div>
           )}

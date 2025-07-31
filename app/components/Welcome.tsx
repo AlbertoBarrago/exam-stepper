@@ -46,8 +46,8 @@ const WelcomeComponent = ({
   ];
 
   return (
-    <div className="flex items-center justify-center mt-10">
-      <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full p-8">
+    <div className="flex items-center justify-center mt-5">
+      <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full p-5">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-semibold text-gray-900 mb-2">{title}</h1>
           <p className="text-gray-600">{subtitle}</p>

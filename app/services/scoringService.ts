@@ -14,7 +14,8 @@ function normalizeScore(raw: number, max: number): number {
 export function calculateFinalScore(results: StepResult[]): number {
   return results.reduce((acc, result) => {
     const norm = normalizeScore(result.rawScore, result.maxScore);
-    return acc + norm * weights[result.step];
+    const stepName = result.step.split('-')[0] as keyof typeof weights;
+    return acc + norm * weights[stepName];
   }, 0);
 }
 
