@@ -4,18 +4,44 @@ import { useTimerStore } from '@/state/timerStore';
 import PreventBackNavigation from '@/components/PreventBackNavigation';
 import { useStepStore } from '@/state/stepStore';
 import { useStepBody } from '@/hooks/useStepBody';
+import { useParams } from 'next/navigation';
+import { useUserStore } from '@/state/userStore';
+import { startExam } from '@/services/apiService';
+import { useExamStore } from '@/state/examStore';
 
 export default function Main(): JSX.Element {
+  const { attemptId } = useParams();
   const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
   const nextStep = useTimerStore((s) => s.nextStep);
   const { steps, isLoading, error, fetchSteps } = useStepStore();
-  const { StepComponent } = useStepBody({ current: currentStepIndex, next: nextStep });
+  const user = useUserStore((s) => s.user);
+  const setExamId = useExamStore((s) => s.setExamId);
+  const { StepComponent } = useStepBody({
+    current: currentStepIndex,
+    nextAction: nextStep,
+    attemptId: attemptId as string,
+  });
 
   useEffect(() => {
-    if (steps.length === 0) {
-      void fetchSteps();
-    }
-  }, [fetchSteps, steps.length]);
+    const initializeExam = async () => {
+      if (steps.length === 0) {
+        await fetchSteps();
+      }
+
+      if (user && steps.length > 0) {
+        const stepIds = steps.map((step) => step.id);
+        const result = await startExam(user.id, stepIds);
+        if (result.success && result.examId) {
+          console.log('Exam started successfully:', result.examId);
+          setExamId(result.examId);
+        } else {
+          console.error('Failed to start exam:', result.error);
+        }
+      }
+    };
+
+    void initializeExam();
+  }, [fetchSteps, steps.length, user, setExamId]);
 
   if (isLoading) {
     return <div className="text-center p-10">Loading Exam...</div>;

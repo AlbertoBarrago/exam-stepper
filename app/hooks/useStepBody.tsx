@@ -17,9 +17,18 @@ import SpeakingCompleteStep from '@/exam/[attemptId]/steps/Speaking/SpeakingComp
 import { useStepStore } from '@/state/stepStore';
 import ReadingQuestionListStep from '@/exam/[attemptId]/steps/Reading/ReadingQuestionListStep';
 import { DURATION_INTRODUCTION_MS } from '@/constants/stepConst';
+import { useExamStore } from '@/state/examStore';
 
-export function useStepBody({ current, next }: { current: number; next: () => void }) {
+export function useStepBody({
+  current,
+  nextAction,
+}: {
+  current: number;
+  nextAction: () => void;
+  attemptId: string;
+}) {
   const steps = useStepStore((s) => s.steps);
+  const examId = useExamStore((s) => s.examId);
   const step = steps[current];
 
   if (!step) {
@@ -28,9 +37,9 @@ export function useStepBody({ current, next }: { current: number; next: () => vo
 
   switch (step.kind) {
     case 'welcome':
-      return { StepComponent: () => <WelcomeStep onNextAction={next} /> };
+      return { StepComponent: () => <WelcomeStep onNextAction={nextAction} /> };
     case 'permission':
-      return { StepComponent: () => <PermissionStep onNextAction={next} /> };
+      return { StepComponent: () => <PermissionStep onNextAction={nextAction} /> };
     case 'reading-login':
       return {
         StepComponent: () => (
@@ -39,7 +48,7 @@ export function useStepBody({ current, next }: { current: number; next: () => vo
             subtitle={step.subTitle}
             durationMs={step.durationMs}
             kind={step.kind}
-            onNextAction={next}
+            onNextAction={nextAction}
           />
         ),
       };
@@ -49,7 +58,7 @@ export function useStepBody({ current, next }: { current: number; next: () => vo
           <ReadingQuestionStep
             sentence={step.sentence}
             options={step.options}
-            onNextAction={next}
+            onNextAction={nextAction}
           />
         ),
       };
@@ -59,13 +68,23 @@ export function useStepBody({ current, next }: { current: number; next: () => vo
           <ReadingQuestionListStep
             questions={step.questions}
             passage={step.passage}
-            onNextAction={next}
+            onNextAction={nextAction}
           />
         ),
       };
     case 'reading-complete':
+      if (examId === null) {
+        return { StepComponent: () => <div>Error: Exam ID not available.</div> };
+      }
       return {
-        StepComponent: () => <ReadingCompleteStep title={step.title} onNextAction={next} />,
+        StepComponent: () => (
+          <ReadingCompleteStep
+            title={step.title}
+            onNextAction={nextAction}
+            examId={examId}
+            stepId={step.id}
+          />
+        ),
       };
     case 'listening-login':
       return {
@@ -75,19 +94,33 @@ export function useStepBody({ current, next }: { current: number; next: () => vo
             subtitle={step.subTitle}
             durationMs={step.durationMs}
             kind={step.kind}
-            onNextAction={next}
+            onNextAction={nextAction}
           />
         ),
       };
     case 'listening-question':
       return {
         StepComponent: () => (
-          <ListeningStep audioUrl={step.audioUrl} questions={step.questions} onNextAction={next} />
+          <ListeningStep
+            audioUrl={step.audioUrl}
+            questions={step.questions}
+            onNextAction={nextAction}
+          />
         ),
       };
     case 'listening-complete':
+      if (examId === null) {
+        return { StepComponent: () => <div>Error: Exam ID not available.</div> };
+      }
       return {
-        StepComponent: () => <ListeningCompleteStep title={step.title} onNextAction={next} />,
+        StepComponent: () => (
+          <ListeningCompleteStep
+            title={step.title}
+            onNextAction={nextAction}
+            examId={examId}
+            stepId={step.id}
+          />
+        ),
       };
     case 'writing-login':
       return {
@@ -97,15 +130,25 @@ export function useStepBody({ current, next }: { current: number; next: () => vo
             subtitle={step.subTitle}
             kind={step.kind}
             durationMs={step.durationMs}
-            onNextAction={next}
+            onNextAction={nextAction}
           />
         ),
       };
     case 'writing-question':
-      return { StepComponent: () => <WritingStep title={step.title} onNextAction={next} /> };
+      return { StepComponent: () => <WritingStep title={step.title} onNextAction={nextAction} /> };
     case 'writing-complete':
+      if (examId === null) {
+        return { StepComponent: () => <div>Error: Exam ID not available.</div> };
+      }
       return {
-        StepComponent: () => <WritingCompleteStep title={step.title} onNextAction={next} />,
+        StepComponent: () => (
+          <WritingCompleteStep
+            title={step.title}
+            onNextAction={nextAction}
+            examId={examId}
+            stepId={step.id}
+          />
+        ),
       };
     case 'speaking-login':
       return {
@@ -115,7 +158,7 @@ export function useStepBody({ current, next }: { current: number; next: () => vo
             subtitle={step.subTitle}
             durationMs={step.durationMs}
             kind={step.kind}
-            onNextAction={next}
+            onNextAction={nextAction}
           />
         ),
       };
@@ -125,12 +168,19 @@ export function useStepBody({ current, next }: { current: number; next: () => vo
           <SpeakingInstructionsStep
             recDurationMs={DURATION_INTRODUCTION_MS}
             audioFileUrl={step.audioUrl}
-            onNextAction={next}
+            onNextAction={nextAction}
           />
         ),
       };
     case 'speaking-complete':
-      return { StepComponent: () => <SpeakingCompleteStep onNextAction={next} /> };
+      if (examId === null) {
+        return { StepComponent: () => <div>Error: Exam ID not available.</div> };
+      }
+      return {
+        StepComponent: () => (
+          <SpeakingCompleteStep onNextAction={nextAction} examId={examId} stepId={step.id} />
+        ),
+      };
     case 'final':
       return { StepComponent: () => <FinalRecapStep /> };
     default:

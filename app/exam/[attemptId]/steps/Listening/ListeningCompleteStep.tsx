@@ -3,18 +3,41 @@ import { TitleAndNextActionType } from '@/types/commonTypes';
 import { useStepStore } from '@/state/stepStore';
 import { useTimerStore } from '@/state/timerStore';
 import { SECTION_DATA } from '@/constants/clientShellConst';
+import { saveStepResult } from '@/services/apiService';
 
-export default function ListeningCompleteStep({ onNextAction }: TitleAndNextActionType) {
+// TODO: These props will need to be passed down from the parent component
+interface ListeningCompleteStepProps extends TitleAndNextActionType {
+  examId: number;
+  stepId: number;
+}
+
+export default function ListeningCompleteStep({ onNextAction, examId, stepId }: ListeningCompleteStepProps) {
   const { steps } = useStepStore();
   const { nextStep } = useTimerStore();
 
-  const handleNext = () => {
-    const writingIntroStepIndex = steps.findIndex((step) => step.kind === 'writing-login');
-    if (writingIntroStepIndex !== -1) {
-      nextStep();
-    } else {
-      // Fallback if writing-intro steps is not found, though it should be.
-      onNextAction();
+  const handleNext = async () => {
+    // Mocked scores for now
+    const rawScore = 18; // e.g., user got 18 questions right
+    const maxScore = 20; // e.g., there were 20 questions in total
+
+    try {
+      const result = await saveStepResult(examId, stepId, rawScore, maxScore);
+      if (result.success) {
+        console.log('Successfully saved listening step score:', result.data);
+        const writingIntroStepIndex = steps.findIndex((step) => step.kind === 'writing-login');
+        if (writingIntroStepIndex !== -1) {
+          nextStep();
+        } else {
+          // Fallback if writing-intro steps is not found, though it should be.
+          onNextAction();
+        }
+      } else {
+        console.error('Failed to save listening step score:', result.error);
+        onNextAction(); // Still allow navigation
+      }
+    } catch (error) {
+      console.error('An unexpected error occurred:', error);
+      onNextAction(); // Ensure the user can still proceed
     }
   };
 

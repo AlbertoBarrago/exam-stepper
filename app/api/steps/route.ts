@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase';
+import { NextResponse } from 'next/server';
 import { Step } from '@/types/stepTypes';
 
 export async function GET() {
@@ -11,8 +11,11 @@ export async function GET() {
       .order('id', { ascending: true });
 
     if (stepsError || !steps) {
+      console.error('Supabase steps fetch error:', stepsError);
       throw stepsError || new Error('No steps found');
     }
+
+    console.log('Fetched raw steps from Supabase:', steps);
 
     const stepsWithDetails = await Promise.all(
       steps.map(async (step) => {
@@ -24,6 +27,7 @@ export async function GET() {
               .eq('step_id', step.id);
 
             if (readingOptionsError || !readingOptions) {
+              console.error('Supabase reading options fetch error:', readingOptionsError);
               throw readingOptionsError || new Error('No reading options found');
             }
 
@@ -36,6 +40,7 @@ export async function GET() {
               .eq('step_id', step.id);
 
             if (readingQuestionsError || !readingQuestions) {
+              console.error('Supabase reading questions fetch error:', readingQuestionsError);
               throw readingQuestionsError || new Error('No reading questions found');
             }
 
@@ -47,6 +52,7 @@ export async function GET() {
                   .eq('question_id', question.id);
 
                 if (optionsError || !options) {
+                  console.error('Supabase reading question options fetch error:', optionsError);
                   throw optionsError || new Error('No reading question options found');
                 }
                 return { ...question, options };
@@ -61,6 +67,7 @@ export async function GET() {
               .eq('step_id', step.id);
 
             if (listeningQuestionsError || !listeningQuestions) {
+              console.error('Supabase listening questions fetch error:', listeningQuestionsError);
               throw listeningQuestionsError || new Error('No listening questions found');
             }
             const listeningQuestionsWithDetails = await Promise.all(
@@ -71,6 +78,7 @@ export async function GET() {
                   .eq('question_id', question.id);
 
                 if (optionsError || !options) {
+                  console.error('Supabase listening question options fetch error:', optionsError);
                   throw optionsError || new Error('No listening question options found');
                 }
                 return { ...question, options };
@@ -79,7 +87,7 @@ export async function GET() {
             return { ...step, questions: listeningQuestionsWithDetails } as Step;
 
           case 'speaking-question':
-            return { ...step, audioUrl: step.audioUrl };
+            return { ...step, audioUrl: step.audio_url };
 
           default:
             return step;
@@ -87,8 +95,10 @@ export async function GET() {
       })
     );
 
+    console.log('Processed steps data sent to client:', stepsWithDetails);
     return NextResponse.json(stepsWithDetails);
   } catch (error: unknown) {
+    console.error('Error in /api/steps GET request:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'An unknown error occurred' },
       { status: 500 }

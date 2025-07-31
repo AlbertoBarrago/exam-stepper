@@ -11,10 +11,15 @@ import { UserData } from '@/types/userTypes';
  */
 async function fetchStepsConfig(): Promise<Step[]> {
   const response = await fetch(`${API_BASE}${API_STEPS}`);
+  console.log('API Response Status:', response.status);
   if (!response.ok) {
-    throw new Error('Failed to fetch steps config');
+    const errorText = await response.text();
+    console.error('Failed to fetch steps config. Response:', errorText);
+    throw new Error(`Failed to fetch steps config: ${response.status} ${response.statusText}`);
   }
-  return await response.json();
+  const data = await response.json();
+  console.log('Fetched steps data:', data);
+  return data;
 }
 
 /**
@@ -108,4 +113,56 @@ async function register(
   }
 }
 
-export { fetchStepsConfig, login, register };
+async function saveStepResult(
+  examId: number,
+  stepId: number,
+  rawScore: number,
+  maxScore: number
+): Promise<{ success: boolean; data?: never; error?: string }> {
+  try {
+    const response = await fetch(`/api/exam/step-result`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ examId, stepId, rawScore, maxScore }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, error: errorData.error || 'Failed to save step result' };
+    }
+
+    return await response.json();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown network error occurred.';
+    return { success: false, error: message };
+  }
+}
+
+async function startExam(
+  userId: string,
+  stepIds: number[]
+): Promise<{ success: boolean; examId?: number; examSteps?: never[]; error?: string }> {
+  try {
+    const response = await fetch(`/api/exam/start`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId, stepIds }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, error: errorData.error || 'Failed to start exam' };
+    }
+
+    return await response.json();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown network error occurred.';
+    return { success: false, error: message };
+  }
+}
+
+export { fetchStepsConfig, login, register, saveStepResult, startExam };

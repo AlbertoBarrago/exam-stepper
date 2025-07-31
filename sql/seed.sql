@@ -7,7 +7,6 @@ TRUNCATE TABLE listening_question_options RESTART IDENTITY CASCADE;
 TRUNCATE TABLE listening_questions RESTART IDENTITY CASCADE;
 TRUNCATE TABLE steps RESTART IDENTITY CASCADE;
 TRUNCATE TABLE exams RESTART IDENTITY CASCADE;
-TRUNCATE TABLE users RESTART IDENTITY CASCADE;
 
 -- Insert steps (let PostgreSQL assign IDs)
 INSERT INTO steps (kind, title, sub_title, duration_ms, sentence, passage, audio_url) VALUES
@@ -130,6 +129,3 @@ INSERT INTO listening_question_options (question_id, value) VALUES
 ((SELECT id FROM listening_questions WHERE before_text = 'The subject is about'), 'a men'),
 ((SELECT id FROM listening_questions WHERE before_text = 'The subject is about'), 'a dog'),
 ((SELECT id FROM listening_questions WHERE before_text = 'The subject is about'), 'a cat');
-
--- Insert a default user
-INSERT INTO users (username, password, email, registration_date, last_login) VALUES ('testuser', 'password', 'test@example.com', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
