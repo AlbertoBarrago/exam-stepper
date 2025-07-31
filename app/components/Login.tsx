@@ -11,6 +11,7 @@ const Login = () => {
   const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const setUser = useUserStore((state) => state.setUser);
   const router = useRouter();
 
@@ -18,18 +19,31 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccessMessage(null);
 
     try {
-      const action = isRegisterView ? register : login;
-      const { success, user, error } = isRegisterView
-        ? await register(email, password, displayName)
-        : await login(email, password);
-
-      if (success && user) {
-        setUser(user);
-        router.push('/exam/01');
+      if (isRegisterView) {
+        const { success, error } = await register(email, password, displayName);
+        if (success) {
+          setSuccessMessage(
+            'Registration successful! Please check your email to confirm your account before logging in.'
+          );
+          setIsRegisterView(false); // Switch to login view
+          // Clear fields
+          setEmail('');
+          setPassword('');
+          setDisplayName('');
+        } else {
+          setError(error || 'Registration failed');
+        }
       } else {
-        setError(error || (isRegisterView ? 'Registration failed' : 'Login failed'));
+        const { success, user, error } = await login(email, password);
+        if (success && user) {
+          setUser(user);
+          router.push('/exam/01');
+        } else {
+          setError(error || 'Login failed');
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
@@ -42,7 +56,10 @@ const Login = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center">{isRegisterView ? 'Register' : 'Login'}</h2>
-        {error && <div className="text-red-500 text-center">{error}</div>}
+        {error && <div className="p-4 text-white bg-red-500 rounded-md">{error}</div>}
+        {successMessage && (
+          <div className="p-4 text-white bg-green-500 rounded-md">{successMessage}</div>
+        )}
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-medium">Email</label>
@@ -89,7 +106,11 @@ const Login = () => {
         </form>
         <div className="text-center">
           <button
-            onClick={() => setIsRegisterView(!isRegisterView)}
+            onClick={() => {
+              setIsRegisterView(!isRegisterView);
+              setError(null);
+              setSuccessMessage(null);
+            }}
             className="text-sm text-blue-600 hover:underline"
           >
             {isRegisterView ? 'Already have an account? Login' : "Don't have an account? Register"}

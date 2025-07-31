@@ -65,6 +65,7 @@ async function login(
  *
  * @param username
  * @param {string} password - The password for the new user.
+ * @param displayName
  * @return {Promise<{ success: boolean; user?: UserData; error?: string }>} A promise that resolves to the JSON response of the registration request.
  */
 async function register(

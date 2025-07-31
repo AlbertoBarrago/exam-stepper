@@ -22,7 +22,6 @@ function TickController(): null {
 
 export default function Header() {
   const user = useUserStore((state) => state.user);
-  const fetchUser = useUserStore((state) => state.fetchUser);
   const logout = useUserStore((state) => state.logout);
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -94,7 +93,7 @@ export default function Header() {
       {showTimeBar && <SectionTimerBar displaySection={isSection(section) ? section : null} />}
       <TickController />
       <div className="relative" ref={menuRef}>
-        {user ? (
+        {user && (
           <button
             className="flex items-center space-x-2 focus:outline-none"
             onClick={() => setOpen((v) => !v)}
@@ -117,19 +116,12 @@ export default function Header() {
               />
             </svg>
           </button>
-        ) : (
-          <button
-            className="px-4 py-2 bg-blue-600 text-white rounded font-semibold cursor-pointer hover:bg-blue-700 transition-colors duration-200"
-            onClick={() => void fetchUser()}
-          >
-            Login
-          </button>
         )}
         {open && user && (
           <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 shadow-lg rounded z-20">
-            <div className="px-4 py-2 text-gray-700 text-sm">{user.email}</div>
+            <div className="px-4 py-2 text-gray-700 text-sm truncate">{user.email}</div>
             <button
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+              className="w-full text-left px-4 py-1 cursor-pointer hover:bg-gray-100 text-red-600"
               onClick={handleLogout}
             >
               Logout
