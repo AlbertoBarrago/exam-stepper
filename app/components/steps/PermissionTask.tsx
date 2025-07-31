@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useRef, useState } from 'react';
 import AudioPlayer from '@/components/AudioPlayer';
 import { useRouter } from 'next/navigation';
@@ -19,7 +18,7 @@ const PermissionTask = ({ onNextAction }: NextTypes) => {
   const startRecording = async () => {
     setError(null);
     try {
-      setHint('Im recording, say something... 5sec!');
+      setHint(`Im recording, say something...`);
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaStreamRef.current = stream;
       const recorder = new MediaRecorder(stream);

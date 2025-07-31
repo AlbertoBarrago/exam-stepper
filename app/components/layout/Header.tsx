@@ -4,7 +4,7 @@ import { useTimerStore } from '@/state/timerStore';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SectionTimerBar from '@/components/TimeBar';
-import { QUESTION_KINDS, stepKindToSection } from '@/const/clientShellConst';
+import { QUESTION_KINDS, stepKindToSection } from '@/constants/clientShellConst';
 import { useStepStore } from '@/state/stepStore';
 import { isSection } from '@/services/utilService';
 
@@ -22,7 +22,6 @@ function TickController(): null {
 
 export default function Header() {
   const user = useUserStore((state) => state.user);
-  const fetchUser = useUserStore((state) => state.fetchUser);
   const logout = useUserStore((state) => state.logout);
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -86,10 +85,6 @@ export default function Header() {
     prevStepKindRef.current = currentKind;
   }, [currentStepIndex, startSection, pause, step, setShowTimeBar]);
 
-  useEffect(() => {
-    void fetchUser();
-  }, [fetchUser]);
-
   return (
     <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50 border-b-blue-600 border-b-3">
       <div className="text-xl font-bold text-blue-700 cursor-pointer" onClick={goToHome}>
@@ -98,15 +93,15 @@ export default function Header() {
       {showTimeBar && <SectionTimerBar displaySection={isSection(section) ? section : null} />}
       <TickController />
       <div className="relative" ref={menuRef}>
-        {user ? (
+        {user && (
           <button
             className="flex items-center space-x-2 focus:outline-none"
             onClick={() => setOpen((v) => !v)}
           >
             <span className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-lg font-bold text-blue-800">
-              {user.username?.charAt(0).toUpperCase() || 'U'}
+              {user.user_metadata?.display_name.charAt(0).toUpperCase() || 'U'}
             </span>
-            <span className="font-medium">{user.username}</span>
+            <span className="font-medium">{user.user_metadata?.display_name}</span>
             <svg
               className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`}
               fill="none"
@@ -121,19 +116,12 @@ export default function Header() {
               />
             </svg>
           </button>
-        ) : (
-          <button
-            className="px-4 py-2 bg-blue-600 text-white rounded font-semibold cursor-pointer hover:bg-blue-700 transition-colors duration-200"
-            onClick={() => void fetchUser()}
-          >
-            Login
-          </button>
         )}
         {open && user && (
           <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 shadow-lg rounded z-20">
-            <div className="px-4 py-2 text-gray-700 text-sm">{user.email}</div>
+            <div className="px-4 py-2 text-gray-700 text-sm truncate">{user.email}</div>
             <button
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+              className="w-full text-left px-4 py-1 cursor-pointer hover:bg-gray-100 text-red-600"
               onClick={handleLogout}
             >
               Logout

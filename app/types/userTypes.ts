@@ -7,6 +7,5 @@ export interface UserStore {
   user: UserData | null;
   loading: boolean;
   error: string | null;
-  fetchUser: () => Promise<void>;
   logout: () => void;
 }

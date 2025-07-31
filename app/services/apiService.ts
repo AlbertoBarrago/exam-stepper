@@ -1,5 +1,5 @@
 import { Step } from '@/types/stepTypes';
-import { API_BASE, API_LOGIN, API_STEPS } from '@/const/api';
+import { API_BASE, API_LOGIN, API_REGISTER, API_STEPS } from '@/constants/api';
 import { UserData } from '@/types/userTypes';
 
 /**
@@ -11,10 +11,15 @@ import { UserData } from '@/types/userTypes';
  */
 async function fetchStepsConfig(): Promise<Step[]> {
   const response = await fetch(`${API_BASE}${API_STEPS}`);
+  console.log('API Response Status:', response.status);
   if (!response.ok) {
-    throw new Error('Failed to fetch steps config');
+    const errorText = await response.text();
+    console.error('Failed to fetch steps config. Response:', errorText);
+    throw new Error(`Failed to fetch steps config: ${response.status} ${response.statusText}`);
   }
-  return await response.json();
+  const data = await response.json();
+  console.log('Fetched steps data:', data);
+  return data;
 }
 
 /**
@@ -24,10 +29,12 @@ async function fetchStepsConfig(): Promise<Step[]> {
  * @param {string} password - The password associated with the user's account.
  * @return {UserData} A promise that resolves to the JSON response of the authentication request.
  */
-async function login(username: string, password: string): Promise<{ success: boolean; user?: UserData; error?: string }> {
-  let response = null;
+async function login(
+  username: string,
+  password: string
+): Promise<{ success: boolean; user?: UserData; error?: string }> {
   try {
-    response = await fetch(`${API_BASE}${API_LOGIN}`, {
+    const response = await fetch(`${API_BASE}${API_LOGIN}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -37,10 +44,170 @@ async function login(username: string, password: string): Promise<{ success: boo
         password,
       }),
     });
+
+    if (!response.ok) {
+      try {
+        const errorData = await response.json();
+        return {
+          success: false,
+          error: errorData.error || `Login failed with status: ${response.status}`,
+        };
+      } catch (e) {
+        console.error(e);
+        return { success: false, error: `Login failed with status: ${response.status}` };
+      }
+    }
+    return await response.json();
   } catch (error) {
-    if (error instanceof Error) throw new Error(error.message);
+    const message =
+      error instanceof Error ? error.message : 'An unknown network error occurred during login.';
+    return { success: false, error: message };
   }
-  return response!.json();
 }
 
-export { fetchStepsConfig, login };
+/**
+ * Registers a new user with the provided email and password.
+ *
+ * @param username
+ * @param {string} password - The password for the new user.
+ * @param displayName
+ * @return {Promise<{ success: boolean; user?: UserData; error?: string }>} A promise that resolves to the JSON response of the registration request.
+ */
+async function register(
+  username: string,
+  password: string,
+  displayName: string
+): Promise<{ success: boolean; user?: UserData; error?: string }> {
+  try {
+    const response = await fetch(`${API_BASE}${API_REGISTER}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        password,
+        displayName,
+      }),
+    });
+
+    if (!response.ok) {
+      try {
+        const errorData = await response.json();
+        return {
+          success: false,
+          error: errorData.error || `Registration failed with status: ${response.status}`,
+        };
+      } catch (e) {
+        console.error(e);
+        return { success: false, error: `Registration failed with status: ${response.status}` };
+      }
+    }
+    return await response.json();
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : 'An unknown network error occurred during registration.';
+    return { success: false, error: message };
+  }
+}
+
+/**
+ * Saves the result (raw score and max score) for a specific step of an exam.
+ *
+ * @param examId The ID of the exam.
+ * @param stepId The ID of the step within the exam.
+ * @param rawScore The raw score obtained for the step.
+ * @param maxScore The maximum possible score for the step.
+ * @returns A promise that resolves to an object indicating success or failure, along with data or an error message.
+ */
+async function saveStepResult(
+  examId: number,
+  stepId: number,
+  rawScore: number,
+  maxScore: number
+): Promise<{ success: boolean; data?: never; error?: string }> {
+  try {
+    const response = await fetch(`/api/exam/step-result`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ examId, stepId, rawScore, maxScore }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, error: errorData.error || 'Failed to save step result' };
+    }
+
+    return await response.json();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown network error occurred.';
+    return { success: false, error: message };
+  }
+}
+
+/**
+ * Starts a new exam session by creating an entry in the exams table and populating exam_steps.
+ *
+ * @param userId The ID of the user starting the exam.
+ * @param stepIds An array of step IDs that constitute this exam.
+ * @returns A promise that resolves to an object indicating success or failure, along with the new examId and examSteps data, or an error message.
+ */
+async function startExam(
+  userId: string,
+  stepIds: number[]
+): Promise<{ success: boolean; examId?: number; examSteps?: never[]; error?: string }> {
+  try {
+    const response = await fetch(`/api/exam/start`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId, stepIds }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, error: errorData.error || 'Failed to start exam' };
+    }
+
+    return await response.json();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown network error occurred.';
+    return { success: false, error: message };
+  }
+}
+
+/**
+ * Finalizes an exam, calculates the final score and CEFR level, and updates the exam record.
+ *
+ * @param examId The ID of the exam to finalize.
+ * @returns A promise that resolves to an object indicating success or failure, along with the calculated final score, CEFR level, or an error message.
+ */
+async function finalizeExam(
+  examId: number
+): Promise<{ success: boolean; finalScore?: number; cefrLevel?: string; error?: string }> {
+  try {
+    const response = await fetch(`/api/exam/${examId}/finalize`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, error: errorData.error || 'Failed to finalize exam' };
+    }
+
+    return await response.json();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown network error occurred.';
+    return { success: false, error: message };
+  }
+}
+
+export { fetchStepsConfig, login, register, saveStepResult, startExam, finalizeExam };

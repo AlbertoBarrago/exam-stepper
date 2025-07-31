@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import SpeakingTask from '@/components/steps/SpeakingTask';
 import { SpeakingStepTypes } from '@/types/speakingTypes';
-import { DURATION_INTRODUCTION_MS } from '@/const/stepConst';
+import { DURATION_INTRODUCTION_MS } from '@/constants/stepConst';
 
 export default function SpeakingInstructionsStep({
   recDurationMs,

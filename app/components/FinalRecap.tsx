@@ -1,7 +1,7 @@
 import { formatTime } from '@/services/utilService';
 import { FinalType } from '@/types/finalTypes';
 
-const FinalRecap = ({ sectionTimes, totalSeconds, analyzing, backToHome }: FinalType) => {
+const FinalRecap = ({ sectionTimes, totalSeconds, analyzing, finalScore, cefrLevel, error, backToHome }: FinalType) => {
   return (
     <div className="text-center space-y-6">
       <h2 className="text-2xl font-bold">Test Complete!</h2>
@@ -21,7 +21,13 @@ const FinalRecap = ({ sectionTimes, totalSeconds, analyzing, backToHome }: Final
         </>
       ) : (
         <>
-          <p className="text-green-600">Your results will be available shortly.</p>
+          {error && <p className="text-red-600">Error: {error}</p>}
+          {finalScore !== null && cefrLevel !== null && (
+            <div className="mt-4 p-4 bg-green-100 rounded-md">
+              <p className="text-green-800 text-lg font-semibold">Final Score: {finalScore.toFixed(2)}%</p>
+              <p className="text-green-800 text-lg font-semibold">CEFR Level: {cefrLevel}</p>
+            </div>
+          )}
           <button className="btn mt-4" onClick={backToHome}>
             Back to Home
           </button>
