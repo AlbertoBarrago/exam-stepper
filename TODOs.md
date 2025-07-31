@@ -3,7 +3,7 @@
 ## Data & Types
 
 - [x] Create `state/timerStore.ts` to share step/result/timing types across the app with zustand
-- [ ] Add Zod Validation for DTO
+- [x] Add Zod Validation for DTO
 
 ## Step Navigation
 
@@ -24,11 +24,12 @@
 - [x] Handle the browser back button to prevent exam navigation loopholes
 
 ## Section Features
+- [ ] Handling the final result with email and fake certificate
+- [ ] Add jsDoc on service
 
 ### Permission
 
 - [x] Audio
-- [ ] Video
 
 ### Reading
 
@@ -44,7 +45,7 @@
 
 ### Speaking
 
-- [ ] Microphone permission, audio visualization, practice, main questions, repeat parts
+- [x] Microphone permission, audio visualization, practice, main questions, repeat parts
 - [ ] Review the start of the timer, now start when the user enters inside the step, but maybe it is better to take trace after the user presses the button to record voice?
 
 ## Timer

@@ -32,13 +32,18 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ exa
 
     console.log('Exam steps fetched for finalization:', examSteps);
 
-    const results: StepResult[] = examSteps.map((es) => ({
-      step: es.steps[0].kind as StepResult['step'],
-      rawScore: es.raw_score,
-      maxScore: es.max_score,
-    }));
+    const results: StepResult[] = examSteps.map((es) => {
+      const stepData = Array.isArray(es.steps) ? es.steps[0] : es.steps;
+      return {
+        step: stepData?.kind as StepResult['step'],
+        rawScore: es.raw_score,
+        maxScore: es.max_score,
+      };
+    });
 
-    const finalScore = calculateFinalScore(results);
+    const validResults = results.filter((r) => r.rawScore !== null && r.maxScore !== null);
+
+    const finalScore = calculateFinalScore(validResults);
     const cefrLevel = mapToCEFR(finalScore);
 
     const { data, error: updateError } = await supabase
@@ -52,7 +57,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ exa
       return NextResponse.json({ success: false, error: updateError.message }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, finalScore, cefrLevel, exam: data[0] });
+    return NextResponse.json({ success: true, finalScore, cefrLevel, exam: data ? data[0] : null });
   } catch (e) {
     const error = e as Error;
     console.error('Error processing finalization request:', error);
