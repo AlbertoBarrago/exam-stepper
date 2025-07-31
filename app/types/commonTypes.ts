@@ -26,3 +26,9 @@ export type SectionCompleteProps = {
   customSubtitle?: string;
   sections: sectionOptions[];
 };
+
+export type StepResult = {
+  step: 'reading' | 'listening' | 'speaking' | 'writing';
+  rawScore: number;
+  maxScore: number;
+};

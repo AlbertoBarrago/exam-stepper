@@ -14,6 +14,8 @@ CREATE TABLE exams (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    final_score DECIMAL(5, 2),
+    cefr_level VARCHAR(2),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
@@ -78,6 +80,9 @@ CREATE TABLE exam_steps (
     exam_id INT NOT NULL,
     step_id INT NOT NULL,
     step_order INT NOT NULL,
+    raw_score INT,
+    max_score INT,
+    normalized_score DECIMAL(5, 2),
     FOREIGN KEY (exam_id) REFERENCES exams(id),
     FOREIGN KEY (step_id) REFERENCES steps(id)
 );
