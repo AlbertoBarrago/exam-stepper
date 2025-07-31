@@ -113,6 +113,15 @@ async function register(
   }
 }
 
+/**
+ * Saves the result (raw score and max score) for a specific step of an exam.
+ *
+ * @param examId The ID of the exam.
+ * @param stepId The ID of the step within the exam.
+ * @param rawScore The raw score obtained for the step.
+ * @param maxScore The maximum possible score for the step.
+ * @returns A promise that resolves to an object indicating success or failure, along with data or an error message.
+ */
 async function saveStepResult(
   examId: number,
   stepId: number,
@@ -140,6 +149,13 @@ async function saveStepResult(
   }
 }
 
+/**
+ * Starts a new exam session by creating an entry in the exams table and populating exam_steps.
+ *
+ * @param userId The ID of the user starting the exam.
+ * @param stepIds An array of step IDs that constitute this exam.
+ * @returns A promise that resolves to an object indicating success or failure, along with the new examId and examSteps data, or an error message.
+ */
 async function startExam(
   userId: string,
   stepIds: number[]
@@ -165,4 +181,27 @@ async function startExam(
   }
 }
 
-export { fetchStepsConfig, login, register, saveStepResult, startExam };
+async function finalizeExam(
+  examId: number
+): Promise<{ success: boolean; finalScore?: number; cefrLevel?: string; error?: string }> {
+  try {
+    const response = await fetch(`/api/exam/${examId}/finalize`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return { success: false, error: errorData.error || 'Failed to finalize exam' };
+    }
+
+    return await response.json();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown network error occurred.';
+    return { success: false, error: message };
+  }
+}
+
+export { fetchStepsConfig, login, register, saveStepResult, startExam, finalizeExam };

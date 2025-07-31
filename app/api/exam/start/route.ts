@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
 
     const supabase = await createClient();
 
-    // 1. Create a new exam entry
     const { data: examData, error: examError } = await supabase
       .from('exams')
       .insert({ user_id: userId })
