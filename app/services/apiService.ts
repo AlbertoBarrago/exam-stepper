@@ -181,6 +181,12 @@ async function startExam(
   }
 }
 
+/**
+ * Finalizes an exam, calculates the final score and CEFR level, and updates the exam record.
+ *
+ * @param examId The ID of the exam to finalize.
+ * @returns A promise that resolves to an object indicating success or failure, along with the calculated final score, CEFR level, or an error message.
+ */
 async function finalizeExam(
   examId: number
 ): Promise<{ success: boolean; finalScore?: number; cefrLevel?: string; error?: string }> {
