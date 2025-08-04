@@ -9,7 +9,7 @@ import { useUserStore } from '@/state/userStore';
 import { startExam } from '@/services/apiService';
 import { useExamStore } from '@/state/examStore';
 
-export default function Main(): JSX.Element {
+export default function Main(): JSX.Element | null {
   const { attemptId } = useParams();
   const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
   const nextStep = useTimerStore((s) => s.nextStep);
@@ -44,12 +44,14 @@ export default function Main(): JSX.Element {
     void initializeExam();
   }, [fetchSteps, steps.length, user, setExamId, steps]);
 
-  function backToLogin() {
-    router.push('/login');
-  }
+  useEffect(() => {
+    if (!user) {
+      router.push('/login');
+    }
+  }, [user, router]);
 
   if (!user) {
-    backToLogin();
+    return null;
   }
 
   if (isLoading) {
