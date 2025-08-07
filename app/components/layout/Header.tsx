@@ -1,5 +1,5 @@
 'use client';
-import ConfirmModal from '@/components/ConfirmModal';
+import Modal from '@/components/Modal';
 import { useUserStore } from '@/state/userStore';
 import { useTimerStore } from '@/state/timerStore';
 import { useState, useRef, useEffect } from 'react';
@@ -100,14 +100,14 @@ export default function Header() {
   return (
     <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50 border-b-blue-600 border-b-3">
       <div className="text-xl font-bold text-blue-700 cursor-pointer" onClick={handleGoToHome}>
-        English Exam
+        StepWise
       </div>
-      <ConfirmModal
+      <Modal
         isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        onCancel={handleCloseModal}
         onConfirm={handleConfirmGoToHome}
         title="Confirm Navigation"
-        message="Are you sure you want to leave the exam? Your progress will not be saved."
+        content="Are you sure you want to leave the exam? Your progress will not be saved."
       />
       {showTimeBar && <SectionTimerBar displaySection={isSection(section) ? section : null} />}
       <TickController />
