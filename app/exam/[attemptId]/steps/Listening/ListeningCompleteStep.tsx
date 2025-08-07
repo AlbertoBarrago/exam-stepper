@@ -32,16 +32,15 @@ export default function ListeningCompleteStep({
         if (writingIntroStepIndex !== -1) {
           nextStep();
         } else {
-          // Fallback if writing-intro steps is not found, though it should be.
           onNextAction();
         }
       } else {
         console.error('Failed to save listening step score:', result.error);
-        onNextAction(); // Still allow navigation
+        onNextAction();
       }
     } catch (error) {
       console.error('An unexpected error occurred:', error);
-      onNextAction(); // Ensure the user can still proceed
+      onNextAction();
     }
   };
 
