@@ -81,27 +81,27 @@ This project is licensed under the MIT License.
 ```mermaid
 sequenceDiagram
     participant User
-    participant Main
+    participant Exam
     participant TimerStore
     participant TimeBar
     participant StepComponent
 
-    User->>Main: Loads Exam Page
-    Main->>TimerStore: Initialize timer state
-    Main->>StepComponent: Render current step
-    StepComponent-->>Main: User clicks "Next"
-    Main->>TimerStore: If step is section intro, startSection()
-    Main->>TimerStore: If step is section complete, pause()
-    Main->>TimeBar: Pass current section info
+    User->>Exam: Loads Exam Page
+    Exam->>TimerStore: Initialize timer state
+    Exam->>StepComponent: Render current step
+    StepComponent-->>Exam: User clicks "Next"
+    Exam->>TimerStore: If step is section intro, startSection()
+    Exam->>TimerStore: If step is section complete, pause()
+    Exam->>TimeBar: Pass current section info
     TimeBar->>TimerStore: Get section time left
     TimerStore-->>TimeBar: Return time left
     TimeBar-->>User: Display section progress bar
     loop Each Step
       User->>StepComponent: Interact/Complete
-      StepComponent-->>Main: onNextAction()
-      Main->>TimerStore: tick() (every second if running)
+      StepComponent-->>Exam: onNextAction()
+      Exam->>TimerStore: tick() (every second if running)
     end
-    Main->>FinalRecapStep: On exam end, show summary
+    Exam->>FinalRecapStep: On exam end, show summary
     FinalRecapStep->>TimerStore: Pause and get elapsed times
     FinalRecapStep-->>User: Show analysis and summary
 ```
