@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { SECTION_LIMITS, TOTAL_LIMIT } from '@/constants/timesConst';
+import { SECTION_LIMITS, TOTAL_LIMIT } from '@/constants/timerConst';
 import { TimerState } from '@/types/timerStoreTypes';
 import { Section } from '@/types/clientShellTypes';
 

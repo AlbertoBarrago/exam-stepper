@@ -9,7 +9,11 @@ interface SpeakingCompleteStepProps extends NextTypes {
   stepId: number;
 }
 
-export default function SpeakingCompleteStep({ onNextAction, examId, stepId }: SpeakingCompleteStepProps) {
+export default function SpeakingCompleteStep({
+  onNextAction,
+  examId,
+  stepId,
+}: SpeakingCompleteStepProps) {
   const handleNext = async () => {
     // Mocked scores for now
     const rawScore = 30; // e.g., user got 30 points

@@ -24,6 +24,7 @@
 - [x] Handle the browser back button to prevent exam navigation loopholes
 
 ## Section Features
+
 - [ ] Handling the final result with email and fake certificate
 - [ ] Add jsDoc on service
 

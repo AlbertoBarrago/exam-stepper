@@ -11,7 +11,11 @@ interface ListeningCompleteStepProps extends TitleAndNextActionType {
   stepId: number;
 }
 
-export default function ListeningCompleteStep({ onNextAction, examId, stepId }: ListeningCompleteStepProps) {
+export default function ListeningCompleteStep({
+  onNextAction,
+  examId,
+  stepId,
+}: ListeningCompleteStepProps) {
   const { steps } = useStepStore();
   const { nextStep } = useTimerStore();
 

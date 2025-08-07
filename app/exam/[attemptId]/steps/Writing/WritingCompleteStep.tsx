@@ -9,7 +9,11 @@ interface WritingCompleteStepProps extends TitleAndNextActionType {
   stepId: number;
 }
 
-export default function WritingCompleteStep({ onNextAction, examId, stepId }: WritingCompleteStepProps) {
+export default function WritingCompleteStep({
+  onNextAction,
+  examId,
+  stepId,
+}: WritingCompleteStepProps) {
   const handleNext = async () => {
     // Mocked scores for now
     const rawScore = 15; // e.g., user got 15 points

@@ -39,7 +39,9 @@ export default function FinalRecapStep() {
           setError(result.error || 'Failed to finalize exam.');
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An unknown error occurred during finalization.');
+        setError(
+          err instanceof Error ? err.message : 'An unknown error occurred during finalization.'
+        );
       } finally {
         setAnalyzing(false);
       }

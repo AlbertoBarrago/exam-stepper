@@ -7,7 +7,10 @@ export async function POST(req: NextRequest) {
     const { examId, stepId, rawScore, maxScore } = await req.json();
 
     if (!examId || !stepId || rawScore === undefined || maxScore === undefined) {
-      return NextResponse.json({ success: false, error: 'Missing required fields.' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: 'Missing required fields.' },
+        { status: 400 }
+      );
     }
 
     const supabase = await createClient();

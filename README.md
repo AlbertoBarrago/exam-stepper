@@ -53,7 +53,6 @@ All exam sections are organized in their own folders under `exam/[attemptId]/ste
 - Speaking/
 - Final/
 
-
 ## ⚙️ How Steps Work
 
 - Step comes from api route `api/steps`

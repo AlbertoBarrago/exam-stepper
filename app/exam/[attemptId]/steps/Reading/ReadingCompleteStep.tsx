@@ -9,7 +9,11 @@ interface ReadingCompleteStepProps extends TitleAndNextActionType {
   stepId: number;
 }
 
-export default function ReadingCompleteStep({ onNextAction, examId, stepId }: ReadingCompleteStepProps) {
+export default function ReadingCompleteStep({
+  onNextAction,
+  examId,
+  stepId,
+}: ReadingCompleteStepProps) {
   const handleNext = async () => {
     // Mocked scores for now
     const rawScore = 16; // e.g., user got 16 questions right
