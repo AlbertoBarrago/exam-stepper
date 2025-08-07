@@ -9,7 +9,7 @@ import { useUserStore } from '@/state/userStore';
 import { startExam } from '@/services/apiService';
 import { useExamStore } from '@/state/examStore';
 
-export default function Main(): JSX.Element | null {
+export default function Exam(): JSX.Element | null {
   const { attemptId } = useParams();
   const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
   const nextStep = useTimerStore((s) => s.nextStep);

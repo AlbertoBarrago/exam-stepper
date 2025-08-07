@@ -6,7 +6,7 @@ This guide provides a comprehensive overview of the exam flow in this applicatio
 
 The exam process begins when a student navigates to the exam page. Here's how it works:
 
-- **Frontend Trigger**: The `app/exam/[attemptId]/Main.tsx` component is responsible for initiating the exam. It uses the `useEffect` hook to call the `startExam` function from `app/services/apiService.ts`.
+- **Frontend Trigger**: The `app/exam/[attemptId]/Exam.tsx` component is responsible for initiating the exam. It uses the `useEffect` hook to call the `startExam` function from `app/services/apiService.ts`.
 
 - **Backend Process**: The `startExam` function sends a request to the `/api/exam/start/route.ts` endpoint. This endpoint creates a new record in the `exams` table and then creates a corresponding record for each step of the exam in the `exam_steps` table. This pre-populates the database with all the steps the student will take, allowing us to track their progress in real-time.
 
