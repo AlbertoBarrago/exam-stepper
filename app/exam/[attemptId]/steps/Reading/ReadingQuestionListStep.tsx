@@ -1,10 +1,18 @@
 import ReadingQuestionList from '@/components/steps/ReadingTaskList';
 import { useState } from 'react';
 import { QuestionListProps } from '@/types/readingTypes';
+import { useExamStore } from '@/state/examStore';
+import { useStepStore } from '@/state/stepStore';
+import { useTimerStore } from '@/state/timerStore';
+import { saveStepResult } from '@/services/apiService';
 
 const ReadingQuestionListStep = ({ passage, questions, onNextAction }: QuestionListProps) => {
+  const examId = useExamStore((s) => s.examId);
+  const { steps } = useStepStore();
+  const currentStepStoreIndex = useTimerStore((s) => s.currentStepIndex);
+  const stepId = steps[currentStepStoreIndex]?.id;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState<Record<number, number | number[]>>({});
 
   const handleAnswerChange = (questionId: number, answer: number | number[]) => {
     setAnswers((prevAnswers) => ({
@@ -13,11 +21,28 @@ const ReadingQuestionListStep = ({ passage, questions, onNextAction }: QuestionL
     }));
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      console.log('Quiz completed!', answers);
+      const rawScore = questions.reduce((score, question) => {
+        const correctAnswers = Array.isArray(question.correctAnswer)
+          ? question.correctAnswer
+          : [question.correctAnswer];
+        const userAnswers = Array.isArray(answers[question.id])
+          ? (answers[question.id] as number[])
+          : [answers[question.id] as number];
+
+        const isCorrect = correctAnswers.every((val) => userAnswers.includes(val));
+        return score + (isCorrect ? 1 : 0);
+      }, 0);
+
+      const maxScore = questions.length;
+
+      if (examId && stepId) {
+        await saveStepResult(examId, stepId, rawScore, maxScore);
+      }
+
       onNextAction([]);
     }
   };
