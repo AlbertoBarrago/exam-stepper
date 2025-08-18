@@ -39,7 +39,7 @@ const FinalRecap = ({
             </div>
           )}
           <button className="btn mt-4" onClick={backToHome}>
-            Back to Home
+            Exit Test
           </button>
         </>
       )}
