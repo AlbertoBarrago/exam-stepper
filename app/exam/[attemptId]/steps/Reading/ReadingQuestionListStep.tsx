@@ -26,14 +26,22 @@ const ReadingQuestionListStep = ({ passage, questions, onNextAction }: QuestionL
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       const rawScore = questions.reduce((score, question) => {
-        const correctAnswers = Array.isArray(question.correctAnswer)
-          ? question.correctAnswer
-          : [question.correctAnswer];
-        const userAnswers = Array.isArray(answers[question.id])
-          ? (answers[question.id] as number[])
-          : [answers[question.id] as number];
+        const correctOptionIds = question.options
+          .filter((option) => option.is_correct)
+          .map((option) => option.id);
 
-        const isCorrect = correctAnswers.every((val) => userAnswers.includes(val));
+        const userAnswer = answers[question.id];
+        let isCorrect = false;
+
+        if (question.type === 'single') {
+          isCorrect = userAnswer === correctOptionIds[0];
+        } else if (question.type === 'multiple') {
+          // Ensure userAnswer is an array for multiple choice
+          const userAnswersArray = Array.isArray(userAnswer) ? userAnswer : [];
+          isCorrect =
+            correctOptionIds.every((id) => userAnswersArray.includes(id)) &&
+            userAnswersArray.length === correctOptionIds.length;
+        }
         return score + (isCorrect ? 1 : 0);
       }, 0);
 

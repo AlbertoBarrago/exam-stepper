@@ -17,83 +17,30 @@ export async function GET() {
 
     console.log('Fetched raw steps from Supabase:', steps);
 
-    const stepsWithDetails = await Promise.all(
-      steps.map(async (step) => {
-        switch (step.kind) {
-          case 'reading-question':
-            const { data: readingOptions, error: readingOptionsError } = await supabase
-              .from('reading_options')
-              .select('*')
-              .eq('step_id', step.id);
-
-            if (readingOptionsError || !readingOptions) {
-              console.error('Supabase reading options fetch error:', readingOptionsError);
-              throw readingOptionsError || new Error('No reading options found');
+    const stepsWithDetails = steps.map((step) => {
+      switch (step.kind) {
+        case 'reading-question':
+          if (step.questions && Array.isArray(step.questions) && step.questions.length > 0) {
+            const questionData = step.questions[0];
+            if (questionData.options) {
+              return { ...step, options: questionData.options } as Step;
             }
+          }
+          return step;
 
-            return { ...step, options: readingOptions } as Step;
+        case 'reading-question-list':
+          return { ...step, questions: step.questions } as Step;
 
-          case 'reading-question-list':
-            const { data: readingQuestions, error: readingQuestionsError } = await supabase
-              .from('reading_questions')
-              .select('*')
-              .eq('step_id', step.id);
+        case 'listening-question':
+          return { ...step, questions: step.questions } as Step;
 
-            if (readingQuestionsError || !readingQuestions) {
-              console.error('Supabase reading questions fetch error:', readingQuestionsError);
-              throw readingQuestionsError || new Error('No reading questions found');
-            }
+        case 'speaking-question':
+          return { ...step, audioUrl: step.audio_url };
 
-            const readingQuestionsWithDetails = await Promise.all(
-              readingQuestions.map(async (question) => {
-                const { data: options, error: optionsError } = await supabase
-                  .from('reading_question_options')
-                  .select('*')
-                  .eq('question_id', question.id);
-
-                if (optionsError || !options) {
-                  console.error('Supabase reading question options fetch error:', optionsError);
-                  throw optionsError || new Error('No reading question options found');
-                }
-                return { ...question, options };
-              })
-            );
-            return { ...step, questions: readingQuestionsWithDetails } as Step;
-
-          case 'listening-question':
-            const { data: listeningQuestions, error: listeningQuestionsError } = await supabase
-              .from('listening_questions')
-              .select('*')
-              .eq('step_id', step.id);
-
-            if (listeningQuestionsError || !listeningQuestions) {
-              console.error('Supabase listening questions fetch error:', listeningQuestionsError);
-              throw listeningQuestionsError || new Error('No listening questions found');
-            }
-            const listeningQuestionsWithDetails = await Promise.all(
-              listeningQuestions.map(async (question) => {
-                const { data: options, error: optionsError } = await supabase
-                  .from('listening_question_options')
-                  .select('*')
-                  .eq('question_id', question.id);
-
-                if (optionsError || !options) {
-                  console.error('Supabase listening question options fetch error:', optionsError);
-                  throw optionsError || new Error('No listening question options found');
-                }
-                return { ...question, options };
-              })
-            );
-            return { ...step, questions: listeningQuestionsWithDetails } as Step;
-
-          case 'speaking-question':
-            return { ...step, audioUrl: step.audio_url };
-
-          default:
-            return step;
-        }
-      })
-    );
+        default:
+          return step;
+      }
+    });
 
     console.log('Processed steps data sent to client:', stepsWithDetails);
     return NextResponse.json(stepsWithDetails);

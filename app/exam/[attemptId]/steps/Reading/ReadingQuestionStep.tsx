@@ -8,11 +8,10 @@ import { saveStepResult } from '@/services/apiService';
 type Props = {
   sentence: string;
   options: IdValue[];
-  correctOption: number;
   onNextAction: (results: boolean[]) => void;
 };
 
-const ReadingQuestionStep = ({ sentence, options, correctOption, onNextAction }: Props) => {
+const ReadingQuestionStep = ({ sentence, options, onNextAction }: Props) => {
   const examId = useExamStore((s) => s.examId);
   const { steps } = useStepStore();
   const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
@@ -21,8 +20,9 @@ const ReadingQuestionStep = ({ sentence, options, correctOption, onNextAction }:
   const handleAnswerChange = (optionIndex: number) => {
     console.log('Answer changed to:', optionIndex);
   };
-  const handleSubmit = async (optionSelected: number) => {
-    const isCorrect = optionSelected === correctOption;
+  const handleSubmit = async (optionSelectedId: number) => {
+    const selectedOption = options.find((option) => option.id === optionSelectedId);
+    const isCorrect = selectedOption?.is_correct || false;
     const rawScore = isCorrect ? 1 : 0;
     const maxScore = 1;
 

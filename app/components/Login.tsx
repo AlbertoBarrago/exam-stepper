@@ -40,7 +40,7 @@ const Login = () => {
         const { success, user, error } = await login(email, password);
         if (success && user) {
           setUser(user);
-          router.push('/exam/01');
+          router.push('/exam/start');
         } else {
           setError(error || 'Login failed');
         }

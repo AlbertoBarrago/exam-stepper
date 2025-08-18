@@ -15,7 +15,6 @@ export type Question = {
   question: string;
   options: IdValue[];
   type: 'single' | 'multiple';
-  correctAnswer: number | number[];
 };
 
 export type ReadingPassageProps = {

@@ -3,13 +3,13 @@ import { z } from 'zod';
 export const IdValueSchema = z.object({
   id: z.number(),
   value: z.string(),
+  is_correct: z.boolean().optional(),
 });
 
 export const AudioQuestionSchema = z.object({
   id: z.number(),
   before: z.string(),
   options: z.array(IdValueSchema),
-  correctAnswer: IdValueSchema,
 });
 
 export const QuestionSchema = z.object({
