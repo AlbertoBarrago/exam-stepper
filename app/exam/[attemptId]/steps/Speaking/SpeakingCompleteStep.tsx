@@ -9,7 +9,11 @@ interface SpeakingCompleteStepProps extends NextTypes {
   stepId: number;
 }
 
-export default function SpeakingCompleteStep({ onNextAction, examId, stepId }: SpeakingCompleteStepProps) {
+export default function SpeakingCompleteStep({
+  onNextAction,
+  examId,
+  stepId,
+}: SpeakingCompleteStepProps) {
   const handleNext = async () => {
     // Mocked scores for now
     const rawScore = 30; // e.g., user got 30 points
@@ -19,14 +23,14 @@ export default function SpeakingCompleteStep({ onNextAction, examId, stepId }: S
       const result = await saveStepResult(examId, stepId, rawScore, maxScore);
       if (result.success) {
         console.log('Successfully saved speaking step score:', result.data);
-        onNextAction(); // Proceed to the next step
+        onNextAction();
       } else {
         console.error('Failed to save speaking step score:', result.error);
-        onNextAction(); // Still allow navigation
+        onNextAction();
       }
     } catch (error) {
       console.error('An unexpected error occurred:', error);
-      onNextAction(); // Ensure the user can still proceed
+      onNextAction();
     }
   };
 

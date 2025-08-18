@@ -40,7 +40,7 @@ const Login = () => {
         const { success, user, error } = await login(email, password);
         if (success && user) {
           setUser(user);
-          router.push('/exam/01');
+          router.push('/exam/start');
         } else {
           setError(error || 'Login failed');
         }
@@ -53,8 +53,8 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+    <div className="flex items-center justify-center">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md mt-50">
         <h2 className="text-2xl font-bold text-center">{isRegisterView ? 'Register' : 'Login'}</h2>
         {error && <div className="p-4 text-white bg-red-500 rounded-md">{error}</div>}
         {successMessage && (

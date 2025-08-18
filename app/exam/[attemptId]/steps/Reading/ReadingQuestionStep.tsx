@@ -1,5 +1,9 @@
 import ReadingTask from '@/components/steps/ReadingTask';
 import { IdValue } from '@/types/stepTypes';
+import { useExamStore } from '@/state/examStore';
+import { useStepStore } from '@/state/stepStore';
+import { useTimerStore } from '@/state/timerStore';
+import { saveStepResult } from '@/services/apiService';
 
 type Props = {
   sentence: string;
@@ -8,12 +12,25 @@ type Props = {
 };
 
 const ReadingQuestionStep = ({ sentence, options, onNextAction }: Props) => {
+  const examId = useExamStore((s) => s.examId);
+  const { steps } = useStepStore();
+  const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
+  const stepId = steps[currentStepIndex]?.id;
+
   const handleAnswerChange = (optionIndex: number) => {
     console.log('Answer changed to:', optionIndex);
   };
-  const handleSubmit = (optionsSelected: number) => {
-    console.log('Submitting with options:', optionsSelected);
-    onNextAction([true]);
+  const handleSubmit = async (optionSelectedId: number) => {
+    const selectedOption = options.find((option) => option.id === optionSelectedId);
+    const isCorrect = selectedOption?.is_correct || false;
+    const rawScore = isCorrect ? 1 : 0;
+    const maxScore = 1;
+
+    if (examId && stepId) {
+      await saveStepResult(examId, stepId, rawScore, maxScore);
+    }
+
+    onNextAction([isCorrect]);
   };
 
   return (

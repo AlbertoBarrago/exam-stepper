@@ -1,6 +1,10 @@
 import { SpeakingTypes } from '@/types/speakingTypes';
 import AudioPlayer from '@/components/AudioPlayer';
 import { RepeatIcon } from 'lucide-react';
+import { useExamStore } from '@/state/examStore';
+import { useStepStore } from '@/state/stepStore';
+import { useTimerStore } from '@/state/timerStore';
+import { saveStepResult } from '@/services/apiService';
 
 const SpeakingTask = ({
   onNextAction,
@@ -19,6 +23,17 @@ const SpeakingTask = ({
   stopEndRecording,
   durationMs = 5000,
 }: SpeakingTypes) => {
+  const examId = useExamStore((s) => s.examId);
+  const { steps } = useStepStore();
+  const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
+  const stepId = steps[currentStepIndex]?.id;
+
+  const handleNext = async () => {
+    if (examId && stepId) {
+      await saveStepResult(examId, stepId, 0, 0);
+    }
+    onNextAction(new Blob(chunksRef.current, { type: 'audio/webm' }));
+  };
   return (
     <div className="space-y-6 flex flex-col items-center mt-10">
       <p className={'text-4xl'}>Practice question</p>
@@ -72,10 +87,7 @@ const SpeakingTask = ({
                 Retry <RepeatIcon size={15} />
               </span>
             </button>
-            <button
-              className="btn"
-              onClick={() => onNextAction(new Blob(chunksRef.current, { type: 'audio/webm' }))}
-            >
+            <button className="btn" onClick={handleNext}>
               Next →
             </button>
           </div>

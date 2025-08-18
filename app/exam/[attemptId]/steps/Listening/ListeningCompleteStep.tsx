@@ -11,7 +11,11 @@ interface ListeningCompleteStepProps extends TitleAndNextActionType {
   stepId: number;
 }
 
-export default function ListeningCompleteStep({ onNextAction, examId, stepId }: ListeningCompleteStepProps) {
+export default function ListeningCompleteStep({
+  onNextAction,
+  examId,
+  stepId,
+}: ListeningCompleteStepProps) {
   const { steps } = useStepStore();
   const { nextStep } = useTimerStore();
 
@@ -28,16 +32,15 @@ export default function ListeningCompleteStep({ onNextAction, examId, stepId }: 
         if (writingIntroStepIndex !== -1) {
           nextStep();
         } else {
-          // Fallback if writing-intro steps is not found, though it should be.
           onNextAction();
         }
       } else {
         console.error('Failed to save listening step score:', result.error);
-        onNextAction(); // Still allow navigation
+        onNextAction();
       }
     } catch (error) {
       console.error('An unexpected error occurred:', error);
-      onNextAction(); // Ensure the user can still proceed
+      onNextAction();
     }
   };
 

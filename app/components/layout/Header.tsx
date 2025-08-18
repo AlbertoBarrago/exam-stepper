@@ -1,4 +1,5 @@
 'use client';
+import Modal from '@/components/Modal';
 import { useUserStore } from '@/state/userStore';
 import { useTimerStore } from '@/state/timerStore';
 import { useState, useRef, useEffect } from 'react';
@@ -40,10 +41,21 @@ export default function Header() {
     router.push('/');
   };
 
-  const goToHome = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleGoToHome = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmGoToHome = () => {
     resetTimer();
     setOpen(false);
     router.push('/');
+    setIsModalOpen(false);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -87,9 +99,16 @@ export default function Header() {
 
   return (
     <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50 border-b-blue-600 border-b-3">
-      <div className="text-xl font-bold text-blue-700 cursor-pointer" onClick={goToHome}>
-        English Exam
+      <div className="text-xl font-bold text-blue-700 cursor-pointer" onClick={handleGoToHome}>
+        StepWise
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onCancel={handleCloseModal}
+        onConfirm={handleConfirmGoToHome}
+        title="Confirm Navigation"
+        content="Are you sure you want to leave the exam? Your progress will not be saved."
+      />
       {showTimeBar && <SectionTimerBar displaySection={isSection(section) ? section : null} />}
       <TickController />
       <div className="relative" ref={menuRef}>

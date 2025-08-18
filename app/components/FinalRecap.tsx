@@ -1,7 +1,15 @@
 import { formatTime } from '@/services/utilService';
 import { FinalType } from '@/types/finalTypes';
 
-const FinalRecap = ({ sectionTimes, totalSeconds, analyzing, finalScore, cefrLevel, error, backToHome }: FinalType) => {
+const FinalRecap = ({
+  sectionTimes,
+  totalSeconds,
+  analyzing,
+  finalScore,
+  cefrLevel,
+  error,
+  backToHome,
+}: FinalType) => {
   return (
     <div className="text-center space-y-6">
       <h2 className="text-2xl font-bold">Test Complete!</h2>
