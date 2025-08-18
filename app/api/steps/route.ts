@@ -32,7 +32,7 @@ export async function GET() {
           return { ...step, questions: step.questions } as Step;
 
         case 'listening-question':
-          return { ...step, questions: step.questions } as Step;
+          return { ...step, questions: step.questions, audioUrl: step.audio_url } as Step;
 
         case 'speaking-question':
           return { ...step, audioUrl: step.audio_url };

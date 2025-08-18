@@ -12,9 +12,7 @@ function normalizeScore(raw: number, max: number): number {
 }
 
 export function calculateFinalScore(results: StepResult[]): number {
-  console.log('calculateFinalScore received results:', JSON.stringify(results, null, 2));
   const validResults = results.filter(result => result.maxScore > 0);
-  console.log('Filtered results (maxScore > 0):', JSON.stringify(validResults, null, 2));
 
   let totalWeight = 0;
 
@@ -25,25 +23,17 @@ export function calculateFinalScore(results: StepResult[]): number {
     if (weight !== undefined) {
       totalWeight += weight;
       const norm = normalizeScore(result.rawScore, result.maxScore);
-      const weightedScore = norm * weight;
-      console.log(`  - Step: ${result.step}, Normalized: ${norm}, Weight: ${weight}, Weighted Score: ${weightedScore}`);
-      return acc + weightedScore;
+      return acc + norm * weight;
     }
 
     return acc;
   }, 0);
 
-  console.log(`Total weight: ${totalWeight}`);
-  console.log(`Weighted score sum: ${weightedScoreSum}`);
-
   if (totalWeight === 0) {
-    console.log('Total weight is 0, returning 0');
     return 0;
   }
 
-  const finalScore = weightedScoreSum / totalWeight;
-  console.log(`Final score: ${finalScore}`);
-  return finalScore;
+  return weightedScoreSum / totalWeight;
 }
 
 export function mapToCEFR(score: number): 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' {

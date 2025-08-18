@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase';
 
+function normalizeScore(raw: number, max: number): number {
+    if (max === 0) return 0;
+    return (raw / max) * 100;
+}
+
 export async function POST(req: NextRequest) {
   try {
     // We need examId to identify the exam session and stepId to identify the specific step.
@@ -15,6 +20,8 @@ export async function POST(req: NextRequest) {
 
     const supabase = await createClient();
 
+    const normalizedScore = normalizeScore(rawScore, maxScore);
+
     // Find the specific exam_step entry and update it.
     // We use .match() to filter on the composite primary key or unique constraint.
     const { data, error } = await supabase
@@ -22,6 +29,7 @@ export async function POST(req: NextRequest) {
       .update({
         raw_score: rawScore,
         max_score: maxScore,
+        normalized_score: normalizedScore,
       })
       .match({ exam_id: examId, step_id: stepId })
       .select(); // .select() returns the updated row, which is good for debugging.

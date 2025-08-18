@@ -77,14 +77,7 @@ export function useStepBody({
         return { StepComponent: () => <div>Error: Exam ID not available.</div> };
       }
       return {
-        StepComponent: () => (
-          <ReadingCompleteStep
-            title={step.title}
-            onNextAction={nextAction}
-            examId={examId}
-            stepId={step.id}
-          />
-        ),
+        StepComponent: () => <ReadingCompleteStep title={step.title} onNextAction={nextAction} />,
       };
     case 'listening-login':
       return {
@@ -113,14 +106,7 @@ export function useStepBody({
         return { StepComponent: () => <div>Error: Exam ID not available.</div> };
       }
       return {
-        StepComponent: () => (
-          <ListeningCompleteStep
-            title={step.title}
-            onNextAction={nextAction}
-            examId={examId}
-            stepId={step.id}
-          />
-        ),
+        StepComponent: () => <ListeningCompleteStep title={step.title} onNextAction={nextAction} />,
       };
     case 'writing-login':
       return {
@@ -141,14 +127,7 @@ export function useStepBody({
         return { StepComponent: () => <div>Error: Exam ID not available.</div> };
       }
       return {
-        StepComponent: () => (
-          <WritingCompleteStep
-            title={step.title}
-            onNextAction={nextAction}
-            examId={examId}
-            stepId={step.id}
-          />
-        ),
+        StepComponent: () => <WritingCompleteStep title={step.title} onNextAction={nextAction} />,
       };
     case 'speaking-login':
       return {
@@ -177,9 +156,7 @@ export function useStepBody({
         return { StepComponent: () => <div>Error: Exam ID not available.</div> };
       }
       return {
-        StepComponent: () => (
-          <SpeakingCompleteStep onNextAction={nextAction} examId={examId} stepId={step.id} />
-        ),
+        StepComponent: () => <SpeakingCompleteStep onNextAction={nextAction} />,
       };
     case 'final':
       return { StepComponent: () => <FinalRecapStep /> };
