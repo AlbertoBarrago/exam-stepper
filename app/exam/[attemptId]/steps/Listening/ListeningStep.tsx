@@ -2,6 +2,7 @@
 import AudioPlayer from '@/components/AudioPlayer';
 import { useState } from 'react';
 import { AudioQuestion } from '@/types/stepTypes';
+import { useExamStore } from '@/state/examStore';
 
 export default function ListeningStep({
   audioUrl,
@@ -12,6 +13,7 @@ export default function ListeningStep({
   onNextAction: () => void;
   questions: AudioQuestion[];
 }) {
+  const setSectionScore = useExamStore((s) => s.setSectionScore);
   const [answers, setAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
   const [showError, setShowError] = useState(false);
 
@@ -22,7 +24,17 @@ export default function ListeningStep({
       return;
     }
     setShowError(false);
-    console.log('Quiz completed! ', answers);
+
+    const rawScore = questions.reduce((score, question, index) => {
+      const correctOption = question.options.find((option) => option.is_correct);
+      const isCorrect = answers[index] === correctOption?.id;
+      return score + (isCorrect ? 1 : 0);
+    }, 0);
+
+    const maxScore = questions.length;
+
+    setSectionScore('listening', { rawScore, maxScore });
+
     onNextAction();
   };
 

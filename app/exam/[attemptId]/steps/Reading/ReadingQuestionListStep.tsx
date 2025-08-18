@@ -2,15 +2,9 @@ import ReadingQuestionList from '@/components/steps/ReadingTaskList';
 import { useState } from 'react';
 import { QuestionListProps } from '@/types/readingTypes';
 import { useExamStore } from '@/state/examStore';
-import { useStepStore } from '@/state/stepStore';
-import { useTimerStore } from '@/state/timerStore';
-import { saveStepResult } from '@/services/apiService';
 
 const ReadingQuestionListStep = ({ passage, questions, onNextAction }: QuestionListProps) => {
-  const examId = useExamStore((s) => s.examId);
-  const { steps } = useStepStore();
-  const currentStepStoreIndex = useTimerStore((s) => s.currentStepIndex);
-  const stepId = steps[currentStepStoreIndex]?.id;
+  const setSectionScore = useExamStore((s) => s.setSectionScore);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number | number[]>>({});
 
@@ -47,9 +41,7 @@ const ReadingQuestionListStep = ({ passage, questions, onNextAction }: QuestionL
 
       const maxScore = questions.length;
 
-      if (examId && stepId) {
-        await saveStepResult(examId, stepId, rawScore, maxScore);
-      }
+      setSectionScore('reading', { rawScore, maxScore });
 
       onNextAction([]);
     }

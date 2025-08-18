@@ -52,3 +52,7 @@
 ## Timer
 
 - [ ] Handle time off, fail exam (what's the right behavior?)
+
+## Final Result
+
+- [ ] Add email and certificate and verify logic for the final result

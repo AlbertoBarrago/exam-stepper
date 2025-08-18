@@ -11,12 +11,16 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ exa
       return NextResponse.json({ success: false, error: 'Missing examId.' }, { status: 400 });
     }
 
+    console.log(`Finalizing exam with ID: ${examId}`);
+
     const supabase = await createClient();
 
     const { data: examSteps, error: examStepsError } = await supabase
       .from('exam_steps')
       .select('raw_score, max_score, steps(kind)')
       .eq('exam_id', examId);
+
+    console.log('Fetched exam steps:', JSON.stringify(examSteps, null, 2));
 
     if (examStepsError) {
       console.error('Error fetching exam steps for finalization:', examStepsError);
@@ -30,8 +34,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ exa
       );
     }
 
-    console.log('Exam steps fetched for finalization:', examSteps);
-
     const results: StepResult[] = examSteps.map((es) => {
       const stepData = Array.isArray(es.steps) ? es.steps[0] : es.steps;
       return {
@@ -41,10 +43,16 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ exa
       };
     });
 
+    console.log('Mapped results:', JSON.stringify(results, null, 2));
+
     const validResults = results.filter((r) => r.rawScore !== null && r.maxScore !== null);
+
+    console.log('Valid results:', JSON.stringify(validResults, null, 2));
 
     const finalScore = calculateFinalScore(validResults);
     const cefrLevel = mapToCEFR(finalScore);
+
+    console.log(`Final score: ${finalScore}, CEFR level: ${cefrLevel}`);
 
     const { data, error: updateError } = await supabase
       .from('exams')
