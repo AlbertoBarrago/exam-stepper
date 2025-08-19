@@ -2,12 +2,14 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import SpeakingTask from '@/components/steps/SpeakingTask';
 import { SpeakingStepTypes } from '@/types/speakingTypes';
 import { DURATION_INTRODUCTION_MS } from '@/constants/stepConst';
+import { useExamStore } from '@/state/examStore';
 
 export default function SpeakingInstructionsStep({
   recDurationMs,
   onNextAction,
   audioFileUrl,
 }: SpeakingStepTypes) {
+  const setSectionScore = useExamStore((s) => s.setSectionScore);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -25,7 +27,12 @@ export default function SpeakingInstructionsStep({
       clearTimeout(timerRef.current);
     }
     setRecording(false);
-  }, []);
+
+    // TODO: Implement AI scoring
+    const rawScore = 30; // Mocked score
+    const maxScore = 40; // Mocked score
+    setSectionScore('speaking', { rawScore, maxScore });
+  }, [setSectionScore]);
 
   const startRecording = async () => {
     try {

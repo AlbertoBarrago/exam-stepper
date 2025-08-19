@@ -30,8 +30,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ exa
       );
     }
 
-    console.log('Exam steps fetched for finalization:', examSteps);
-
     const results: StepResult[] = examSteps.map((es) => {
       const stepData = Array.isArray(es.steps) ? es.steps[0] : es.steps;
       return {

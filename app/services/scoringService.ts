@@ -12,11 +12,28 @@ function normalizeScore(raw: number, max: number): number {
 }
 
 export function calculateFinalScore(results: StepResult[]): number {
-  return results.reduce((acc, result) => {
-    const norm = normalizeScore(result.rawScore, result.maxScore);
+  const validResults = results.filter(result => result.maxScore > 0);
+
+  let totalWeight = 0;
+
+  const weightedScoreSum = validResults.reduce((acc, result) => {
     const stepName = result.step.split('-')[0] as keyof typeof weights;
-    return acc + norm * weights[stepName];
+    const weight = weights[stepName];
+
+    if (weight !== undefined) {
+      totalWeight += weight;
+      const norm = normalizeScore(result.rawScore, result.maxScore);
+      return acc + norm * weight;
+    }
+
+    return acc;
   }, 0);
+
+  if (totalWeight === 0) {
+    return 0;
+  }
+
+  return weightedScoreSum / totalWeight;
 }
 
 export function mapToCEFR(score: number): 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' {
