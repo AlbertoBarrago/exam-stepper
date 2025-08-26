@@ -8,6 +8,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useUserStore } from '@/state/userStore';
 import { startExam } from '@/services/apiService';
 import { useExamStore } from '@/state/examStore';
+import Loader from '@/components/common/Loader';
 
 export default function Exam(): JSX.Element | null {
   const { attemptId } = useParams();
@@ -55,7 +56,7 @@ export default function Exam(): JSX.Element | null {
   }
 
   if (isLoading) {
-    return <div className="text-center p-10">Loading Exam...</div>;
+    return <Loader message={'Loading exam steps...'} />;
   }
 
   if (error) {

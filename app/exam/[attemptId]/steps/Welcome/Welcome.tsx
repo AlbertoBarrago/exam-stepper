@@ -1,7 +1,7 @@
 import { useTimerStore } from '@/state/timerStore';
 import WelcomeComponent from '@/components/Welcome';
 
-export default function WelcomeStep({ onNextAction }: { onNextAction: () => void }) {
+export default function Welcome({ onNextAction }: { onNextAction: () => void }) {
   const start = useTimerStore((s) => s.start);
 
   const handleStart = () => {
