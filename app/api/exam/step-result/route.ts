@@ -1,14 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase';
-
-function normalizeScore(raw: number, max: number): number {
-    if (max === 0) return 0;
-    return (raw / max) * 100;
-}
+import { normalizeScore } from '@/services/scoringService';
 
 export async function POST(req: NextRequest) {
   try {
-    // We need examId to identify the exam session and stepId to identify the specific step.
     const { examId, stepId, rawScore, maxScore } = await req.json();
 
     if (!examId || !stepId || rawScore === undefined || maxScore === undefined) {
