@@ -9,6 +9,7 @@ import { useUserStore } from '@/state/userStore';
 import { startExam } from '@/services/apiService';
 import { useExamStore } from '@/state/examStore';
 import Loader from '@/components/common/Loader';
+import TimeOverMessage from '@/components/common/TimeOverMessage';
 
 export default function Exam(): JSX.Element | null {
   const { attemptId } = useParams();
@@ -69,6 +70,7 @@ export default function Exam(): JSX.Element | null {
       <section className="p-6 text-center">
         <StepComponent />
       </section>
+      <TimeOverMessage />
     </>
   );
 }

@@ -24,6 +24,7 @@ export const useTimerStore = create<
       sectionTimeLeft: 0,
       currentSection: null,
       isRunning: false,
+      isTimeOver: false,
       sectionElapsed: {
         reading: 0,
         listening: 0,
@@ -40,12 +41,18 @@ export const useTimerStore = create<
         const { globalTimeLeft, sectionTimeLeft, currentSection, isRunning, sectionElapsed } =
           get();
         if (!isRunning) return;
+        const newGlobalTimeLeft = Math.max(0, globalTimeLeft - 1);
+        const newSectionTimeLeft = Math.max(0, sectionTimeLeft - 1);
+        const timeIsOver = newGlobalTimeLeft === 0; // Each task can affect the end of an exam for this reason we evaluate the timeIsOver based on the globalTimeLeft
+
         set({
-          globalTimeLeft: Math.max(0, globalTimeLeft - 1),
-          sectionTimeLeft: Math.max(0, sectionTimeLeft - 1),
+          globalTimeLeft: newGlobalTimeLeft,
+          sectionTimeLeft: newSectionTimeLeft,
           sectionElapsed: currentSection
             ? { ...sectionElapsed, [currentSection]: sectionElapsed[currentSection] + 1 }
             : sectionElapsed,
+          isRunning: timeIsOver ? false : isRunning, // Stop timer if time is over
+          isTimeOver: timeIsOver, // Set isTimeOver to true if time is over
         });
       },
 
@@ -65,6 +72,7 @@ export const useTimerStore = create<
           sectionTimeLeft: 0,
           currentSection: null,
           isRunning: false,
+          isTimeOver: false,
           sectionElapsed: {
             reading: 0,
             listening: 0,
