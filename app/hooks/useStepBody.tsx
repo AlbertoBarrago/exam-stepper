@@ -1,5 +1,10 @@
 'use client';
-import WelcomeStep from '@/exam/[attemptId]/steps/Welcome/WelcomeStep';
+
+import { useStepStore } from '@/state/stepStore';
+import { DURATION_INTRODUCTION_MS, StepKind } from '@/constants/stepConst';
+import { useExamStore } from '@/state/examStore';
+
+import Welcome from '@/exam/[attemptId]/steps/Welcome/Welcome';
 import ReadingIntroStep from '@/exam/[attemptId]/steps/Reading/ReadingIntroStep';
 import ReadingQuestionStep from '@/exam/[attemptId]/steps/Reading/ReadingQuestionStep';
 import ReadingCompleteStep from '@/exam/[attemptId]/steps/Reading/ReadingCompleteStep';
@@ -14,10 +19,7 @@ import SpeakingInstructionsStep from '@/exam/[attemptId]/steps/Speaking/Speaking
 import FinalRecapStep from '@/exam/[attemptId]/steps/Final/FinalRecapStep';
 import PermissionStep from '@/exam/[attemptId]/steps/Permission/PermissionStep';
 import SpeakingCompleteStep from '@/exam/[attemptId]/steps/Speaking/SpeakingCompleteStep';
-import { useStepStore } from '@/state/stepStore';
 import ReadingQuestionListStep from '@/exam/[attemptId]/steps/Reading/ReadingQuestionListStep';
-import { DURATION_INTRODUCTION_MS } from '@/constants/stepConst';
-import { useExamStore } from '@/state/examStore';
 
 export function useStepBody({
   current,
@@ -36,11 +38,11 @@ export function useStepBody({
   }
 
   switch (step.kind) {
-    case 'welcome':
-      return { StepComponent: () => <WelcomeStep onNextAction={nextAction} /> };
-    case 'permission':
+    case StepKind.Welcome:
+      return { StepComponent: () => <Welcome onNextAction={nextAction} /> };
+    case StepKind.Permission:
       return { StepComponent: () => <PermissionStep onNextAction={nextAction} /> };
-    case 'reading-login':
+    case StepKind.ReadingLogin:
       return {
         StepComponent: () => (
           <ReadingIntroStep
@@ -52,7 +54,7 @@ export function useStepBody({
           />
         ),
       };
-    case 'reading-question':
+    case StepKind.ReadingQuestion:
       return {
         StepComponent: () => (
           <ReadingQuestionStep
@@ -62,7 +64,7 @@ export function useStepBody({
           />
         ),
       };
-    case 'reading-question-list':
+    case StepKind.ReadingQuestionList:
       return {
         StepComponent: () => (
           <ReadingQuestionListStep
@@ -72,14 +74,14 @@ export function useStepBody({
           />
         ),
       };
-    case 'reading-complete':
+    case StepKind.ReadingComplete:
       if (examId === null) {
         return { StepComponent: () => <div>Error: Exam ID not available.</div> };
       }
       return {
         StepComponent: () => <ReadingCompleteStep title={step.title} onNextAction={nextAction} />,
       };
-    case 'listening-login':
+    case StepKind.ListeningLogin:
       return {
         StepComponent: () => (
           <ListeningIntroStep
@@ -91,7 +93,7 @@ export function useStepBody({
           />
         ),
       };
-    case 'listening-question':
+    case StepKind.ListeningQuestion:
       return {
         StepComponent: () => (
           <ListeningStep
@@ -101,14 +103,14 @@ export function useStepBody({
           />
         ),
       };
-    case 'listening-complete':
+    case StepKind.ListeningComplete:
       if (examId === null) {
         return { StepComponent: () => <div>Error: Exam ID not available.</div> };
       }
       return {
         StepComponent: () => <ListeningCompleteStep title={step.title} onNextAction={nextAction} />,
       };
-    case 'writing-login':
+    case StepKind.WritingLogin:
       return {
         StepComponent: () => (
           <WritingIntroStep
@@ -120,16 +122,16 @@ export function useStepBody({
           />
         ),
       };
-    case 'writing-question':
+    case StepKind.WritingQuestion:
       return { StepComponent: () => <WritingStep title={step.title} onNextAction={nextAction} /> };
-    case 'writing-complete':
+    case StepKind.WritingComplete:
       if (examId === null) {
         return { StepComponent: () => <div>Error: Exam ID not available.</div> };
       }
       return {
         StepComponent: () => <WritingCompleteStep title={step.title} onNextAction={nextAction} />,
       };
-    case 'speaking-login':
+    case StepKind.SpeakingLogin:
       return {
         StepComponent: () => (
           <SpeakingIntroStep
@@ -141,7 +143,7 @@ export function useStepBody({
           />
         ),
       };
-    case 'speaking-question':
+    case StepKind.SpeakingQuestion:
       return {
         StepComponent: () => (
           <SpeakingInstructionsStep
@@ -151,14 +153,14 @@ export function useStepBody({
           />
         ),
       };
-    case 'speaking-complete':
+    case StepKind.SpeakingComplete:
       if (examId === null) {
         return { StepComponent: () => <div>Error: Exam ID not available.</div> };
       }
       return {
         StepComponent: () => <SpeakingCompleteStep onNextAction={nextAction} />,
       };
-    case 'final':
+    case StepKind.Final:
       return { StepComponent: () => <FinalRecapStep /> };
     default:
       return { StepComponent: () => <div>Invalid step</div> };

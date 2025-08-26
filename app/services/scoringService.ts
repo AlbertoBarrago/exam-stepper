@@ -7,7 +7,8 @@ const weights = {
   writing: 0.2,
 };
 
-function normalizeScore(raw: number, max: number): number {
+export function normalizeScore(raw: number, max: number): number {
+  if (max === 0) return 0;
   return (raw / max) * 100;
 }
 
