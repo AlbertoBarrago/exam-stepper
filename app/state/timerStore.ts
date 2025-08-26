@@ -15,7 +15,6 @@ export const useTimerStore = create<
     setCurrentStepIndex: (idx: number) => void;
     nextStep: () => void;
     prevStep: () => void;
-    reset: () => void;
   }
 >()(
   persist(
@@ -25,6 +24,7 @@ export const useTimerStore = create<
       currentSection: null,
       isRunning: false,
       isTimeOver: false,
+      isSectionTimeOver: false,
       sectionElapsed: {
         reading: 0,
         listening: 0,
@@ -43,7 +43,7 @@ export const useTimerStore = create<
         if (!isRunning) return;
         const newGlobalTimeLeft = Math.max(0, globalTimeLeft - 1);
         const newSectionTimeLeft = Math.max(0, sectionTimeLeft - 1);
-        const timeIsOver = newGlobalTimeLeft === 0; // Each task can affect the end of an exam for this reason we evaluate the timeIsOver based on the globalTimeLeft
+        const timeIsOver = sectionTimeLeft === 0 && currentSection !== null;
 
         set({
           globalTimeLeft: newGlobalTimeLeft,
@@ -51,8 +51,8 @@ export const useTimerStore = create<
           sectionElapsed: currentSection
             ? { ...sectionElapsed, [currentSection]: sectionElapsed[currentSection] + 1 }
             : sectionElapsed,
-          isRunning: timeIsOver ? false : isRunning, // Stop timer if time is over
-          isTimeOver: timeIsOver, // Set isTimeOver to true if time is over
+          isRunning: timeIsOver ? false : isRunning,
+          isTimeOver: timeIsOver,
         });
       },
 

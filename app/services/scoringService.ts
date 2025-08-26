@@ -13,7 +13,7 @@ export function normalizeScore(raw: number, max: number): number {
 }
 
 export function calculateFinalScore(results: StepResult[]): number {
-  const validResults = results.filter(result => result.maxScore > 0);
+  const validResults = results.filter((result) => result.maxScore > 0);
 
   let totalWeight = 0;
 
