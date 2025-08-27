@@ -1,9 +1,17 @@
 import WritingTask from '@/components/steps/WritingTask';
 import { WritingTypes } from '@/types/writingTypes';
 import { useExamStore } from '@/state/examStore';
+import { saveStepResult } from '@/services/apiService';
+import { useStepStore } from '@/state/stepStore';
+import { useTimerStore } from '@/state/timerStore';
 
 export default function WritingStep({ onNextAction }: WritingTypes) {
   const setSectionScore = useExamStore((s) => s.setSectionScore);
+
+  const examId = useExamStore((s) => s.examId);
+  const { steps } = useStepStore();
+  const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
+  const stepId = steps[currentStepIndex]?.id;
 
   const handleTextChange = (text: string, wordCount: number) => {
     console.log('Text changed:', { text, wordCount });
@@ -24,14 +32,18 @@ export default function WritingStep({ onNextAction }: WritingTypes) {
       }
 
       const data = await response.json();
-      const rawScore = data.score;
-      const detailedDescription = data.detailedDescription;
+      const rawScore = data.score; // Score from AI
+      const detailedDescription = data.detailedDescription; // Detailed description from AI
+      const maxScore = data.maxScore; // Max score from AI
 
       console.log('AI Detailed Description:', detailedDescription);
 
-      const maxScore = 20;
-
       setSectionScore('writing', { rawScore, maxScore });
+
+      // Save to database
+      if (examId && stepId) {
+        await saveStepResult(examId, stepId, rawScore, maxScore);
+      }
 
       onNextAction();
     } catch (error) {

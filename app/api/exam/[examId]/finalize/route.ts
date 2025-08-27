@@ -5,7 +5,12 @@ import { StepResult } from '@/types/commonTypes';
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ examId: string }> }) {
   try {
-    const { examId } = await params;
+    const { examId: examIdString } = await params;
+    const examId = parseInt(examIdString, 10);
+
+    if (isNaN(examId)) {
+      return NextResponse.json({ success: false, error: 'Invalid examId.' }, { status: 400 });
+    }
 
     if (!examId) {
       return NextResponse.json({ success: false, error: 'Missing examId.' }, { status: 400 });
@@ -41,9 +46,12 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ exa
 
     const validResults = results.filter((r) => r.rawScore !== null && r.maxScore !== null);
 
+    console.log(`Finalizing exam: ${examId}`);
     const finalScore = calculateFinalScore(validResults);
     const cefrLevel = mapToCEFR(finalScore);
+    console.log(`Calculated finalScore: ${finalScore}, cefrLevel: ${cefrLevel}`);
 
+    console.log('Attempting to update exam record in Supabase...');
     const { data, error: updateError } = await supabase
       .from('exams')
       .update({ final_score: finalScore, cefr_level: cefrLevel })
@@ -52,8 +60,16 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ exa
 
     if (updateError) {
       console.error('Error updating exam with final score:', updateError);
+      console.error(
+        'Supabase update error details:',
+        updateError.message,
+        updateError.details,
+        updateError.hint,
+        updateError.code
+      );
       return NextResponse.json({ success: false, error: updateError.message }, { status: 500 });
     }
+    console.log('Supabase update successful. Data:', data);
 
     return NextResponse.json({ success: true, finalScore, cefrLevel, exam: data ? data[0] : null });
   } catch (e) {

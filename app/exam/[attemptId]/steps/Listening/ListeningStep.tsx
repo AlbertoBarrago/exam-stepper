@@ -3,6 +3,9 @@ import AudioPlayer from '@/components/AudioPlayer';
 import { useState } from 'react';
 import { AudioQuestion } from '@/types/stepTypes';
 import { useExamStore } from '@/state/examStore';
+import { saveStepResult } from '@/services/apiService';
+import { useStepStore } from '@/state/stepStore';
+import { useTimerStore } from '@/state/timerStore';
 
 export default function ListeningStep({
   audioUrl,
@@ -14,10 +17,14 @@ export default function ListeningStep({
   questions: AudioQuestion[];
 }) {
   const setSectionScore = useExamStore((s) => s.setSectionScore);
+  const examId = useExamStore((s) => s.examId);
+  const { steps } = useStepStore();
+  const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
+  const stepId = steps[currentStepIndex]?.id;
   const [answers, setAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
   const [showError, setShowError] = useState(false);
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const allFilled = answers.every((ans) => ans !== null);
     if (!allFilled) {
       setShowError(true);
@@ -34,6 +41,10 @@ export default function ListeningStep({
     const maxScore = questions.length;
 
     setSectionScore('listening', { rawScore, maxScore });
+
+    if (examId && stepId) {
+      await saveStepResult(examId, stepId, rawScore, maxScore);
+    }
 
     onNextAction();
   };

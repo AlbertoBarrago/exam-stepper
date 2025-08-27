@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import SpeakingTask from '@/components/steps/SpeakingTask';
 import { SpeakingStepTypes } from '@/types/speakingTypes';
+import { saveStepResult } from '@/services/apiService';
+import { useExamStore } from '@/state/examStore';
+import { useStepStore } from '@/state/stepStore';
+import { useTimerStore } from '@/state/timerStore';
 import { DURATION_INTRODUCTION_MS } from '@/constants/stepConst';
 
 export default function SpeakingStep({
@@ -104,6 +108,12 @@ export default function SpeakingStep({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const examId = useExamStore((s) => s.examId);
+  const setSectionScore = useExamStore((s) => s.setSectionScore);
+  const { steps } = useStepStore();
+  const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
+  const stepId = steps[currentStepIndex]?.id;
+
   const handleNextActionWithAudio = async (audioBlob: Blob) => {
     try {
       const formData = new FormData();
@@ -120,9 +130,15 @@ export default function SpeakingStep({
 
       const data = await response.json();
       const rawScore = data.score;
+      const maxScore = data.maxScore;
       const detailedDescription = data.detailedDescription;
 
-      // For now, we'll just log and then call the original onNextAction
+      setSectionScore('speaking', { rawScore, maxScore });
+
+      if (examId && stepId) {
+        await saveStepResult(examId, stepId, rawScore, maxScore);
+      }
+
       console.log('AI Detailed Description (Speaking):', detailedDescription);
 
       // Call the original onNextAction to proceed to the next step
