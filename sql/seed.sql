@@ -37,7 +37,7 @@ INSERT INTO steps (kind, title, sub_title, duration_ms, sentence, passage, audio
 ('writing-question', 'Writing', NULL, NULL, NULL, NULL, NULL, NULL),
 ('writing-complete', 'Writing Complete', NULL, NULL, NULL, NULL, NULL, NULL),
 ('speaking-login', 'Speaking Section', 'Now you have speaking a little', 900000, NULL, NULL, NULL, NULL),
-('speaking-question', 'Practice question', NULL, NULL, NULL, NULL, '/audio/hello_robot.wav', NULL),
+('speaking-question', 'Practice question', NULL, NULL, NULL, NULL, '/audio/i_can_see_you.wav', NULL),
 ('speaking-complete', 'Speaking', NULL, NULL, NULL, NULL, NULL, NULL),
 ('final', 'Exam complete', NULL, NULL, NULL, NULL, NULL, NULL);
 
