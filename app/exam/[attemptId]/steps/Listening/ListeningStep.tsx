@@ -1,50 +1,89 @@
 'use client';
 import AudioPlayer from '@/components/AudioPlayer';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { AudioQuestion } from '@/types/stepTypes';
 import { useExamStore } from '@/state/examStore';
 
 export default function ListeningStep({
   audioUrl,
   onNextAction,
-  questions,
 }: {
   audioUrl: string;
   onNextAction: () => void;
   questions: AudioQuestion[];
 }) {
   const setSectionScore = useExamStore((s) => s.setSectionScore);
-  const [answers, setAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
-  const [showError, setShowError] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
 
-  const handleNext = () => {
-    const allFilled = answers.every((ans) => ans !== null);
-    if (!allFilled) {
-      setShowError(true);
-      return;
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      audioChunksRef.current = [];
+
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data);
+      };
+
+      mediaRecorderRef.current.onstop = () => {
+        const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        setAudioBlob(blob);
+        stream.getTracks().forEach((track) => track.stop()); // Stop the microphone
+      };
+
+      mediaRecorderRef.current.start();
+      setIsRecording(true);
+      setAudioBlob(null); // Clear previous recording
+    } catch (err) {
+      console.error('Error accessing microphone:', err);
+      alert(
+        'Could not access microphone. Please ensure it is connected and permissions are granted.'
+      );
     }
-    setShowError(false);
-
-    const rawScore = questions.reduce((score, question, index) => {
-      const correctOption = question.options.find((option) => option.is_correct);
-      const isCorrect = answers[index] === correctOption?.id;
-      return score + (isCorrect ? 1 : 0);
-    }, 0);
-
-    const maxScore = questions.length;
-
-    setSectionScore('listening', { rawScore, maxScore });
-
-    onNextAction();
   };
 
-  const handleAnswerChange = (i: number, value: number) => {
-    setAnswers((prev) => {
-      const newAnswers = [...prev];
-      newAnswers[i] = value;
-      return newAnswers;
-    });
-    if (showError) setShowError(false);
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const handleNext = async () => {
+    if (!audioBlob) {
+      alert('Please record your answer before proceeding.');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'recorded_audio.webm');
+
+      const response = await fetch('/api/exam/listening-analysis', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const rawScore = data.score;
+      const maxScore = data.maxScore;
+      const detailedDescription = data.detailedDescription;
+
+      setSectionScore('listening', { rawScore, maxScore });
+      console.log('AI Detailed Description (Audio):', detailedDescription);
+
+      onNextAction();
+    } catch (error) {
+      console.error('Error submitting audio for AI analysis:', error);
+      alert('Failed to analyze audio. Please try again.');
+    }
   };
 
   return (
@@ -67,48 +106,40 @@ export default function ListeningStep({
           </div>
         </div>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <div className="space-y-4">
-            {questions.map((q, i) => (
-              <div key={q.id} className="bg-white border border-gray-200 rounded-lg p-4">
-                <label className="block">
-                  <div className="text-sm font-medium text-gray-700 mb-2">Announcement {i + 1}</div>
-                  <div className="text-gray-700 mb-3">{q.before}</div>
-                  <div className="space-y-2">
-                    {q.options.map((option, index) => (
-                      <div key={index} className="flex items-center">
-                        <input
-                          type="radio"
-                          id={`${q.id}-${option.id}`}
-                          name={`announcement-${i}`}
-                          value={option.value}
-                          checked={answers[i] === option.id}
-                          onChange={() => handleAnswerChange(i, option.id)}
-                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                        />
-                        <label
-                          htmlFor={`${q.id}-${option.id}`}
-                          className="ml-2 block text-sm text-gray-700"
-                        >
-                          {option.value}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </label>
-              </div>
-            ))}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 flex flex-col items-center justify-center">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Record Your Answer</h2>
+          <div className="flex space-x-4 mb-6">
+            <button
+              onClick={startRecording}
+              disabled={isRecording}
+              className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+                isRecording
+                  ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+                  : 'bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+              }`}
+            >
+              {isRecording ? 'Recording...' : 'Start Recording'}
+            </button>
+            <button
+              onClick={stopRecording}
+              disabled={!isRecording}
+              className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+                !isRecording
+                  ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+                  : 'bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
+              }`}
+            >
+              Stop Recording
+            </button>
           </div>
+          {audioBlob && (
+            <div className="mb-6">
+              <p className="text-gray-700 mb-2">Recorded Audio:</p>
+              <audio controls src={URL.createObjectURL(audioBlob)} className="w-full"></audio>
+            </div>
+          )}
         </div>
       </div>
-
-      {showError && (
-        <div className="mt-6 p-3 bg-red-50 border border-red-200 rounded-md" role="alert">
-          <p className="text-red-700 text-sm font-medium">
-            Please complete all announcements before continuing.
-          </p>
-        </div>
-      )}
 
       <div className="flex justify-end mt-8">
         <button
