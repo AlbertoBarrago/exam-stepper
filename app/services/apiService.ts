@@ -1,4 +1,4 @@
-import { Step } from '@/types/stepTypes';
+import { Step, StepResult } from '@/types/stepTypes';
 import { API_BASE, API_LOGIN, API_REGISTER, API_STEPS } from '@/constants/api';
 import { UserData } from '@/types/userTypes';
 
@@ -149,6 +149,20 @@ async function saveStepResult(
   }
 }
 
+async function updateStepResult(stepResult: Partial<StepResult>): Promise<object> {
+  const response = await fetch('/api/exam/step-result', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(stepResult),
+  });
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+}
+
 /**
  * Starts a new exam session by creating an entry in the exams table and populating exam_steps.
  *
@@ -210,4 +224,12 @@ async function finalizeExam(
   }
 }
 
-export { fetchStepsConfig, login, register, saveStepResult, startExam, finalizeExam };
+export {
+  fetchStepsConfig,
+  login,
+  register,
+  saveStepResult,
+  startExam,
+  finalizeExam,
+  updateStepResult,
+};
