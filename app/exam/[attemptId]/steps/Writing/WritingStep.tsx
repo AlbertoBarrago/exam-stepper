@@ -9,14 +9,35 @@ export default function WritingStep({ onNextAction }: WritingTypes) {
     console.log('Text changed:', { text, wordCount });
   };
 
-  const submitToAi = async () => {
-    // TODO: Implement AI scoring
-    const rawScore = 15; // Mocked score
-    const maxScore = 20; // Mocked score
+  const submitToAi = async (text: string) => {
+    try {
+      const response = await fetch('/api/exam/writing-analysis', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: text }),
+      });
 
-    setSectionScore('writing', { rawScore, maxScore });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-    onNextAction();
+      const data = await response.json();
+      const rawScore = data.score;
+      const detailedDescription = data.detailedDescription;
+
+      console.log('AI Detailed Description:', detailedDescription);
+
+      const maxScore = 20;
+
+      setSectionScore('writing', { rawScore, maxScore });
+
+      onNextAction();
+    } catch (error) {
+      console.error('Error submitting text for AI analysis:', error);
+      // Handle error, e.g., show an error message to the user
+    }
   };
 
   return (
