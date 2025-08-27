@@ -3,7 +3,7 @@ import SpeakingTask from '@/components/steps/SpeakingTask';
 import { SpeakingStepTypes } from '@/types/speakingTypes';
 import { DURATION_INTRODUCTION_MS } from '@/constants/stepConst';
 
-export default function SpeakingInstructionsStep({
+export default function SpeakingStep({
   recDurationMs,
   onNextAction,
   audioFileUrl,
@@ -104,13 +104,42 @@ export default function SpeakingInstructionsStep({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleNextActionWithAudio = async (audioBlob: Blob) => {
+    try {
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'recorded_audio.webm');
+
+      const response = await fetch('/api/exam/speaking-analysis', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        console.error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const rawScore = data.score;
+      const detailedDescription = data.detailedDescription;
+
+      // For now, we'll just log and then call the original onNextAction
+      console.log('AI Detailed Description (Speaking):', detailedDescription);
+
+      // Call the original onNextAction to proceed to the next step
+      onNextAction(rawScore);
+    } catch (error) {
+      console.error('Error submitting audio for AI analysis:', error);
+      alert('Failed to analyze audio. Please try again.');
+    }
+  };
+
   return (
     <SpeakingTask
       audioFileUrl={audioFileUrl}
       remainingTime={remainingTime}
       startRecording={startRecording}
       resetAudioUrl={resetAudioUrl}
-      onNextAction={onNextAction}
+      onNextAction={handleNextActionWithAudio}
       handleAudioEnd={handleAudioEnd}
       audioFinished={audioFinished}
       recording={recording}

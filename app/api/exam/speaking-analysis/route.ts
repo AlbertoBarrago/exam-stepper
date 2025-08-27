@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const rawScore = Math.floor(Math.random() * 20) + 1; // Random score 1-20
     const maxScore = 20;
     const detailedDescription = {
-      message: 'Audio analysis mocked for POC.',
+      message: 'Speaking analysis mocked for POC.',
       feedback: 'This is placeholder feedback for your spoken audio.',
       audioFileName: (audioFile as File).name || 'recorded_audio.webm',
       audioFileSize: (audioFile as File).size || 0,

@@ -98,7 +98,7 @@ const Login = () => {
           )}
           <button
             type="submit"
-            className="w-full px-4 py-2 text-white bg-blue-600 rounded-md"
+            className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:cursor-pointer"
             disabled={loading}
           >
             {loading ? 'Processing...' : isRegisterView ? 'Register' : 'Login'}
@@ -111,7 +111,7 @@ const Login = () => {
               setError(null);
               setSuccessMessage(null);
             }}
-            className="text-sm text-blue-600 hover:underline"
+            className="text-sm text-blue-600 hover:underline hover:cursor-pointer"
           >
             {isRegisterView ? 'Already have an account? Login' : "Don't have an account? Register"}
           </button>
