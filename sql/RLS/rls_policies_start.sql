@@ -6,6 +6,14 @@ FOR INSERT
 TO authenticated
 WITH CHECK (user_id = auth.uid());
 
+-- RLS Policy for UPDATE operations on exams
+CREATE POLICY "Allow authenticated users to update their own exams"
+ON "public"."exams"
+AS PERMISSIVE
+FOR UPDATE
+TO authenticated
+USING (user_id = auth.uid());
+
 -- RLS Policy for INSERT operations on exam_steps
 CREATE POLICY "Allow authenticated users to create exam steps"
 ON "public"."exam_steps"

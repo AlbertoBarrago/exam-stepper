@@ -89,3 +89,10 @@ export const StepSchema = z.union([
   }),
   z.object({ id: z.number(), kind: SimpleStepKindSchema, title: z.string() }),
 ]);
+
+export const StepResultSchema = z.object({
+  exam_id: z.string(),
+  step_id: z.number(),
+  visited: z.boolean().optional(),
+  time_spent_ms: z.number().optional(),
+});

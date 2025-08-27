@@ -1,15 +1,17 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import SpeakingTask from '@/components/steps/SpeakingTask';
 import { SpeakingStepTypes } from '@/types/speakingTypes';
-import { DURATION_INTRODUCTION_MS } from '@/constants/stepConst';
+import { saveStepResult } from '@/services/apiService';
 import { useExamStore } from '@/state/examStore';
+import { useStepStore } from '@/state/stepStore';
+import { useTimerStore } from '@/state/timerStore';
+import { DURATION_INTRODUCTION_MS } from '@/constants/stepConst';
 
-export default function SpeakingInstructionsStep({
+export default function SpeakingStep({
   recDurationMs,
   onNextAction,
   audioFileUrl,
 }: SpeakingStepTypes) {
-  const setSectionScore = useExamStore((s) => s.setSectionScore);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -27,12 +29,7 @@ export default function SpeakingInstructionsStep({
       clearTimeout(timerRef.current);
     }
     setRecording(false);
-
-    // TODO: Implement AI scoring
-    const rawScore = 30; // Mocked score
-    const maxScore = 40; // Mocked score
-    setSectionScore('speaking', { rawScore, maxScore });
-  }, [setSectionScore]);
+  }, []);
 
   const startRecording = async () => {
     try {
@@ -64,7 +61,6 @@ export default function SpeakingInstructionsStep({
       recorderRef.current = recorder;
       setRecording(true);
 
-      // Set the timer to stop recording after recDurationMs
       timerRef.current = setTimeout(stopRecording, recDurationMs);
     } catch (err) {
       console.error('Failed to login recording:', err);
@@ -112,13 +108,54 @@ export default function SpeakingInstructionsStep({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const examId = useExamStore((s) => s.examId);
+  const setSectionScore = useExamStore((s) => s.setSectionScore);
+  const { steps } = useStepStore();
+  const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
+  const stepId = steps[currentStepIndex]?.id;
+
+  const handleNextActionWithAudio = async (audioBlob: Blob) => {
+    try {
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'recorded_audio.webm');
+
+      const response = await fetch('/api/exam/speaking-analysis', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        console.error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const rawScore = data.score;
+      const maxScore = data.maxScore;
+      const detailedDescription = data.detailedDescription;
+
+      setSectionScore('speaking', { rawScore, maxScore });
+
+      if (examId && stepId) {
+        await saveStepResult(examId, stepId, rawScore, maxScore);
+      }
+
+      console.log('AI Detailed Description (Speaking):', detailedDescription);
+
+      // Call the original onNextAction to proceed to the next step
+      onNextAction(rawScore);
+    } catch (error) {
+      console.error('Error submitting audio for AI analysis:', error);
+      alert('Failed to analyze audio. Please try again.');
+    }
+  };
+
   return (
     <SpeakingTask
       audioFileUrl={audioFileUrl}
       remainingTime={remainingTime}
       startRecording={startRecording}
       resetAudioUrl={resetAudioUrl}
-      onNextAction={onNextAction}
+      onNextAction={handleNextActionWithAudio}
       handleAudioEnd={handleAudioEnd}
       audioFinished={audioFinished}
       recording={recording}

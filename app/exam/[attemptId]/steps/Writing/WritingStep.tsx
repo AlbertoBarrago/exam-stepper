@@ -1,22 +1,55 @@
 import WritingTask from '@/components/steps/WritingTask';
 import { WritingTypes } from '@/types/writingTypes';
 import { useExamStore } from '@/state/examStore';
+import { saveStepResult } from '@/services/apiService';
+import { useStepStore } from '@/state/stepStore';
+import { useTimerStore } from '@/state/timerStore';
 
 export default function WritingStep({ onNextAction }: WritingTypes) {
   const setSectionScore = useExamStore((s) => s.setSectionScore);
+
+  const examId = useExamStore((s) => s.examId);
+  const { steps } = useStepStore();
+  const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
+  const stepId = steps[currentStepIndex]?.id;
 
   const handleTextChange = (text: string, wordCount: number) => {
     console.log('Text changed:', { text, wordCount });
   };
 
-  const submitToAi = async () => {
-    // TODO: Implement AI scoring
-    const rawScore = 15; // Mocked score
-    const maxScore = 20; // Mocked score
+  const submitToAi = async (text: string) => {
+    try {
+      const response = await fetch('/api/exam/writing-analysis', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: text }),
+      });
 
-    setSectionScore('writing', { rawScore, maxScore });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-    onNextAction();
+      const data = await response.json();
+      const rawScore = data.score; // Score from AI
+      const detailedDescription = data.detailedDescription; // Detailed description from AI
+      const maxScore = data.maxScore; // Max score from AI
+
+      console.log('AI Detailed Description:', detailedDescription);
+
+      setSectionScore('writing', { rawScore, maxScore });
+
+      // Save to database
+      if (examId && stepId) {
+        await saveStepResult(examId, stepId, rawScore, maxScore);
+      }
+
+      onNextAction();
+    } catch (error) {
+      console.error('Error submitting text for AI analysis:', error);
+      // Handle error, e.g., show an error message to the user
+    }
   };
 
   return (

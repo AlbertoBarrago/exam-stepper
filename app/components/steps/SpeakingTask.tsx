@@ -1,10 +1,6 @@
 import { SpeakingTypes } from '@/types/speakingTypes';
 import AudioPlayer from '@/components/AudioPlayer';
 import { RepeatIcon } from 'lucide-react';
-import { useExamStore } from '@/state/examStore';
-import { useStepStore } from '@/state/stepStore';
-import { useTimerStore } from '@/state/timerStore';
-import { saveStepResult } from '@/services/apiService';
 
 const SpeakingTask = ({
   onNextAction,
@@ -23,15 +19,7 @@ const SpeakingTask = ({
   stopEndRecording,
   durationMs = 5000,
 }: SpeakingTypes) => {
-  const examId = useExamStore((s) => s.examId);
-  const { steps } = useStepStore();
-  const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
-  const stepId = steps[currentStepIndex]?.id;
-
   const handleNext = async () => {
-    if (examId && stepId) {
-      await saveStepResult(examId, stepId, 0, 0);
-    }
     onNextAction(new Blob(chunksRef.current, { type: 'audio/webm' }));
   };
   return (

@@ -15,7 +15,7 @@ import WritingIntroStep from '@/exam/[attemptId]/steps/Writing/WritingIntroStep'
 import WritingStep from '@/exam/[attemptId]/steps/Writing/WritingStep';
 import WritingCompleteStep from '@/exam/[attemptId]/steps/Writing/WritingCompleteStep';
 import SpeakingIntroStep from '@/exam/[attemptId]/steps/Speaking/SpeakingIntroStep';
-import SpeakingInstructionsStep from '@/exam/[attemptId]/steps/Speaking/SpeakingInstructionsStep';
+import SpeakingStep from '@/exam/[attemptId]/steps/Speaking/SpeakingStep';
 import FinalRecapStep from '@/exam/[attemptId]/steps/Final/FinalRecapStep';
 import PermissionStep from '@/exam/[attemptId]/steps/Permission/PermissionStep';
 import SpeakingCompleteStep from '@/exam/[attemptId]/steps/Speaking/SpeakingCompleteStep';
@@ -146,7 +146,7 @@ export function useStepBody({
     case StepKind.SpeakingQuestion:
       return {
         StepComponent: () => (
-          <SpeakingInstructionsStep
+          <SpeakingStep
             recDurationMs={DURATION_INTRODUCTION_MS}
             audioFileUrl={step.audioUrl}
             onNextAction={nextAction}
