@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useUserStore } from '@/state/userStore';
 import { useStepStore } from '@/state/stepStore';
 import { useExamStore } from '@/state/examStore';
@@ -16,13 +16,16 @@ const StartExam = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
+  const examStarted = useRef(false);
+
   useEffect(() => {
     if (steps.length === 0 && !stepsLoading) {
       void fetchSteps();
     }
 
     const startNewExam = async () => {
-      if (user && steps.length > 0 && !stepsLoading) {
+      if (user && steps.length > 0 && !stepsLoading && !examStarted.current) {
+        examStarted.current = true;
         const stepIds = steps.map((step) => step.id);
         const { success, examId, error: apiError } = await startExam(user.id, stepIds);
 
