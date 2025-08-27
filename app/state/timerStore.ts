@@ -15,7 +15,6 @@ export const useTimerStore = create<
     setCurrentStepIndex: (idx: number) => void;
     nextStep: () => void;
     prevStep: () => void;
-    reset: () => void;
   }
 >()(
   persist(
@@ -24,6 +23,8 @@ export const useTimerStore = create<
       sectionTimeLeft: 0,
       currentSection: null,
       isRunning: false,
+      isTimeOver: false,
+      isSectionTimeOver: false,
       sectionElapsed: {
         reading: 0,
         listening: 0,
@@ -40,12 +41,18 @@ export const useTimerStore = create<
         const { globalTimeLeft, sectionTimeLeft, currentSection, isRunning, sectionElapsed } =
           get();
         if (!isRunning) return;
+        const newGlobalTimeLeft = Math.max(0, globalTimeLeft - 1);
+        const newSectionTimeLeft = Math.max(0, sectionTimeLeft - 1);
+        const timeIsOver = sectionTimeLeft === 0 && currentSection !== null;
+
         set({
-          globalTimeLeft: Math.max(0, globalTimeLeft - 1),
-          sectionTimeLeft: Math.max(0, sectionTimeLeft - 1),
+          globalTimeLeft: newGlobalTimeLeft,
+          sectionTimeLeft: newSectionTimeLeft,
           sectionElapsed: currentSection
             ? { ...sectionElapsed, [currentSection]: sectionElapsed[currentSection] + 1 }
             : sectionElapsed,
+          isRunning: timeIsOver ? false : isRunning,
+          isTimeOver: timeIsOver,
         });
       },
 
@@ -65,6 +72,7 @@ export const useTimerStore = create<
           sectionTimeLeft: 0,
           currentSection: null,
           isRunning: false,
+          isTimeOver: false,
           sectionElapsed: {
             reading: 0,
             listening: 0,

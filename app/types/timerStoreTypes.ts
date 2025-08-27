@@ -5,6 +5,7 @@ export type TimerState = {
   sectionTimeLeft: number;
   currentSection: Section | null;
   isRunning: boolean;
+  isTimeOver: boolean;
   sectionElapsed: Record<Section, number>;
   tick: () => void;
   startSection: (section: Section) => void;

@@ -1,23 +1,23 @@
 'use client';
-import { JSX, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useTimerStore } from '@/state/timerStore';
 import PreventBackNavigation from '@/components/PreventBackNavigation';
 import { useStepStore } from '@/state/stepStore';
 import { useStepBody } from '@/hooks/useStepBody';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useUserStore } from '@/state/userStore';
 import { startExam } from '@/services/apiService';
 import { useExamStore } from '@/state/examStore';
 import Loader from '@/components/common/Loader';
+import TimeOverMessage from '@/components/common/TimeOverMessage';
 
-export default function Exam(): JSX.Element | null {
+export default function Exam() {
   const { attemptId } = useParams();
   const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
   const nextStep = useTimerStore((s) => s.nextStep);
   const { steps, isLoading, error, fetchSteps } = useStepStore();
   const user = useUserStore((s) => s.user);
   const setExamId = useExamStore((s) => s.setExamId);
-  const router = useRouter();
   const { StepComponent } = useStepBody({
     current: currentStepIndex,
     nextAction: nextStep,
@@ -45,16 +45,6 @@ export default function Exam(): JSX.Element | null {
     void initializeExam();
   }, [fetchSteps, steps.length, user, setExamId, steps]);
 
-  useEffect(() => {
-    if (!user) {
-      router.push('/login');
-    }
-  }, [user, router]);
-
-  if (!user) {
-    return null;
-  }
-
   if (isLoading) {
     return <Loader message={'Loading exam steps...'} />;
   }
@@ -69,6 +59,7 @@ export default function Exam(): JSX.Element | null {
       <section className="p-6 text-center">
         <StepComponent />
       </section>
+      <TimeOverMessage />
     </>
   );
 }
