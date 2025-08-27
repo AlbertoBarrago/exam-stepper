@@ -40,16 +40,9 @@ export default function Exam() {
         exam_id: attemptId as string,
         step_id: previousStep.id,
         time_spent_ms: timeSpentMs,
+        visited: true,
       });
     }
-
-    stepStartTimeRef.current = Date.now();
-    void updateStepResult({
-      exam_id: attemptId as string,
-      step_id: step.id,
-      visited: true,
-    });
-
   }, [currentStepIndex, steps, attemptId]);
 
   if (isLoading) {
