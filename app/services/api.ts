@@ -1,6 +1,7 @@
-import { Step, StepResult } from '@/types/stepTypes';
+import { Step } from '@/types/stepTypes';
 import { API_BASE, API_LOGIN, API_REGISTER, API_STEPS } from '@/constants/api';
 import { UserData } from '@/types/userTypes';
+import { mapToCEFR, normalizeScore } from '@/services/score';
 
 /**
  * Fetches the configuration for steps from the API.
@@ -17,9 +18,7 @@ async function fetchStepsConfig(): Promise<Step[]> {
     console.error('Failed to fetch steps config. Response:', errorText);
     throw new Error(`Failed to fetch steps config: ${response.status} ${response.statusText}`);
   }
-  const data = await response.json();
-  console.log('Fetched steps data:', data);
-  return data;
+  return await response.json();
 }
 
 /**
@@ -149,20 +148,6 @@ async function saveStepResult(
   }
 }
 
-async function updateStepResult(stepResult: Partial<StepResult>): Promise<object> {
-  const response = await fetch('/api/exam/step-result', {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(stepResult),
-  });
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.json();
-}
-
 /**
  * Starts a new exam session by creating an entry in the exams table and populating exam_steps.
  *
@@ -201,11 +186,69 @@ async function startExam(
  * @param examId The ID of the exam to finalize.
  * @returns A promise that resolves to an object indicating success or failure, along with the calculated final score, CEFR level, or an error message.
  */
-async function finalizeExam(
-  examId: number
-): Promise<{ success: boolean; finalScore?: number; cefrLevel?: string; error?: string }> {
+async function finalizeExam(examId: number): Promise<{
+  success: boolean;
+  finalScore?: number;
+  exam?: {
+    cefr_level: {
+      global_cefr_level: string;
+      reading_cefr_level?: string;
+      listening_cefr_level?: string;
+      speaking_cefr_level?: string;
+      writing_cefr_level?: string;
+    };
+    final_score: number;
+    created_at: string;
+  };
+  stepScores?: { [key: string]: number };
+  error?: string;
+}> {
   try {
-    const response = await fetch(`/api/exam/${examId}/finalize`, {
+    const stepResultsResponse = await fetch(`${API_BASE}/exam/${examId}/step-results`);
+    if (!stepResultsResponse.ok) {
+      const errorData = await stepResultsResponse.json();
+      return { success: false, error: errorData.error || 'Failed to fetch step results' };
+    }
+    const { examSteps } = await stepResultsResponse.json();
+
+    const sectionCefrLevels: { [key: string]: string } = {};
+    const stepScoresData: { [key: string]: number } = {};
+    let totalNormalizedScore = 0;
+    let totalStepsWithScore = 0;
+
+    interface ExamStepResult {
+      raw_score: number;
+      max_score: number;
+      step_id: number;
+      steps: { kind: string };
+    }
+
+    examSteps.forEach((step: ExamStepResult) => {
+      const rawScore = step.raw_score || 0;
+      const maxScore = step.max_score || 0;
+      const stepKind = step.steps.kind.split('-')[0]; // e.g., 'reading', 'listening'
+
+      stepScoresData[`${stepKind}_score`] = rawScore;
+
+      if (maxScore > 0) {
+        const normalizedScore = normalizeScore(rawScore, maxScore);
+        sectionCefrLevels[`${stepKind}_cefr_level`] = mapToCEFR(normalizedScore);
+        totalNormalizedScore += normalizedScore;
+        totalStepsWithScore++;
+      }
+    });
+
+    // Calculate global CEFR level
+    const globalNormalizedScore =
+      totalStepsWithScore > 0 ? totalNormalizedScore / totalStepsWithScore : 0;
+    const globalCefrLevel = mapToCEFR(globalNormalizedScore);
+
+    const cefrLevelData = {
+      global_cefr_level: globalCefrLevel,
+      ...sectionCefrLevels,
+    };
+
+    const response = await fetch(`${API_BASE}/exam/${examId}/finalize`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -217,7 +260,8 @@ async function finalizeExam(
       return { success: false, error: errorData.error || 'Failed to finalize exam' };
     }
 
-    return await response.json();
+    const finalResult = await response.json();
+    return { ...finalResult, stepScores: stepScoresData };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'An unknown network error occurred.';
     return { success: false, error: message };

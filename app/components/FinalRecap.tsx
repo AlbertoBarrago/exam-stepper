@@ -1,27 +1,18 @@
-import { formatTime } from '@/services/utilService';
 import { FinalType } from '@/types/finalTypes';
+import Certificate from './Certificate';
 
 const FinalRecap = ({
-  sectionTimes,
-  totalSeconds,
   analyzing,
   finalScore,
   cefrLevel,
   error,
   backToHome,
+  displayName,
+  awardedDate,
+  stepScores,
 }: FinalType) => {
   return (
-    <div className="text-center space-y-6">
-      <h2 className="text-2xl font-bold">Test Complete!</h2>
-      <p className="font-medium">Time spent in each section:</p>
-      <div className="flex flex-col items-center gap-2 mb-2">
-        {sectionTimes.map(([section, secs]) => (
-          <span key={section}>
-            <span className="capitalize font-semibold">{section}</span>: {formatTime(secs)}
-          </span>
-        ))}
-      </div>
-      <div className="font-bold text-lg">Total time: {formatTime(totalSeconds)}</div>
+    <div className="text-center space-y-2">
       {analyzing ? (
         <>
           <p className="text-blue-600">Analyzing results...</p>
@@ -31,12 +22,17 @@ const FinalRecap = ({
         <>
           {error && <p className="text-red-600">Error: {error}</p>}
           {(finalScore || finalScore === 0) && cefrLevel !== null && (
-            <div className="mt-4 p-4 bg-green-100 rounded-md">
-              <p className="text-green-800 text-lg font-semibold">
-                Final Score: {finalScore ? `${finalScore.toFixed(2)}%` : 'Pending'}
-              </p>
-              <p className="text-green-800 text-lg font-semibold">CEFR Level: {cefrLevel}</p>
-            </div>
+            <Certificate
+              overallScore={finalScore.toFixed(0)}
+              overallLevel={cefrLevel.global_cefr_level}
+              name={displayName}
+              awardedDate={awardedDate}
+              stepScores={stepScores}
+              readingCefrLevel={cefrLevel.reading_cefr_level}
+              listeningCefrLevel={cefrLevel.listening_cefr_level}
+              speakingCefrLevel={cefrLevel.speaking_cefr_level}
+              writingCefrLevel={cefrLevel.writing_cefr_level}
+            />
           )}
           <button className="btn mt-4" onClick={backToHome}>
             Exit Test

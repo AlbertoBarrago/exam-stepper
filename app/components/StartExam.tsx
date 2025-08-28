@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useUserStore } from '@/state/userStore';
 import { useStepStore } from '@/state/stepStore';
 import { useExamStore } from '@/state/examStore';
-import { startExam } from '@/services/apiService';
+import { startExam } from '@/services/api';
 import { useRouter } from 'next/navigation';
 import Loader from '@/components/common/Loader';
 import Link from 'next/link';
@@ -54,10 +54,11 @@ const StartExam = () => {
         <div className="w-full max-w-md p-8 space-y-6 text-center bg-white rounded-lg shadow-md">
           <h2 className="text-2xl font-bold">Login Required</h2>
           <p>Please log in to start an exam.</p>
-          <Link href="/login">
-            <a className="w-full px-4 py-2 mt-4 text-white bg-blue-600 rounded-md hover:bg-blue-700">
-              Go to Login
-            </a>
+          <Link
+            href="/login"
+            className="w-full px-4 py-2 mt-4 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+          >
+            Go to Login
           </Link>
         </div>
       </div>

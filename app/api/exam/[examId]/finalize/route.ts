@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase';
-import { calculateFinalScore, mapToCEFR } from '@/services/scoringService';
+import { calculateFinalScore } from '@/services/score';
 import { StepResult } from '@/types/commonTypes';
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ examId: string }> }) {
@@ -15,6 +15,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ exa
     if (!examId) {
       return NextResponse.json({ success: false, error: 'Missing examId.' }, { status: 400 });
     }
+
+    const { cefrLevelData, stepScoresData } = await req.json();
 
     const supabase = await createClient();
 
@@ -46,15 +48,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ exa
 
     const validResults = results.filter((r) => r.rawScore !== null && r.maxScore !== null);
 
-    console.log(`Finalizing exam: ${examId}`);
     const finalScore = calculateFinalScore(validResults);
-    const cefrLevel = mapToCEFR(finalScore);
-    console.log(`Calculated finalScore: ${finalScore}, cefrLevel: ${cefrLevel}`);
 
-    console.log('Attempting to update exam record in Supabase...');
     const { data, error: updateError } = await supabase
       .from('exams')
-      .update({ final_score: finalScore, cefr_level: cefrLevel })
+      .update({ final_score: finalScore, cefr_level: cefrLevelData, step_scores: stepScoresData }) // Use cefrLevelData and stepScoresData here
       .eq('id', examId)
       .select();
 
@@ -71,7 +69,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ exa
     }
     console.log('Supabase update successful. Data:', data);
 
-    return NextResponse.json({ success: true, finalScore, cefrLevel, exam: data ? data[0] : null });
+    return NextResponse.json({ success: true, finalScore, exam: data ? data[0] : null });
   } catch (e) {
     const error = e as Error;
     console.error('Error processing finalization request:', error);

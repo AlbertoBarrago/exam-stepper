@@ -4,16 +4,20 @@ import { useTimerStore } from '@/state/timerStore';
 import PreventBackNavigation from '@/components/PreventBackNavigation';
 import { useStepStore } from '@/state/stepStore';
 import { useStepBody } from '@/hooks/useStepBody';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Loader from '@/components/common/Loader';
 import TimeOverMessage from '@/components/common/TimeOverMessage';
-import { updateStepResult } from '@/services/apiService';
+import { updateStepResult } from '@/services/api';
+import { useUserStore } from '@/state/userStore';
 
 export default function Exam() {
   const { attemptId } = useParams();
+  const user = useUserStore((state) => state.user);
   const currentStepIndex = useTimerStore((s) => s.currentStepIndex);
   const nextStep = useTimerStore((s) => s.nextStep);
   const { steps, isLoading, error, fetchSteps } = useStepStore();
+  const logout = useUserStore((state) => state.logout);
+  const router = useRouter();
   const { StepComponent } = useStepBody({
     current: currentStepIndex,
     nextAction: nextStep,
@@ -51,10 +55,16 @@ export default function Exam() {
     });
   }, [currentStepIndex, steps, attemptId]);
 
-  if (isLoading) {
+  useEffect(() => {
+    if (!isLoading && !user) {
+      logout();
+      router.push('/login');
+    }
+  }, [isLoading, user, router, logout]);
+
+  if (isLoading || !user) {
     return <Loader message={'Loading exam steps...'} />;
   }
-
   if (error) {
     return <div className="text-center p-10 text-red-600">Error: {error}</div>;
   }

@@ -1,7 +1,7 @@
 import WritingTask from '@/components/steps/WritingTask';
 import { WritingTypes } from '@/types/writingTypes';
 import { useExamStore } from '@/state/examStore';
-import { saveStepResult } from '@/services/apiService';
+import { saveStepResult } from '@/services/api';
 import { useStepStore } from '@/state/stepStore';
 import { useTimerStore } from '@/state/timerStore';
 

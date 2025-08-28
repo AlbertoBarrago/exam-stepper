@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { StepState } from '@/types/stepTypes';
-import { fetchStepsConfig } from '@/services/apiService';
+import { fetchStepsConfig } from '@/services/api';
 
 export const useStepStore = create<StepState>((set) => ({
   steps: [],

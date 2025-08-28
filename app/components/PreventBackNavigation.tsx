@@ -3,10 +3,6 @@ import { useTimerStore } from '@/state/timerStore';
 import Modal from '@/components/Modal';
 import { useUserStore } from '@/state/userStore';
 
-function deleteCookie(name: string) {
-  document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
-}
-
 /**
  * Prevents the user from navigating back using the browser's back button or reloading the page
  * without confirmation. Displays a modal to confirm user action when such events are triggered.
@@ -35,7 +31,6 @@ function PreventBackNavigation(): JSX.Element {
     };
 
     const handleUnload = () => {
-      deleteCookie('token');
       logout();
       resetTimer();
     };

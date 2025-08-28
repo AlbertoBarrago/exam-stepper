@@ -4,9 +4,16 @@ CREATE TABLE exams (
     user_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     final_score DECIMAL(5, 2),
-    cefr_level VARCHAR(2),
+    cefr_level JSONB,
+    step_scores JSONB,
     FOREIGN KEY (user_id) REFERENCES auth.users(id)
 );
+
+-- Add or alter cefr_level column in exams table to JSONB
+ALTER TABLE exams ALTER COLUMN cefr_level TYPE JSONB USING cefr_level::jsonb;
+
+-- Add step_scores column to exams table if it doesn't exist
+ALTER TABLE exams ADD COLUMN step_scores JSONB;
 
 -- Create the step table
 CREATE TABLE steps (
@@ -28,9 +35,9 @@ CREATE TABLE exam_steps (
     exam_id INT NOT NULL,
     step_id INT NOT NULL,
     step_order INT NOT NULL,
-    raw_score INT,
-    max_score INT,
-    normalized_score DECIMAL(5, 2),
-    FOREIGN KEY (exam_id) REFERENCES exams(id),
-    FOREIGN KEY (step_id) REFERENCES steps(id)
+    raw_score numeric,
+    max_score numeric,
+    cefr_level text,
+    created_at timestamp with time zone default now() not null,
+    updated_at timestamp with time zone default now() not null
 );

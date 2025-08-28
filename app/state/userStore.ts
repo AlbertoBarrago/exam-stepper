@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { UserData, UserStore } from '@/types/userTypes';
+import { useExamStore } from './examStore';
 
 export const useUserStore = create<
   UserStore & {
@@ -9,6 +10,9 @@ export const useUserStore = create<
   user: null,
   loading: false,
   error: null,
-  logout: () => set({ user: null }),
+  logout: () => {
+    useExamStore.getState().reset();
+    set({ user: null });
+  },
   setUser: (userData: UserData) => set({ user: userData }),
 }));

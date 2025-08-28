@@ -1,10 +1,11 @@
 import CompleteTask from '@/components/steps/CompleteTask';
 import { TitleAndNextActionType } from '@/types/commonTypes';
-import { SECTION_DATA } from '@/constants/clientShellConst';
-import { saveStepResult } from '@/services/apiService';
+import { SECTION_DATA } from '@/constants/main';
+import { saveStepResult } from '@/services/api';
 import { useExamStore } from '@/state/examStore';
 import { useStepStore } from '@/state/stepStore';
 import { useTimerStore } from '@/state/timerStore';
+import { normalizeScore, mapToCEFR } from '@/services/score';
 
 export default function WritingCompleteStep({ onNextAction }: TitleAndNextActionType) {
   const { examId, sectionScores } = useExamStore();
@@ -17,9 +18,12 @@ export default function WritingCompleteStep({ onNextAction }: TitleAndNextAction
     const rawScore = writingScore?.rawScore || 0;
     const maxScore = writingScore?.maxScore || 0;
 
+    const normalizedScore = normalizeScore(rawScore, maxScore);
+    const cefrLevel = mapToCEFR(normalizedScore);
+
     if (examId && stepId) {
       try {
-        const result = await saveStepResult(examId, stepId, rawScore, maxScore);
+        const result = await saveStepResult(examId, stepId, rawScore, maxScore, cefrLevel);
         if (result.success) {
           console.log('Successfully saved writing step score:', result.data);
           onNextAction();
