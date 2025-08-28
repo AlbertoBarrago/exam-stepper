@@ -17,6 +17,7 @@ export default function FinalRecapStep() {
   const [analyzing, setAnalyzing] = useState(true);
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [awardedDate, setAwardedDate] = useState<string | null>(null);
+  const [cefrLevel, setCefrLevel] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -34,6 +35,7 @@ export default function FinalRecapStep() {
         if (result.success) {
           console.log('Exam Finalization Success:', result);
           setFinalScore(result.finalScore ?? null);
+          setCefrLevel(result.exam.cefr_level ?? null);
           setAwardedDate(result.exam.created_at ?? null);
         } else {
           console.error('Exam Finalization Failed:', result.error);
@@ -69,6 +71,7 @@ export default function FinalRecapStep() {
       totalSeconds={totalSeconds}
       analyzing={analyzing}
       finalScore={finalScore}
+      cefrLevel={cefrLevel}
       error={error}
       backToHome={backToHome}
       displayName={user?.user_metadata.display_name ?? 'User'}
