@@ -8,10 +8,6 @@ const FinalRecap = ({
   error,
   backToHome,
   displayName,
-  readingScore,
-  readingLevel,
-  listeningScore,
-  listeningLevel,
   awardedDate,
 }: FinalType) => {
   return (
@@ -28,10 +24,6 @@ const FinalRecap = ({
             <Certificate
               overallScore={finalScore.toFixed(0)}
               overallLevel={cefrLevel}
-              listeningScore={listeningScore}
-              readingScore={readingScore}
-              listeningLevel={listeningLevel}
-              readingLevel={readingLevel}
               name={displayName}
               awardedDate={awardedDate}
             />

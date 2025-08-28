@@ -16,11 +16,6 @@ export default function FinalRecapStep() {
 
   const [analyzing, setAnalyzing] = useState(true);
   const [finalScore, setFinalScore] = useState<number | null>(null);
-  const [cefrLevel, setCefrLevel] = useState<string | null>(null);
-  const [readingScore, setReadingScore] = useState<number | null>(null);
-  const [readingLevel, setReadingLevel] = useState<string | null>(null);
-  const [listeningScore, setListeningScore] = useState<number | null>(null);
-  const [listeningLevel, setListeningLevel] = useState<string | null>(null);
   const [awardedDate, setAwardedDate] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -39,12 +34,7 @@ export default function FinalRecapStep() {
         if (result.success) {
           console.log('Exam Finalization Success:', result);
           setFinalScore(result.finalScore ?? null);
-          setCefrLevel(result.cefrLevel ?? null);
-          setReadingScore(result.readingScore ?? null);
-          setReadingLevel(result.readingLevel ?? null);
-          setListeningScore(result.listeningScore ?? null);
-          setListeningLevel(result.listeningLevel ?? null);
-          setAwardedDate(result.awardedDate ?? null);
+          setAwardedDate(result.exam.created_at ?? null);
         } else {
           console.error('Exam Finalization Failed:', result.error);
           setError(result.error || 'Failed to finalize exam.');
@@ -79,14 +69,9 @@ export default function FinalRecapStep() {
       totalSeconds={totalSeconds}
       analyzing={analyzing}
       finalScore={finalScore}
-      cefrLevel={cefrLevel}
       error={error}
       backToHome={backToHome}
       displayName={user?.user_metadata.display_name ?? 'User'}
-      readingScore={readingScore ?? 0}
-      readingLevel={readingLevel ?? ''}
-      listeningScore={listeningScore ?? 0}
-      listeningLevel={listeningLevel ?? ''}
       awardedDate={awardedDate ?? ''}
     />
   );

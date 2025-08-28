@@ -201,17 +201,14 @@ async function startExam(
  * @param examId The ID of the exam to finalize.
  * @returns A promise that resolves to an object indicating success or failure, along with the calculated final score, CEFR level, or an error message.
  */
-async function finalizeExam(
-  examId: number
-): Promise<{
+async function finalizeExam(examId: number): Promise<{
   success: boolean;
   finalScore?: number;
-  cefrLevel?: string;
-  readingScore?: number;
-  readingLevel?: string;
-  listeningScore?: number;
-  listeningLevel?: string;
-  awardedDate?: string;
+  exam: {
+    cefr_level: string;
+    final_score: number;
+    created_at: string;
+  };
   error?: string;
 }> {
   try {
