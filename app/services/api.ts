@@ -204,7 +204,7 @@ async function startExam(
 async function finalizeExam(examId: number): Promise<{
   success: boolean;
   finalScore?: number;
-  exam: {
+  exam?: {
     cefr_level: string;
     final_score: number;
     created_at: string;
