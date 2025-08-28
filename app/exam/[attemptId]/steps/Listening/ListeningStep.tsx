@@ -3,7 +3,7 @@ import AudioPlayer from '@/components/AudioPlayer';
 import { useState } from 'react';
 import { AudioQuestion } from '@/types/stepTypes';
 import { useExamStore } from '@/state/examStore';
-import { saveStepResult } from '@/services/apiService';
+import { saveStepResult } from '@/services/api';
 import { useStepStore } from '@/state/stepStore';
 import { useTimerStore } from '@/state/timerStore';
 

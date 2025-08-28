@@ -129,7 +129,7 @@ async function saveStepResult(
   maxScore: number
 ): Promise<{ success: boolean; data?: never; error?: string }> {
   try {
-    const response = await fetch(`/api/exam/step-result`, {
+    const response = await fetch(`${API_BASE}/exam/step-result`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -150,7 +150,7 @@ async function saveStepResult(
 }
 
 async function updateStepResult(stepResult: Partial<StepResult>): Promise<object> {
-  const response = await fetch('/api/exam/step-result', {
+  const response = await fetch(`${API_BASE}/exam/step-result`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -175,7 +175,7 @@ async function startExam(
   stepIds: number[]
 ): Promise<{ success: boolean; examId?: number; examSteps?: never[]; error?: string }> {
   try {
-    const response = await fetch(`/api/exam/start`, {
+    const response = await fetch(`${API_BASE}/exam/start`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -203,9 +203,19 @@ async function startExam(
  */
 async function finalizeExam(
   examId: number
-): Promise<{ success: boolean; finalScore?: number; cefrLevel?: string; error?: string }> {
+): Promise<{
+  success: boolean;
+  finalScore?: number;
+  cefrLevel?: string;
+  readingScore?: number;
+  readingLevel?: string;
+  listeningScore?: number;
+  listeningLevel?: string;
+  awardedDate?: string;
+  error?: string;
+}> {
   try {
-    const response = await fetch(`/api/exam/${examId}/finalize`, {
+    const response = await fetch(`${API_BASE}/exam/${examId}/finalize`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

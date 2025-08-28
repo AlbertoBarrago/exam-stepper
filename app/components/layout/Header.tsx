@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import SectionTimerBar from '@/components/TimeBar';
 import { QUESTION_KINDS, stepKindToSection } from '@/constants/clientShellConst';
 import { useStepStore } from '@/state/stepStore';
-import { isSection } from '@/services/utilService';
+import { isSection } from '@/services/utils';
 
 function TickController(): null {
   const tick = useTimerStore((s) => s.tick);
@@ -34,11 +34,23 @@ export default function Header() {
   const prevStepKindRef = useRef<string | undefined>(undefined);
   const [showTimeBar, setShowTimeBar] = useState(true); // New state to control visibility
 
-  const handleLogout = () => {
-    logout();
-    resetTimer();
-    setOpen(false);
-    router.push('/');
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/logout', {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        logout();
+        resetTimer();
+        setOpen(false);
+        router.push('/login');
+      } else {
+        console.error('Logout failed');
+      }
+    } catch (error) {
+      console.error('An error occurred during logout', error);
+    }
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);

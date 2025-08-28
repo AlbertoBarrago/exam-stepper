@@ -22,4 +22,13 @@ function formatTime(secs: number): string {
 function isSection(val: string | null): val is Section {
   return !!val && SECTIONS.includes(val as Section);
 }
-export { formatTime, isSection };
+
+/**
+ * Clean a cookie by setting it to expire immediately
+ * @param name
+ */
+function cleanCookie(name: string) {
+  document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+}
+
+export { formatTime, isSection, cleanCookie };

@@ -17,13 +17,6 @@ export async function POST(req: NextRequest) {
 
     const response = NextResponse.json({ success: true, user: data.user });
 
-    if (data.session) {
-      response.cookies.set('supabase-auth-token', data.session.access_token, {
-        httpOnly: true,
-        path: '/',
-      });
-    }
-
     return response;
   } catch (error) {
     return NextResponse.json(

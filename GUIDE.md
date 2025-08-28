@@ -6,7 +6,7 @@ This guide provides a comprehensive overview of the exam flow in this applicatio
 
 The exam process begins when a student navigates to the exam page. Here's how it works:
 
-- **Frontend Trigger**: The `app/exam/[attemptId]/Exam.tsx` component is responsible for initiating the exam. It uses the `useEffect` hook to call the `startExam` function from `app/services/apiService.ts`.
+- **Frontend Trigger**: The `app/exam/[attemptId]/Exam.tsx` component is responsible for initiating the exam. It uses the `useEffect` hook to call the `startExam` function from `app/services/api.ts`.
 
 - **Backend Process**: The `startExam` function sends a request to the `/api/exam/start/route.ts` endpoint. This endpoint creates a new record in the `exams` table and then creates a corresponding record for each step of the exam in the `exam_steps` table. This pre-populates the database with all the steps the student will take, allowing us to track their progress in real-time.
 
@@ -24,7 +24,7 @@ Once the exam is initialized, the student progresses through the steps one by on
 
 After the student completes a step, their answer is sent to the backend to be saved. Here's how this process works:
 
-- **Frontend Submission**: The step component calls a function from `app/services/apiService.ts` to send the student's answer to the backend.
+- **Frontend Submission**: The step component calls a function from `app/services/api.ts` to send the student's answer to the backend.
 
 - **Backend Processing**: The `/api/exam/step-result/route.ts` endpoint receives the answer and updates the corresponding record in the `exam_steps` table with the `raw_score` and `max_score`.
 
@@ -34,7 +34,7 @@ Once the student has completed all the steps, the exam is finalized and the fina
 
 - **Frontend Trigger**: The `app/exam/[attemptId]/steps/Final/FinalRecapStep.tsx` component triggers the finalization process.
 
-- **Backend Calculation**: The `/api/exam/[examId]/finalize/route.ts` endpoint fetches all the step results for the exam from the `exam_steps` table. It then uses the `calculateFinalScore` function from `app/services/scoringService.ts` to calculate the final score. The final score and the corresponding CEFR level are then saved in the `exams` table.
+- **Backend Calculation**: The `/api/exam/[examId]/finalize/route.ts` endpoint fetches all the step results for the exam from the `exam_steps` table. It then uses the `calculateFinalScore` function from `app/services/score.ts` to calculate the final score. The final score and the corresponding CEFR level are then saved in the `exams` table.
 
 ## 5. Implementing Manual or AI Review
 

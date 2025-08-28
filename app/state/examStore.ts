@@ -11,6 +11,7 @@ interface ExamStore {
   sectionScores: Record<string, SectionScore>;
   setSectionScore: (section: string, score: SectionScore) => void;
   resetSectionScores: () => void;
+  reset: () => void;
 }
 
 export const useExamStore = create<ExamStore>((set) => ({
@@ -28,4 +29,5 @@ export const useExamStore = create<ExamStore>((set) => ({
       },
     })),
   resetSectionScores: () => set({ sectionScores: {} }),
+  reset: () => set({ examId: null, sectionScores: {} }),
 }));

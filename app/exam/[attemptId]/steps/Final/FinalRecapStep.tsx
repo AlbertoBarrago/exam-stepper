@@ -4,18 +4,24 @@ import { useTimerStore } from '@/state/timerStore';
 import { useUserStore } from '@/state/userStore';
 import FinalRecap from '@/components/FinalRecap';
 import { useExamStore } from '@/state/examStore';
-import { finalizeExam } from '@/services/apiService';
+import { finalizeExam } from '@/services/api';
 
 export default function FinalRecapStep() {
   const pause = useTimerStore((s) => s.pause);
   const reset = useTimerStore((s) => s.reset);
   const sectionElapsed = useTimerStore((s) => s.sectionElapsed);
   const logout = useUserStore((s) => s.logout);
+  const user = useUserStore((s) => s.user);
   const examId = useExamStore((s) => s.examId);
 
   const [analyzing, setAnalyzing] = useState(true);
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [cefrLevel, setCefrLevel] = useState<string | null>(null);
+  const [readingScore, setReadingScore] = useState<number | null>(null);
+  const [readingLevel, setReadingLevel] = useState<string | null>(null);
+  const [listeningScore, setListeningScore] = useState<number | null>(null);
+  const [listeningLevel, setListeningLevel] = useState<string | null>(null);
+  const [awardedDate, setAwardedDate] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -30,10 +36,15 @@ export default function FinalRecapStep() {
 
       try {
         const result = await finalizeExam(examId);
-        if (result.success && result.finalScore !== undefined && result.cefrLevel !== undefined) {
+        if (result.success) {
           console.log('Exam Finalization Success:', result);
-          setFinalScore(result.finalScore);
-          setCefrLevel(result.cefrLevel);
+          setFinalScore(result.finalScore ?? null);
+          setCefrLevel(result.cefrLevel ?? null);
+          setReadingScore(result.readingScore ?? null);
+          setReadingLevel(result.readingLevel ?? null);
+          setListeningScore(result.listeningScore ?? null);
+          setListeningLevel(result.listeningLevel ?? null);
+          setAwardedDate(result.awardedDate ?? null);
         } else {
           console.error('Exam Finalization Failed:', result.error);
           setError(result.error || 'Failed to finalize exam.');
@@ -71,6 +82,12 @@ export default function FinalRecapStep() {
       cefrLevel={cefrLevel}
       error={error}
       backToHome={backToHome}
+      displayName={user?.user_metadata.display_name ?? 'User'}
+      readingScore={readingScore ?? 0}
+      readingLevel={readingLevel ?? ''}
+      listeningScore={listeningScore ?? 0}
+      listeningLevel={listeningLevel ?? ''}
+      awardedDate={awardedDate ?? ''}
     />
   );
 }

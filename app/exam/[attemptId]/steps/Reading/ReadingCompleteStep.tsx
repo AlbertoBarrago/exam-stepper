@@ -1,7 +1,7 @@
 import { TitleAndNextActionType } from '@/types/commonTypes';
 import CompleteTask from '@/components/steps/CompleteTask';
 import { SECTION_DATA } from '@/constants/clientShellConst';
-import { saveStepResult } from '@/services/apiService';
+import { saveStepResult } from '@/services/api';
 import { useExamStore } from '@/state/examStore';
 import { useStepStore } from '@/state/stepStore';
 import { useTimerStore } from '@/state/timerStore';

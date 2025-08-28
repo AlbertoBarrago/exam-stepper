@@ -2,10 +2,7 @@ import { JSX, useEffect, useState } from 'react';
 import { useTimerStore } from '@/state/timerStore';
 import Modal from '@/components/Modal';
 import { useUserStore } from '@/state/userStore';
-
-function deleteCookie(name: string) {
-  document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
-}
+import { cleanCookie } from '@/services/utils';
 
 /**
  * Prevents the user from navigating back using the browser's back button or reloading the page
@@ -35,7 +32,6 @@ function PreventBackNavigation(): JSX.Element {
     };
 
     const handleUnload = () => {
-      deleteCookie('token');
       logout();
       resetTimer();
     };

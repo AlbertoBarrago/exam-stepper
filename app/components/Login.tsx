@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { login, register } from '@/services/apiService';
+import { login, register } from '@/services/api';
 import { useUserStore } from '@/state/userStore';
 import { useRouter } from 'next/navigation';
 
@@ -28,8 +28,7 @@ const Login = () => {
           setSuccessMessage(
             'Registration successful! Please check your email to confirm your account before logging in.'
           );
-          setIsRegisterView(false); // Switch to login view
-          // Clear fields
+          setIsRegisterView(false);
           setEmail('');
           setPassword('');
           setDisplayName('');

@@ -3,7 +3,7 @@ import { TitleAndNextActionType } from '@/types/commonTypes';
 import { useStepStore } from '@/state/stepStore';
 import { useTimerStore } from '@/state/timerStore';
 import { SECTION_DATA } from '@/constants/clientShellConst';
-import { saveStepResult } from '@/services/apiService';
+import { saveStepResult } from '@/services/api';
 import { useExamStore } from '@/state/examStore';
 
 export default function ListeningCompleteStep({ onNextAction }: TitleAndNextActionType) {

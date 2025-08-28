@@ -6,4 +6,10 @@ export type FinalType = {
   cefrLevel: string | null;
   error: string | null;
   backToHome: () => void;
+  displayName: string;
+  readingScore: number;
+  readingLevel: string;
+  listeningScore: number;
+  listeningLevel: string;
+  awardedDate: string;
 };

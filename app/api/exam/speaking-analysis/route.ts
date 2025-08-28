@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     // The scoring and description logic can be customized as needed for the POC.
 
     // Simulate some processing time
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const rawScore = Math.floor(Math.random() * 20) + 1; // Random score 1-20
     const maxScore = 20;

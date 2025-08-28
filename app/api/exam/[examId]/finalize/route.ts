@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase';
-import { calculateFinalScore, mapToCEFR } from '@/services/scoringService';
+import { calculateFinalScore, mapToCEFR } from '@/services/score';
 import { StepResult } from '@/types/commonTypes';
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ examId: string }> }) {
