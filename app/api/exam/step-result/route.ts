@@ -4,9 +4,9 @@ import { normalizeScore } from '@/services/score';
 
 export async function POST(req: NextRequest) {
   try {
-    const { examId, stepId, rawScore, maxScore } = await req.json();
+    const { examId, stepId, rawScore, maxScore, cefrLevel } = await req.json();
 
-    if (!examId || !stepId || rawScore === undefined || maxScore === undefined) {
+    if (!examId || !stepId || rawScore === undefined || maxScore === undefined || cefrLevel === undefined) {
       return NextResponse.json(
         { success: false, error: 'Missing required fields.' },
         { status: 400 }
@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
         raw_score: rawScore,
         max_score: maxScore,
         normalized_score: normalizedScore,
+        cefr_level: cefrLevel,
       })
       .match({ exam_id: examId, step_id: stepId })
       .select(); // .select() returns the updated row, which is good for debugging.

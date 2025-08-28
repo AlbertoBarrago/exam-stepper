@@ -95,4 +95,5 @@ export const StepResultSchema = z.object({
   step_id: z.number(),
   visited: z.boolean().optional(),
   time_spent_ms: z.number().optional(),
+  cefr_level: z.string().optional(),
 });

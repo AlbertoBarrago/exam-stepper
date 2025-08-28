@@ -35,8 +35,8 @@ export default function FinalRecapStep() {
         if (result.success) {
           console.log('Exam Finalization Success:', result);
           setFinalScore(result.finalScore ?? null);
-          setCefrLevel(result.exam.cefr_level ?? null);
-          setAwardedDate(result.exam.created_at ?? null);
+          setCefrLevel(result.exam?.cefr_level ?? null);
+          setAwardedDate(result.exam?.created_at ?? null);
         } else {
           console.error('Exam Finalization Failed:', result.error);
           setError(result.error || 'Failed to finalize exam.');

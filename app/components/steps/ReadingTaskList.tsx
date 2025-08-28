@@ -170,7 +170,7 @@ const ReadingPassage: React.FC<ReadingPassageProps> = ({
                                 inline-flex items-center px-6 py-2 text-sm font-medium rounded-lg transition-all duration-200
                                 ${
                                   canProceed()
-                                    ? 'bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 text-white'
+                                    ? 'bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 text-white hover:cursor-pointer'
                                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                 }
                             `}

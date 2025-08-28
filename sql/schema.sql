@@ -28,9 +28,9 @@ CREATE TABLE exam_steps (
     exam_id INT NOT NULL,
     step_id INT NOT NULL,
     step_order INT NOT NULL,
-    raw_score INT,
-    max_score INT,
-    normalized_score DECIMAL(5, 2),
-    FOREIGN KEY (exam_id) REFERENCES exams(id),
-    FOREIGN KEY (step_id) REFERENCES steps(id)
+    raw_score numeric,
+    max_score numeric,
+    cefr_level text,
+    created_at timestamp with time zone default now() not null,
+    updated_at timestamp with time zone default now() not null
 );

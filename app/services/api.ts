@@ -126,7 +126,8 @@ async function saveStepResult(
   examId: number,
   stepId: number,
   rawScore: number,
-  maxScore: number
+  maxScore: number,
+  cefrLevel: string
 ): Promise<{ success: boolean; data?: never; error?: string }> {
   try {
     const response = await fetch(`${API_BASE}/exam/step-result`, {
@@ -134,7 +135,7 @@ async function saveStepResult(
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ examId, stepId, rawScore, maxScore }),
+      body: JSON.stringify({ examId, stepId, rawScore, maxScore, cefrLevel }),
     });
 
     if (!response.ok) {

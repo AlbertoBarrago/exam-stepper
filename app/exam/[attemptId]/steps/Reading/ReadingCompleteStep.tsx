@@ -5,6 +5,7 @@ import { saveStepResult } from '@/services/api';
 import { useExamStore } from '@/state/examStore';
 import { useStepStore } from '@/state/stepStore';
 import { useTimerStore } from '@/state/timerStore';
+import { normalizeScore, mapToCEFR } from '@/services/score';
 
 export default function ReadingCompleteStep({ onNextAction }: TitleAndNextActionType) {
   const { examId, sectionScores } = useExamStore();
@@ -17,9 +18,12 @@ export default function ReadingCompleteStep({ onNextAction }: TitleAndNextAction
     const rawScore = readingScore?.rawScore || 0;
     const maxScore = readingScore?.maxScore || 0;
 
+    const normalizedScore = normalizeScore(rawScore, maxScore);
+    const cefrLevel = mapToCEFR(normalizedScore);
+
     if (examId && stepId) {
       try {
-        const result = await saveStepResult(examId, stepId, rawScore, maxScore);
+        const result = await saveStepResult(examId, stepId, rawScore, maxScore, cefrLevel);
         if (result.success) {
           console.log('Successfully saved reading step score:', result.data);
           onNextAction();
