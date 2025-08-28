@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase';
 import { normalizeScore } from '@/services/score';
 
+// Move me inside utils for better reusability
+const handleError = (error: Error) => {
+  if (error) {
+    console.error('Supabase error updating exam_steps:', error);
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+};
+
 export async function POST(req: NextRequest) {
   try {
     const { examId, stepId, rawScore, maxScore, cefrLevel } = await req.json();
@@ -36,10 +44,7 @@ export async function POST(req: NextRequest) {
       .match({ exam_id: examId, step_id: stepId })
       .select(); // .select() returns the updated row, which is good for debugging.
 
-    if (error) {
-      console.error('Supabase error updating exam_steps:', error);
-      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-    }
+    if (error) handleError(error);
 
     if (!data || data.length === 0) {
       return NextResponse.json({ success: false, error: 'Exam step not found.' }, { status: 404 });
@@ -82,10 +87,7 @@ export async function PUT(req: NextRequest) {
       .match({ exam_id: exam_id, step_id: step_id })
       .select();
 
-    if (error) {
-      console.error('Supabase error updating exam_steps:', error);
-      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-    }
+    if (error) handleError(error);
 
     if (!data || data.length === 0) {
       return NextResponse.json({ success: false, error: 'Exam step not found.' }, { status: 404 });
