@@ -52,8 +52,8 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md mt-50">
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="w-[310px] lg:w-500 max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center">{isRegisterView ? 'Register' : 'Login'}</h2>
         {error && <div className="p-4 text-white bg-red-500 rounded-md">{error}</div>}
         {successMessage && (
