@@ -127,7 +127,7 @@ async function saveStepResult(
   stepId: number,
   rawScore: number,
   maxScore: number,
-  cefrLevel: string
+  cefrLevel?: string
 ): Promise<{ success: boolean; data?: never; error?: string }> {
   try {
     const response = await fetch(`${API_BASE}/exam/step-result`, {
