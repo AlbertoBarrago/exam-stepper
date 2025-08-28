@@ -1,4 +1,4 @@
-import { Step } from '@/types/stepTypes';
+import { Step, StepResult } from '@/types/stepTypes';
 import { API_BASE, API_LOGIN, API_REGISTER, API_STEPS } from '@/constants/api';
 import { UserData } from '@/types/userTypes';
 import { mapToCEFR, normalizeScore } from '@/services/score';
@@ -119,21 +119,23 @@ async function register(
  * @param stepId The ID of the step within the exam.
  * @param rawScore The raw score obtained for the step.
  * @param maxScore The maximum possible score for the step.
+ * @param cefrLevel
  * @returns A promise that resolves to an object indicating success or failure, along with data or an error message.
  */
 async function saveStepResult(
   examId: number,
   stepId: number,
   rawScore: number,
-  maxScore: number
+  maxScore: number,
+  cefrLevel?: string
 ): Promise<{ success: boolean; data?: never; error?: string }> {
   try {
-    const response = await fetch(`/api/exam/step-result`, {
+    const response = await fetch(`${API_BASE}/exam/step-result`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ examId, stepId, rawScore, maxScore }),
+      body: JSON.stringify({ examId, stepId, rawScore, maxScore, cefrLevel }),
     });
 
     if (!response.ok) {
@@ -148,6 +150,20 @@ async function saveStepResult(
   }
 }
 
+async function updateStepResult(stepResult: Partial<StepResult>): Promise<object> {
+  const response = await fetch(`${API_BASE}/exam/step-result`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(stepResult),
+  });
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+}
+
 /**
  * Starts a new exam session by creating an entry in the exams table and populating exam_steps.
  *
@@ -160,7 +176,7 @@ async function startExam(
   stepIds: number[]
 ): Promise<{ success: boolean; examId?: number; examSteps?: never[]; error?: string }> {
   try {
-    const response = await fetch(`/api/exam/start`, {
+    const response = await fetch(`${API_BASE}/exam/start`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -253,6 +269,7 @@ async function finalizeExam(examId: number): Promise<{
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({ cefrLevelData, stepScoresData }), // Send both CEFR and step scores data
     });
 
     if (!response.ok) {
