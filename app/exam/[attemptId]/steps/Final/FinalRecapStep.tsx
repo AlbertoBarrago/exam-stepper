@@ -17,16 +17,14 @@ export default function FinalRecapStep() {
   const [analyzing, setAnalyzing] = useState(true);
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [awardedDate, setAwardedDate] = useState<string | null>(null);
-  const [cefrLevel, setCefrLevel] = useState<
-    | {
-        global_cefr_level: string;
-        reading_cefr_level?: string;
-        listening_cefr_level?: string;
-        speaking_cefr_level?: string;
-        writing_cefr_level?: string;
-      }
-    | null
-  >(null);
+  const [cefrLevel, setCefrLevel] = useState<{
+    global_cefr_level: string;
+    reading_cefr_level?: string;
+    listening_cefr_level?: string;
+    speaking_cefr_level?: string;
+    writing_cefr_level?: string;
+  } | null>(null);
+  const [stepScores, setStepScores] = useState<{ [key: string]: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -46,6 +44,7 @@ export default function FinalRecapStep() {
           setFinalScore(result.finalScore ?? null);
           setCefrLevel(result.exam?.cefr_level ?? null);
           setAwardedDate(result.exam?.created_at ?? null);
+          setStepScores(result.stepScores ?? null);
         } else {
           console.error('Exam Finalization Failed:', result.error);
           setError(result.error || 'Failed to finalize exam.');
@@ -85,6 +84,7 @@ export default function FinalRecapStep() {
       backToHome={backToHome}
       displayName={user?.user_metadata.display_name ?? 'User'}
       awardedDate={awardedDate ?? ''}
+      stepScores={stepScores}
     />
   );
 }

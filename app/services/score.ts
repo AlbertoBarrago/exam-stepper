@@ -39,10 +39,10 @@ export function calculateFinalScore(results: StepResult[]): number {
 
 export function mapToCEFR(score: number): 'A0' | 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' {
   if (score === 0 || score <= 20) return 'A0';
-  if (score >= 21 && score <= 30) return 'A1';
-  if (score >= 31 && score <= 40) return 'A2';
-  if (score >= 41 && score <= 50) return 'B1';
-  if (score >= 51 && score <= 60) return 'B2';
-  if (score >= 61 && score <= 70) return 'C1';
+  if (score >= 21 && score <= 31) return 'A1';
+  if (score >= 32 && score <= 41) return 'A2';
+  if (score >= 42 && score <= 51) return 'B1';
+  if (score >= 52 && score <= 61) return 'B2';
+  if (score >= 62 && score <= 70) return 'C1';
   return 'C2';
 }

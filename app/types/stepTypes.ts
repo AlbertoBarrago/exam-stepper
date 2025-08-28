@@ -17,6 +17,10 @@ export type CertificateProps = {
   overallLevel: string;
   awardedDate: string;
   stepScores: { [key: string]: number } | null;
+  readingCefrLevel?: string;
+  listeningCefrLevel?: string;
+  speakingCefrLevel?: string;
+  writingCefrLevel?: string;
 };
 
 export type StepState = {

@@ -18,9 +18,7 @@ async function fetchStepsConfig(): Promise<Step[]> {
     console.error('Failed to fetch steps config. Response:', errorText);
     throw new Error(`Failed to fetch steps config: ${response.status} ${response.statusText}`);
   }
-  const data = await response.json();
-  console.log('Fetched steps data:', data);
-  return data;
+  return await response.json();
 }
 
 /**
@@ -121,6 +119,7 @@ async function register(
  * @param stepId The ID of the step within the exam.
  * @param rawScore The raw score obtained for the step.
  * @param maxScore The maximum possible score for the step.
+ * @param cefrLevel
  * @returns A promise that resolves to an object indicating success or failure, along with data or an error message.
  */
 async function saveStepResult(
@@ -217,10 +216,10 @@ async function finalizeExam(examId: number): Promise<{
     final_score: number;
     created_at: string;
   };
+  stepScores?: { [key: string]: number };
   error?: string;
 }> {
   try {
-    // Fetch all step results for the exam
     const stepResultsResponse = await fetch(`${API_BASE}/exam/${examId}/step-results`);
     if (!stepResultsResponse.ok) {
       const errorData = await stepResultsResponse.json();
@@ -228,7 +227,6 @@ async function finalizeExam(examId: number): Promise<{
     }
     const { examSteps } = await stepResultsResponse.json();
 
-    // Calculate individual CEFR levels and prepare for global CEFR calculation
     const sectionCefrLevels: { [key: string]: string } = {};
     const stepScoresData: { [key: string]: number } = {};
     let totalNormalizedScore = 0;
@@ -279,7 +277,8 @@ async function finalizeExam(examId: number): Promise<{
       return { success: false, error: errorData.error || 'Failed to finalize exam' };
     }
 
-    return await response.json();
+    const finalResult = await response.json();
+    return { ...finalResult, stepScores: stepScoresData };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'An unknown network error occurred.';
     return { success: false, error: message };

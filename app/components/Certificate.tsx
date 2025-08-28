@@ -8,6 +8,10 @@ const Certificate: React.FC<CertificateProps> = ({
   overallLevel,
   awardedDate,
   stepScores,
+  readingCefrLevel,
+  listeningCefrLevel,
+  speakingCefrLevel,
+  writingCefrLevel,
 }) => {
   const cefrLevels = [
     { score: '0-20', level: 'A0 Novice' },
@@ -20,7 +24,7 @@ const Certificate: React.FC<CertificateProps> = ({
   ];
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4 font-sans text-gray-800">
+    <div className="flex justify-center items-center p-10 bg-gray-100 font-sans text-gray-800">
       <div className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl overflow-hidden md:p-12 p-6 transition-all duration-300 transform hover:scale-[1.01] border border-gray-200">
         <div className="text-center mb-10 border-b border-gray-200 pb-6">
           <p className="text-gray-400 font-semibold text-sm">StepWise</p>
@@ -58,6 +62,9 @@ const Certificate: React.FC<CertificateProps> = ({
               <p className="text-4xl font-extrabold text-blue-600 mt-2">
                 {stepScores.reading_score}
               </p>
+              {readingCefrLevel && (
+                <p className="text-lg font-semibold text-blue-600 mt-1">CEFR: {readingCefrLevel}</p>
+              )}
             </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 flex flex-col items-center text-center shadow-md">
@@ -66,14 +73,22 @@ const Certificate: React.FC<CertificateProps> = ({
               <p className="text-4xl font-extrabold text-blue-600 mt-2">
                 {stepScores.listening_score}
               </p>
+              {listeningCefrLevel && (
+                <p className="text-lg font-semibold text-blue-600 mt-1">
+                  CEFR: {listeningCefrLevel}
+                </p>
+              )}
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 flex flex-col items-center text-center shadow-md">
+            {/*   <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 flex flex-col items-center text-center shadow-md">
               <Book className="text-blue-600 mb-2" size={24} />
               <h4 className="text-xl font-bold text-blue-700 mt-2">Writing</h4>
               <p className="text-4xl font-extrabold text-blue-600 mt-2">
                 {stepScores.writing_score}
               </p>
+              {writingCefrLevel && (
+                <p className="text-lg font-semibold text-blue-600 mt-1">CEFR: {writingCefrLevel}</p>
+              )}
             </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 flex flex-col items-center text-center shadow-md">
@@ -82,7 +97,12 @@ const Certificate: React.FC<CertificateProps> = ({
               <p className="text-4xl font-extrabold text-blue-600 mt-2">
                 {stepScores.speaking_score}
               </p>
-            </div>
+              {speakingCefrLevel && (
+                <p className="text-lg font-semibold text-blue-600 mt-1">
+                  CEFR: {speakingCefrLevel}
+                </p>
+              )}
+            </div>*/}
           </div>
         )}
 

@@ -6,7 +6,13 @@ export async function POST(req: NextRequest) {
   try {
     const { examId, stepId, rawScore, maxScore, cefrLevel } = await req.json();
 
-    if (!examId || !stepId || rawScore === undefined || maxScore === undefined || cefrLevel === undefined) {
+    if (
+      !examId ||
+      !stepId ||
+      rawScore === undefined ||
+      maxScore === undefined ||
+      cefrLevel === undefined
+    ) {
       return NextResponse.json(
         { success: false, error: 'Missing required fields.' },
         { status: 400 }

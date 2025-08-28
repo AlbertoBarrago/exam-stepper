@@ -9,9 +9,10 @@ const FinalRecap = ({
   backToHome,
   displayName,
   awardedDate,
+  stepScores,
 }: FinalType) => {
   return (
-    <div className="text-center space-y-6">
+    <div className="text-center space-y-2">
       {analyzing ? (
         <>
           <p className="text-blue-600">Analyzing results...</p>
@@ -26,10 +27,11 @@ const FinalRecap = ({
               overallLevel={cefrLevel.global_cefr_level}
               name={displayName}
               awardedDate={awardedDate}
-              readingScore={''}
-              readingLevel={''}
-              listeningScore={''}
-              listeningLevel={''}
+              stepScores={stepScores}
+              readingCefrLevel={cefrLevel.reading_cefr_level}
+              listeningCefrLevel={cefrLevel.listening_cefr_level}
+              speakingCefrLevel={cefrLevel.speaking_cefr_level}
+              writingCefrLevel={cefrLevel.writing_cefr_level}
             />
           )}
           <button className="btn mt-4" onClick={backToHome}>
