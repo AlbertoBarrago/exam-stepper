@@ -9,7 +9,6 @@ import Loader from '@/components/common/Loader';
 import TimeOverMessage from '@/components/common/TimeOverMessage';
 import { updateStepResult } from '@/services/api';
 import { useUserStore } from '@/state/userStore';
-import { cleanCookie } from '@/services/utils';
 
 export default function Exam() {
   const { attemptId } = useParams();

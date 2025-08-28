@@ -1,18 +1,13 @@
 import React from 'react';
 import { Book, Headphones } from 'lucide-react';
-
-interface CertificateProps {
-  name: string;
-  overallScore: string;
-  overallLevel: string;
-  awardedDate: string;
-}
+import { CertificateProps } from '@/types/stepTypes';
 
 const Certificate: React.FC<CertificateProps> = ({
   name,
   overallScore,
   overallLevel,
   awardedDate,
+  stepScores,
 }) => {
   const cefrLevels = [
     { score: '0-20', level: 'A0 Novice' },
@@ -55,6 +50,41 @@ const Certificate: React.FC<CertificateProps> = ({
         <div className="text-center mb-8">
           <p className="text-gray-500 font-medium">Awarded on: {awardedDate}</p>
         </div>
+        {stepScores && (
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 flex flex-col items-center text-center shadow-md">
+              <Book className="text-blue-600 mb-2" size={24} />
+              <h4 className="text-xl font-bold text-blue-700 mt-2">Reading</h4>
+              <p className="text-4xl font-extrabold text-blue-600 mt-2">
+                {stepScores.reading_score}
+              </p>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 flex flex-col items-center text-center shadow-md">
+              <Headphones className="text-blue-600 mb-2" size={24} />
+              <h4 className="text-xl font-bold text-blue-700 mt-2">Listening</h4>
+              <p className="text-4xl font-extrabold text-blue-600 mt-2">
+                {stepScores.listening_score}
+              </p>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 flex flex-col items-center text-center shadow-md">
+              <Book className="text-blue-600 mb-2" size={24} />
+              <h4 className="text-xl font-bold text-blue-700 mt-2">Writing</h4>
+              <p className="text-4xl font-extrabold text-blue-600 mt-2">
+                {stepScores.writing_score}
+              </p>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 flex flex-col items-center text-center shadow-md">
+              <Headphones className="text-blue-600 mb-2" size={24} />
+              <h4 className="text-xl font-bold text-blue-700 mt-2">Speaking</h4>
+              <p className="text-4xl font-extrabold text-blue-600 mt-2">
+                {stepScores.speaking_score}
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="mb-8 p-6 rounded-xl bg-gray-50 border border-gray-200">
           <h4 className="text-xl font-semibold mb-4 text-center">Understanding the results</h4>

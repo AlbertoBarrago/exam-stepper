@@ -1,3 +1,3 @@
-import { SECTIONS } from '@/constants/clientShellConst';
+import { SECTIONS } from '@/constants/main';
 
 export type Section = (typeof SECTIONS)[number];

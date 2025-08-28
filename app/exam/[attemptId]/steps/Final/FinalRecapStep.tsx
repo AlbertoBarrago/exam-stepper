@@ -17,7 +17,16 @@ export default function FinalRecapStep() {
   const [analyzing, setAnalyzing] = useState(true);
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [awardedDate, setAwardedDate] = useState<string | null>(null);
-  const [cefrLevel, setCefrLevel] = useState<string | null>(null);
+  const [cefrLevel, setCefrLevel] = useState<
+    | {
+        global_cefr_level: string;
+        reading_cefr_level?: string;
+        listening_cefr_level?: string;
+        speaking_cefr_level?: string;
+        writing_cefr_level?: string;
+      }
+    | null
+  >(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 

@@ -1,6 +1,7 @@
 import { Step, StepResult } from '@/types/stepTypes';
 import { API_BASE, API_LOGIN, API_REGISTER, API_STEPS } from '@/constants/api';
 import { UserData } from '@/types/userTypes';
+import { mapToCEFR, normalizeScore } from '@/services/score';
 
 /**
  * Fetches the configuration for steps from the API.
@@ -206,18 +207,71 @@ async function finalizeExam(examId: number): Promise<{
   success: boolean;
   finalScore?: number;
   exam?: {
-    cefr_level: string;
+    cefr_level: {
+      global_cefr_level: string;
+      reading_cefr_level?: string;
+      listening_cefr_level?: string;
+      speaking_cefr_level?: string;
+      writing_cefr_level?: string;
+    };
     final_score: number;
     created_at: string;
   };
   error?: string;
 }> {
   try {
+    // Fetch all step results for the exam
+    const stepResultsResponse = await fetch(`${API_BASE}/exam/${examId}/step-results`);
+    if (!stepResultsResponse.ok) {
+      const errorData = await stepResultsResponse.json();
+      return { success: false, error: errorData.error || 'Failed to fetch step results' };
+    }
+    const { examSteps } = await stepResultsResponse.json();
+
+    // Calculate individual CEFR levels and prepare for global CEFR calculation
+    const sectionCefrLevels: { [key: string]: string } = {};
+    const stepScoresData: { [key: string]: number } = {};
+    let totalNormalizedScore = 0;
+    let totalStepsWithScore = 0;
+
+    interface ExamStepResult {
+      raw_score: number;
+      max_score: number;
+      step_id: number;
+      steps: { kind: string };
+    }
+
+    examSteps.forEach((step: ExamStepResult) => {
+      const rawScore = step.raw_score || 0;
+      const maxScore = step.max_score || 0;
+      const stepKind = step.steps.kind.split('-')[0]; // e.g., 'reading', 'listening'
+
+      stepScoresData[`${stepKind}_score`] = rawScore;
+
+      if (maxScore > 0) {
+        const normalizedScore = normalizeScore(rawScore, maxScore);
+        sectionCefrLevels[`${stepKind}_cefr_level`] = mapToCEFR(normalizedScore);
+        totalNormalizedScore += normalizedScore;
+        totalStepsWithScore++;
+      }
+    });
+
+    // Calculate global CEFR level
+    const globalNormalizedScore =
+      totalStepsWithScore > 0 ? totalNormalizedScore / totalStepsWithScore : 0;
+    const globalCefrLevel = mapToCEFR(globalNormalizedScore);
+
+    const cefrLevelData = {
+      global_cefr_level: globalCefrLevel,
+      ...sectionCefrLevels,
+    };
+
     const response = await fetch(`${API_BASE}/exam/${examId}/finalize`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({ cefrLevelData, stepScoresData }), // Send both CEFR and step scores data
     });
 
     if (!response.ok) {

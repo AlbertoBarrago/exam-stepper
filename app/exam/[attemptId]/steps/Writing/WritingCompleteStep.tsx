@@ -1,6 +1,6 @@
 import CompleteTask from '@/components/steps/CompleteTask';
 import { TitleAndNextActionType } from '@/types/commonTypes';
-import { SECTION_DATA } from '@/constants/clientShellConst';
+import { SECTION_DATA } from '@/constants/main';
 import { saveStepResult } from '@/services/api';
 import { useExamStore } from '@/state/examStore';
 import { useStepStore } from '@/state/stepStore';

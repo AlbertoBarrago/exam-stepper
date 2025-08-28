@@ -2,7 +2,7 @@ import CompleteTask from '@/components/steps/CompleteTask';
 import { TitleAndNextActionType } from '@/types/commonTypes';
 import { useStepStore } from '@/state/stepStore';
 import { useTimerStore } from '@/state/timerStore';
-import { SECTION_DATA } from '@/constants/clientShellConst';
+import { SECTION_DATA } from '@/constants/main';
 import { saveStepResult } from '@/services/api';
 import { useExamStore } from '@/state/examStore';
 import { normalizeScore, mapToCEFR } from '@/services/score';

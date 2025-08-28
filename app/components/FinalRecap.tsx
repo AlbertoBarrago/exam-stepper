@@ -23,9 +23,13 @@ const FinalRecap = ({
           {(finalScore || finalScore === 0) && cefrLevel !== null && (
             <Certificate
               overallScore={finalScore.toFixed(0)}
-              overallLevel={cefrLevel}
+              overallLevel={cefrLevel.global_cefr_level}
               name={displayName}
               awardedDate={awardedDate}
+              readingScore={''}
+              readingLevel={''}
+              listeningScore={''}
+              listeningLevel={''}
             />
           )}
           <button className="btn mt-4" onClick={backToHome}>
