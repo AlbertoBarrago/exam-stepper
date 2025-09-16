@@ -1,16 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-
-interface WritingTaskProps {
-  title?: string;
-  subtitle?: string;
-  placeholder?: string;
-  minWords?: number;
-  maxWords?: number;
-  onTextChange?: (text: string, wordCount: number) => void;
-  onSubmit: (text: string) => void;
-  initialText?: string;
-  buttonText?: string;
-}
+import { WritingTaskProps } from '@/types/writingTypes';
 
 const WritingTask: React.FC<WritingTaskProps> = ({
   title = 'Write a clear and compelling job advertisement.',
@@ -27,18 +16,15 @@ const WritingTask: React.FC<WritingTaskProps> = ({
   const [wordCount, setWordCount] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Count words function
   const countWords = (text: string): number => {
     if (!text.trim()) return 0;
     return text.trim().split(/\s+/).length;
   };
 
-  // Handle text change
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
     const newWordCount = countWords(newText);
 
-    // Prevent exceeding max word limit
     if (maxWords && newWordCount > maxWords) {
       return;
     }
@@ -51,7 +37,6 @@ const WritingTask: React.FC<WritingTaskProps> = ({
     }
   };
 
-  // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -59,7 +44,6 @@ const WritingTask: React.FC<WritingTaskProps> = ({
     }
   }, [text]);
 
-  // Initialize word count
   useEffect(() => {
     const initialWordCount = countWords(initialText);
     setWordCount(initialWordCount);
@@ -90,13 +74,11 @@ const WritingTask: React.FC<WritingTaskProps> = ({
   return (
     <div className="flex items-center justify-center p-4 mt-10">
       <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full p-8">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-xl font-semibold text-gray-900 mb-2">{title}</h1>
           {subtitle && <p className="text-gray-600 text-sm">{subtitle}</p>}
         </div>
 
-        {/* Writing Area */}
         <div className="mb-6">
           <div className="relative">
             <textarea
@@ -109,7 +91,6 @@ const WritingTask: React.FC<WritingTaskProps> = ({
               aria-label="Writing task response"
             />
 
-            {/* Word Counter */}
             <div className="absolute bottom-4 right-4 flex flex-col items-end">
               <div
                 id="word-count"
@@ -123,7 +104,6 @@ const WritingTask: React.FC<WritingTaskProps> = ({
             </div>
           </div>
 
-          {/* Progress Bar */}
           <div className="mt-4">
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
@@ -147,7 +127,6 @@ const WritingTask: React.FC<WritingTaskProps> = ({
           </div>
         </div>
 
-        {/* Submit Button */}
         <div className="text-center">
           <button
             onClick={handleSubmit}
@@ -166,7 +145,6 @@ const WritingTask: React.FC<WritingTaskProps> = ({
           </button>
         </div>
 
-        {/* Screen reader instructions */}
         <div id="writing-instructions" className="sr-only">
           Writing task with {maxWords} word limit.
           {minWords > 0 && `Minimum ${minWords} words required.`}
