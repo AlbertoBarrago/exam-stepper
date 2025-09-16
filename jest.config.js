@@ -9,9 +9,9 @@ const customJestConfig = {
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
+  testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jest-environment-jsdom',
-  collectCoverageFrom: ['app/**/*.{js,jsx,ts,tsx}', '!**/node_modules/**'],
+  collectCoverageFrom: ['app/api/**/*.{js,jsx,ts,tsx}', '!**/node_modules/**'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/app/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
@@ -20,6 +20,37 @@ const customJestConfig = {
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
   },
+  projects: [
+    {
+      displayName: 'api-tests',
+      testEnvironment: 'node',
+      testMatch: ['<rootDir>/app/api/__tests__/**/*.test.{js,jsx,ts,tsx}'],
+      setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+      moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/app/$1',
+        '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+      },
+      transform: {
+        '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
+      },
+    },
+    {
+      displayName: 'component-tests',
+      testEnvironment: 'jest-environment-jsdom',
+      testMatch: [
+        '<rootDir>/app/**/*.test.{js,jsx,ts,tsx}',
+        '!<rootDir>/app/api/__tests__/**/*.test.{js,jsx,ts,tsx}',
+      ],
+      setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+      moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/app/$1',
+        '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+      },
+      transform: {
+        '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
+      },
+    },
+  ],
 };
 
 module.exports = createJestConfig(customJestConfig);
