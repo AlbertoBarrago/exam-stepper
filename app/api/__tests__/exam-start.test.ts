@@ -26,7 +26,7 @@ describe('/api/exam/start', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as never);
 
     const request = new NextRequest('http://localhost:3000/api/exam/start', {
       method: 'POST',

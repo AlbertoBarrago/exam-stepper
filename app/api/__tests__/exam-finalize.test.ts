@@ -40,15 +40,17 @@ describe('/api/exam/[examId]/finalize', () => {
         })
         .mockReturnValueOnce({
           update: jest.fn().mockReturnValue({
-            eq: jest.fn().mockResolvedValue({
-              data: [{ id: 123 }],
-              error: null,
+            eq: jest.fn().mockReturnValue({
+              select: jest.fn().mockResolvedValue({
+                data: [{ id: 123 }],
+                error: null,
+              }),
             }),
           }),
         }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as never);
 
     const request = new NextRequest('http://localhost:3000/api/exam/123/finalize', {
       method: 'POST',
@@ -65,7 +67,7 @@ describe('/api/exam/[examId]/finalize', () => {
       }),
     });
 
-    const response = await POST(request, { params: { examId: '123' } });
+    const response = await POST(request, { params: Promise.resolve({ examId: '123' }) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -78,12 +80,12 @@ describe('/api/exam/[examId]/finalize', () => {
       body: JSON.stringify({}),
     });
 
-    const response = await POST(request, { params: {} });
+    const response = await POST(request, { params: Promise.resolve({ examId: ''}) });
     const data = await response.json();
 
     expect(response.status).toBe(400);
     expect(data.success).toBe(false);
-    expect(data.error).toBe('Exam ID is required');
+    expect(data.error).toBe('Invalid examId.');
   });
 
   it('should handle step results fetch error', async () => {
@@ -98,7 +100,7 @@ describe('/api/exam/[examId]/finalize', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as never);
 
     const request = new NextRequest('http://localhost:3000/api/exam/123/finalize', {
       method: 'POST',
@@ -108,7 +110,7 @@ describe('/api/exam/[examId]/finalize', () => {
       }),
     });
 
-    const response = await POST(request, { params: { examId: '123' } });
+    const response = await POST(request, { params: Promise.resolve({ examId: '123' }) });
     const data = await response.json();
 
     expect(response.status).toBe(500);
@@ -136,15 +138,17 @@ describe('/api/exam/[examId]/finalize', () => {
         })
         .mockReturnValueOnce({
           update: jest.fn().mockReturnValue({
-            eq: jest.fn().mockResolvedValue({
-              data: null,
-              error: { message: 'Failed to update exam' },
+            eq: jest.fn().mockReturnValue({
+              select: jest.fn().mockResolvedValue({
+                data: null,
+                error: { message: 'Failed to update exam' },
+              }),
             }),
           }),
         }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as never);
 
     const request = new NextRequest('http://localhost:3000/api/exam/123/finalize', {
       method: 'POST',
@@ -154,7 +158,7 @@ describe('/api/exam/[examId]/finalize', () => {
       }),
     });
 
-    const response = await POST(request, { params: { examId: '123' } });
+    const response = await POST(request, { params: Promise.resolve({ examId: '123' }) });
     const data = await response.json();
 
     expect(response.status).toBe(500);
@@ -168,7 +172,7 @@ describe('/api/exam/[examId]/finalize', () => {
       body: 'invalid json',
     });
 
-    const response = await POST(request, { params: { examId: '123' } });
+    const response = await POST(request, { params: Promise.resolve({ examId: '123' }) });
     const data = await response.json();
 
     expect(response.status).toBe(500);
@@ -201,15 +205,17 @@ describe('/api/exam/[examId]/finalize', () => {
         })
         .mockReturnValueOnce({
           update: jest.fn().mockReturnValue({
-            eq: jest.fn().mockResolvedValue({
-              data: [{ id: 123 }],
-              error: null,
+            eq: jest.fn().mockReturnValue({
+              select: jest.fn().mockResolvedValue({
+                data: [{ id: 123 }],
+                error: null,
+              }),
             }),
           }),
         }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as never);
 
     const request = new NextRequest('http://localhost:3000/api/exam/123/finalize', {
       method: 'POST',
@@ -219,7 +225,7 @@ describe('/api/exam/[examId]/finalize', () => {
       }),
     });
 
-    const response = await POST(request, { params: { examId: '123' } });
+    const response = await POST(request, { params: Promise.resolve({ examId: '123' }) });
     const data = await response.json();
 
     expect(response.status).toBe(200);

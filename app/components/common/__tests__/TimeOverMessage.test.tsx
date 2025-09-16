@@ -7,7 +7,15 @@ jest.mock('@/state/timerStore', () => ({
   useTimerStore: jest.fn(),
 }));
 
-const mockUseTimerStore = useTimerStore as jest.MockedFunction<typeof useTimerStore>;
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}));
+
+const mockUseTimerStore = useTimerStore as jest.MockedFunction<
+  typeof useTimerStore
+>;
 
 describe('TimeOverMessage Component', () => {
   beforeEach(() => {
@@ -15,45 +23,39 @@ describe('TimeOverMessage Component', () => {
   });
 
   it('should not render when time is not over', () => {
-    mockUseTimerStore.mockReturnValue({
-      isTimeOver: false,
-    } as any);
+    mockUseTimerStore.mockReturnValue({ isTimeOver: false } as any);
 
     render(<TimeOverMessage />);
-    
-    expect(screen.queryByText(/time is up/i)).not.toBeInTheDocument();
+
+    expect(screen.queryByText(/time is over/i)).not.toBeInTheDocument();
   });
 
   it('should render when time is over', () => {
-    mockUseTimerStore.mockReturnValue({
-      isTimeOver: true,
-    } as any);
+    mockUseTimerStore.mockReturnValue({ isTimeOver: true } as any);
 
     render(<TimeOverMessage />);
-    
-    expect(screen.getByText(/time is up/i)).toBeInTheDocument();
-    expect(screen.getByText(/exam will be submitted automatically/i)).toBeInTheDocument();
+
+    expect(screen.getByText(/time is over/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/You failed to complete the exam within the allotted time./i),
+    ).toBeInTheDocument();
   });
 
   it('should render with correct styling', () => {
-    mockUseTimerStore.mockReturnValue({
-      isTimeOver: true,
-    } as any);
+    mockUseTimerStore.mockReturnValue({ isTimeOver: true } as any);
 
     render(<TimeOverMessage />);
-    
-    const message = screen.getByText(/time is up/i);
-    expect(message).toHaveClass('bg-red-100', 'border-red-400', 'text-red-700');
+
+    const message = screen.getByText(/time is over/i);
+    expect(message).toHaveClass('text-3xl font-bold text-red-600 mb-4');
   });
 
   it('should render with icon', () => {
-    mockUseTimerStore.mockReturnValue({
-      isTimeOver: true,
-    } as any);
+    mockUseTimerStore.mockReturnValue({ isTimeOver: true } as any);
 
     render(<TimeOverMessage />);
-    
+
     // Check if the component renders (the icon might be from lucide-react)
-    expect(screen.getByText(/time is up/i)).toBeInTheDocument();
+    expect(screen.getByText(/time is over/i)).toBeInTheDocument();
   });
 });
