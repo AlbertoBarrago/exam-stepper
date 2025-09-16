@@ -40,7 +40,7 @@ describe('/api/register', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/register', {
       method: 'POST',
@@ -125,7 +125,7 @@ describe('/api/register', () => {
       },
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/register', {
       method: 'POST',
@@ -165,7 +165,7 @@ describe('/api/register', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/register', {
       method: 'POST',

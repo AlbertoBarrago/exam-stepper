@@ -9,9 +9,7 @@ const Certificate: React.FC<CertificateProps> = ({
   awardedDate,
   stepScores,
   readingCefrLevel,
-  listeningCefrLevel,
-  speakingCefrLevel,
-  writingCefrLevel,
+  listeningCefrLevel
 }) => {
   const cefrLevels = [
     { score: '0-20', level: 'A0 Novice' },

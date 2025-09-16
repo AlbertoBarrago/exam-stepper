@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { POST } from '../exam/start/route';
 import { createClient } from '@/utils/supabase';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 // Mock Supabase
 jest.mock('@/utils/supabase', () => ({
@@ -26,7 +27,7 @@ describe('/api/exam/start', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as never);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/exam/start', {
       method: 'POST',
@@ -105,7 +106,7 @@ describe('/api/exam/start', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/exam/start', {
       method: 'POST',
@@ -144,7 +145,7 @@ describe('/api/exam/start', () => {
         }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/exam/start', {
       method: 'POST',

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { POST } from '../exam/[examId]/finalize/route';
 import { createClient } from '@/utils/supabase';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 // Mock Supabase
 jest.mock('@/utils/supabase', () => ({
@@ -100,7 +101,7 @@ describe('/api/exam/[examId]/finalize', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as never);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/exam/123/finalize', {
       method: 'POST',
@@ -148,7 +149,7 @@ describe('/api/exam/[examId]/finalize', () => {
         }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as never);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/exam/123/finalize', {
       method: 'POST',
@@ -215,7 +216,7 @@ describe('/api/exam/[examId]/finalize', () => {
         }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as never);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/exam/123/finalize', {
       method: 'POST',

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { POST, PUT } from '../exam/step-result/route';
 import { createClient } from '@/utils/supabase';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 // Mock Supabase
 jest.mock('@/utils/supabase', () => ({
@@ -29,7 +30,7 @@ describe('/api/exam/step-result', () => {
         }),
       };
 
-      mockCreateClient.mockResolvedValue(mockSupabase as any);
+      mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
       const request = new NextRequest('http://localhost:3000/api/exam/step-result', {
         method: 'POST',
@@ -99,7 +100,7 @@ describe('/api/exam/step-result', () => {
         }),
       };
 
-      mockCreateClient.mockResolvedValue(mockSupabase as any);
+      mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
       const request = new NextRequest('http://localhost:3000/api/exam/step-result', {
         method: 'POST',
@@ -135,7 +136,7 @@ describe('/api/exam/step-result', () => {
         }),
       };
 
-      mockCreateClient.mockResolvedValue(mockSupabase as any);
+      mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
       const request = new NextRequest('http://localhost:3000/api/exam/step-result', {
         method: 'PUT',
@@ -202,7 +203,7 @@ describe('/api/exam/step-result', () => {
         }),
       };
 
-      mockCreateClient.mockResolvedValue(mockSupabase as any);
+      mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
       const request = new NextRequest('http://localhost:3000/api/exam/step-result', {
         method: 'PUT',

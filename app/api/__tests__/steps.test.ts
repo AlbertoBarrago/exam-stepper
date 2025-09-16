@@ -64,7 +64,7 @@ describe('/api/steps', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const response = await GET();
     const data = await response.json();
@@ -95,7 +95,7 @@ describe('/api/steps', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const response = await GET();
     const data = await response.json();
@@ -116,7 +116,7 @@ describe('/api/steps', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const response = await GET();
     const data = await response.json();
@@ -152,7 +152,7 @@ describe('/api/steps', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const response = await GET();
     const data = await response.json();
@@ -194,7 +194,7 @@ describe('/api/steps', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const response = await GET();
     const data = await response.json();

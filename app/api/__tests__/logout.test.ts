@@ -23,7 +23,7 @@ describe('/api/logout', () => {
       },
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/logout', {
       method: 'POST',
@@ -46,7 +46,7 @@ describe('/api/logout', () => {
       },
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/logout', {
       method: 'POST',

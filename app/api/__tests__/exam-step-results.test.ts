@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { GET } from '../exam/[examId]/step-results/route';
 import { createClient } from '@/utils/supabase';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 // Mock Supabase
 jest.mock('@/utils/supabase', () => ({
@@ -59,10 +60,10 @@ describe('/api/exam/[examId]/step-results', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/exam/123/step-results');
-    const response = await GET(request, { params: { examId: '123' } });
+    const response = await GET(request, { params: Promise.resolve({ examId: '123' }) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -71,11 +72,11 @@ describe('/api/exam/[examId]/step-results', () => {
 
   it('should handle missing examId', async () => {
     const request = new NextRequest('http://localhost:3000/api/exam//step-results');
-    const response = await GET(request, { params: {} });
+    const response = await GET(request, { params: Promise.resolve({ examId: '' }) });
     const data = await response.json();
 
     expect(response.status).toBe(400);
-    expect(data.error).toBe('Exam ID is required');
+    expect(data.error).toBe('Missing examId.');
   });
 
   it('should handle database error', async () => {
@@ -90,10 +91,10 @@ describe('/api/exam/[examId]/step-results', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/exam/123/step-results');
-    const response = await GET(request, { params: { examId: '123' } });
+    const response = await GET(request, { params: Promise.resolve({ examId: '123' }) });
     const data = await response.json();
 
     expect(response.status).toBe(500);
@@ -112,10 +113,10 @@ describe('/api/exam/[examId]/step-results', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/exam/123/step-results');
-    const response = await GET(request, { params: { examId: '123' } });
+    const response = await GET(request, { params: Promise.resolve({ examId: '123' }) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -154,10 +155,10 @@ describe('/api/exam/[examId]/step-results', () => {
       }),
     };
 
-    mockCreateClient.mockResolvedValue(mockSupabase as any);
+    mockCreateClient.mockResolvedValue(mockSupabase as unknown as SupabaseClient);
 
     const request = new NextRequest('http://localhost:3000/api/exam/123/step-results');
-    const response = await GET(request, { params: { examId: '123' } });
+    const response = await GET(request, { params: Promise.resolve({ examId: '123' }) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
