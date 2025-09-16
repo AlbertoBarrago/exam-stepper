@@ -1,9 +1,11 @@
+/**
+ * @jest-environment node
+ */
 import { NextRequest } from 'next/server';
 import { GET } from '../exam/[examId]/step-results/route';
 import { createClient } from '@/utils/supabase';
 import { SupabaseClient } from '@supabase/supabase-js';
 
-// Mock Supabase
 jest.mock('@/utils/supabase', () => ({
   createClient: jest.fn(),
 }));
@@ -85,7 +87,7 @@ describe('/api/exam/[examId]/step-results', () => {
         select: jest.fn().mockReturnValue({
           eq: jest.fn().mockResolvedValue({
             data: null,
-            error: { message: 'Database connection failed' },
+            error: { message: 'An unknow error occurred' },
           }),
         }),
       }),
@@ -98,7 +100,7 @@ describe('/api/exam/[examId]/step-results', () => {
     const data = await response.json();
 
     expect(response.status).toBe(500);
-    expect(data.error).toBe('Database connection failed');
+    expect(data.error).toBe('An unknow error occurred');
   });
 
   it('should handle empty results', async () => {

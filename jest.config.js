@@ -9,8 +9,9 @@ const customJestConfig = {
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
+  testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  collectCoverageFrom: ['app/**/*.{js,jsx,ts,tsx}', '!**/node_modules/**'],
+  collectCoverageFrom: ['app/api/**/*.{js,jsx,ts,tsx}', '!**/node_modules/**'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/app/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',

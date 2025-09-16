@@ -19,6 +19,7 @@
     "lucide-react": "^0.525.0",
     "mysql2": "^3.14.3",
     "next": "15.4.7",
+    "node-fetch": "^3.3.2",
     "pg": "^8.16.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -27,6 +28,7 @@
     "zustand": "^5.0.6"
   },
   "devDependencies": {
+    "@edge-runtime/jest-environment": "^4.0.0",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.0",
@@ -40,11 +42,13 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.1",
+    "formdata-polyfill": "^4.0.10",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "undici": "^7.16.0"
   }
 }
