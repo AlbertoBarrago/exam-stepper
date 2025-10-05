@@ -28,7 +28,7 @@ export default function Header() {
   const pathname = usePathname();
   const [isRouteReady, setIsRouteReady] = useState(false);
   const [open, setOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(<></> as HTMLDivElement);
+  const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   const { steps, isLoading: isLoadingSteps } = useStepStore();
