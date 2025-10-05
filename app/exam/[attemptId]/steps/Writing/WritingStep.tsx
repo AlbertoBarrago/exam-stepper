@@ -14,7 +14,7 @@ export default function WritingStep({ onNextAction }: WritingTypes) {
   const stepId = steps[currentStepIndex]?.id;
 
   const handleTextChange = (text: string, wordCount: number) => {
-    console.log('Text changed:', { text, wordCount });
+    //console.log('Text changed:', { text, wordCount });
   };
 
   const submitToAi = async (text: string) => {
@@ -32,15 +32,14 @@ export default function WritingStep({ onNextAction }: WritingTypes) {
       }
 
       const data = await response.json();
-      const rawScore = data.score; // Score from AI
-      const detailedDescription = data.detailedDescription; // Detailed description from AI
-      const maxScore = data.maxScore; // Max score from AI
+      const rawScore = data.score;
+      const detailedDescription = data.detailedDescription;
+      const maxScore = data.maxScore;
 
       console.log('AI Detailed Description:', detailedDescription);
 
       setSectionScore('writing', { rawScore, maxScore });
 
-      // Save to database
       if (examId && stepId) {
         await saveStepResult(examId, stepId, rawScore, maxScore);
       }
@@ -48,7 +47,7 @@ export default function WritingStep({ onNextAction }: WritingTypes) {
       onNextAction();
     } catch (error) {
       console.error('Error submitting text for AI analysis:', error);
-      // Handle error, e.g., show an error message to the user
+      // TODO: Handle error
     }
   };
 
