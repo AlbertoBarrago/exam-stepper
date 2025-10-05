@@ -3,11 +3,12 @@ import Modal from '@/components/Modal';
 import { useUserStore } from '@/state/userStore';
 import { useTimerStore } from '@/state/timerStore';
 import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import SectionTimerBar from '@/components/TimeBar';
 import { QUESTION_KINDS, stepKindToSection } from '@/constants/main';
 import { useStepStore } from '@/state/stepStore';
-import { isSection } from '@/services/utils';
+import { isSection, toSectionOrNull } from '@/services/utils';
+import { Section } from '@/types/clientShellTypes';
 
 function TickController(): null {
   const tick = useTimerStore((s) => s.tick);
@@ -24,15 +25,17 @@ function TickController(): null {
 export default function Header() {
   const user = useUserStore((state) => state.user);
   const logout = useUserStore((state) => state.logout);
+  const pathname = usePathname();
+  const [isRouteReady, setIsRouteReady] = useState(false);
   const [open, setOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(<></> as HTMLDivElement);
   const router = useRouter();
 
   const { steps, isLoading: isLoadingSteps } = useStepStore();
   const { currentStepIndex, reset: resetTimer, startSection, pause } = useTimerStore();
 
   const prevStepKindRef = useRef<string | undefined>(undefined);
-  const [showTimeBar, setShowTimeBar] = useState(true); // New state to control visibility
+  const [showTimeBar, setShowTimeBar] = useState(true);
 
   const handleLogout = async () => {
     try {
@@ -70,6 +73,16 @@ export default function Header() {
     setIsModalOpen(false);
   };
 
+  const step = !isLoadingSteps && steps.length > 0 ? steps[currentStepIndex] : null;
+
+  const section = step ? stepKindToSection(step.kind) : null;
+
+  useEffect(() => {
+    setIsRouteReady(true);
+  }, []);
+
+  const showHeader = pathname !== '/login' && isRouteReady;
+
   useEffect(() => {
     function handleClick(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -80,9 +93,6 @@ export default function Header() {
     if (open) document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, [open]);
-
-  const step = !isLoadingSteps && steps.length > 0 ? steps[currentStepIndex] : null;
-  const section = step ? stepKindToSection(step.kind) : null;
 
   useEffect(() => {
     if (!step) return;
@@ -109,8 +119,8 @@ export default function Header() {
     prevStepKindRef.current = currentKind;
   }, [currentStepIndex, startSection, pause, step, setShowTimeBar]);
 
-  return (
-    <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50 border-b-blue-600 border-b-3">
+  const renderHeader = () => {
+    return <header className="w-full px-6 py-3 flex items-center justify-between bg-white shadow sticky top-0 z-50 border-b-blue-600 border-b-3">
       <div className="text-xl font-bold text-blue-700 cursor-pointer" onClick={handleGoToHome}>
         StepWise
       </div>
@@ -121,7 +131,7 @@ export default function Header() {
         title="Confirm Navigation"
         content="Are you sure you want to leave the exam? Your progress will not be saved."
       />
-      {showTimeBar && <SectionTimerBar displaySection={isSection(section) ? section : null} />}
+      {showTimeBar && <SectionTimerBar displaySection={toSectionOrNull(section)} />}
       <TickController />
       <div className="relative" ref={menuRef}>
         {user && (
@@ -161,5 +171,11 @@ export default function Header() {
         )}
       </div>
     </header>
+  }
+
+  return (
+    <>
+      {showHeader ? renderHeader() : <></>}
+    </>
   );
 }

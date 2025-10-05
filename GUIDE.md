@@ -14,7 +14,7 @@ The exam process begins when a student navigates to the exam page. Here's how it
 
 Once the exam is initialized, the student progresses through the steps one by one. Here's how the application handles this:
 
-- **State Management**: The `app/state/stepStore.tsx` and `app/state/timerStore.ts` files are responsible for managing the state of the exam, including the current step and the time remaining.
+- **State Management**: The `app/state/stepStore.ts` and `app/state/timerStore.ts` files are responsible for managing the state of the exam, including the current step and the time remaining.
 
 - **Rendering the Current Step**: The `app/hooks/useStepBody.tsx` hook determines which step component to render based on the current step index. It dynamically loads the appropriate component from the `app/components/steps` directory.
 

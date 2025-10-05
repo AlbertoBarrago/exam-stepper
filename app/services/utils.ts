@@ -14,13 +14,24 @@ function formatTime(secs: number): string {
 }
 
 /**
- * Checks if the provided value is a valid section.
+ * Type guard that checks if a value is a valid Section.
  *
- * @param {string | null} val - The value to be checked.
- * @return {boolean} Returns true if the value is a valid section, otherwise false.
+ * @param {unknown} val - The value to check (accepts any type for more robust validation)
+ * @returns {boolean} True if the value is a valid Section, false otherwise
  */
-function isSection(val: string | null): val is Section {
-  return !!val && SECTIONS.includes(val as Section);
+function isSection(val: unknown): val is Section {
+  if (typeof val !== 'string') {
+    return false;
+  }
+
+  return SECTIONS.includes(val as Section);
+}
+
+/**
+ * Safely converts a value to a Section type if valid, or returns null
+ */
+function toSectionOrNull(val: unknown): Section | null {
+  return isSection(val) ? val : null;
 }
 
 /**
@@ -31,4 +42,4 @@ function cleanCookie(name: string) {
   document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
 }
 
-export { formatTime, isSection, cleanCookie };
+export { formatTime, isSection, cleanCookie, toSectionOrNull };
