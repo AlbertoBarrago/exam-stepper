@@ -1,5 +1,7 @@
 # English Test Stepper
 
+> [deepwiki.com](https://deepwiki.com/AlbertoBarrago/exam-stepper/6.4-speaking-section)
+
 A modern web application designed to assess English language proficiency with interactive, speech-enabled features.
 
 ## ✨ Features
